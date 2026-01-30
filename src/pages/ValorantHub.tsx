@@ -5,10 +5,11 @@ import { Sword, Shield, Settings, ChevronLeft } from "lucide-react";
 
 // === HEADER DA COLLAB (ONSITE x V) ===
 const HubHeader = () => (
-  <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 mix-blend-difference text-white flex items-center gap-6">
+  // Adicionei backdrop-blur para o header não "sumir" quando passar conteúdo por baixo
+  <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 mix-blend-difference text-white flex items-center gap-6 pointer-events-none">
       
-      {/* 1. LOGO ONSITE (OS) */}
-      <Link to="/" className="group relative shrink-0">
+      {/* Pointer-events-auto no link para poder clicar */}
+      <Link to="/" className="group relative shrink-0 pointer-events-auto">
         <svg 
           width="48" 
           height="48" 
@@ -29,10 +30,8 @@ const HubHeader = () => (
         </svg>
       </Link>
 
-      {/* 2. BARRA DE SEPARAÇÃO */}
       <div className="h-8 w-[2px] bg-white/20 -skew-x-12 shrink-0" />
 
-      {/* 3. LOGO V (ROSA) */}
       <img 
         src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Valorant_pink_version_logo.svg/2560px-Valorant_pink_version_logo.svg.png"
         alt="Valorant V Logo"
@@ -63,15 +62,15 @@ const AGENT_IDS = {
   astra: "41fb69c1-4189-7b37-f117-bcaf1e96f1bf"
 };
 
-// ROTAÇÃO COMPETITIVA (7 MAPAS + Abyss que é novo)
+// === MAPAS (Exatamente os mesmos da Landing Page com caminhos locais) ===
 const MAPS = [
-  { id: "abyss", name: "Abyss", image: "https://static.wikia.nocookie.net/valorant/images/6/61/Loading_Screen_Abyss.png" },
-  { id: "ascent", name: "Ascent", image: "https://static.wikia.nocookie.net/valorant/images/e/e7/Loading_Screen_Ascent.png" },
-  { id: "bind", name: "Bind", image: "https://static.wikia.nocookie.net/valorant/images/2/23/Loading_Screen_Bind.png" },
-  { id: "haven", name: "Haven", image: "https://static.wikia.nocookie.net/valorant/images/7/70/Loading_Screen_Haven.png" },
-  { id: "lotus", name: "Lotus", image: "https://static.wikia.nocookie.net/valorant/images/d/d0/Loading_Screen_Lotus.png" },
-  { id: "sunset", name: "Sunset", image: "https://static.wikia.nocookie.net/valorant/images/5/5c/Loading_Screen_Sunset.png" },
-  { id: "split", name: "Split", image: "https://static.wikia.nocookie.net/valorant/images/d/d6/Loading_Screen_Split.png" },
+  { id: "abyss", name: "Abyss", image: "/maps/abyss.webp" },
+  { id: "bind", name: "Bind", image: "/maps/bind.webp" },
+  { id: "corrode", name: "Corrode", image: "/maps/corrode.webp" }, 
+  { id: "haven", name: "Haven", image: "/maps/haven.webp" },
+  { id: "pearl", name: "Pearl", image: "/maps/pearl.webp" },
+  { id: "breeze", name: "Breeze", image: "/maps/breeze.webp" },
+  { id: "split", name: "Split", image: "/maps/split.webp" },
 ];
 
 const ROLE_COLORS = {
@@ -163,13 +162,16 @@ export default function ValorantHub() {
   const currentAgentData = AGENTS[selectedAgent as keyof typeof AGENTS];
 
   return (
-    // CORREÇÃO DE SCROLL: min-h-screen permite crescer, overflow-x-hidden evita scroll lateral, mas Y é liberado
-    <div className="min-h-screen w-full bg-[#0A0A0A] font-sans selection:bg-[#FF4654] selection:text-white overflow-x-hidden">
+    // CORREÇÃO SCROLL: 
+    // "fixed inset-0" ocupa a tela toda.
+    // "overflow-y-auto" cria a barra de rolagem DENTRO desse container.
+    // Isso ignora qualquer trava que a Landing Page tenha deixado no body.
+    <div className="fixed inset-0 w-full h-full bg-[#0A0A0A] font-sans selection:bg-[#FF4654] selection:text-white overflow-y-auto overflow-x-hidden">
       
-      {/* HEADER NOVO (Logo V) */}
+      {/* HEADER */}
       <HubHeader />
 
-      {/* Hero Section (Background Dinâmico) */}
+      {/* Hero Section */}
       <section className="relative h-[60vh] overflow-hidden">
         <AnimatePresence mode="popLayout">
           <motion.div
@@ -180,12 +182,11 @@ export default function ValorantHub() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} 
             className="absolute inset-0"
           >
-            {/* Imagem do mapa (Fundo) */}
+            {/* IMAGEM LOCAL OTIMIZADA (WEBP) */}
             <img
               src={selectedMap.image}
               alt={selectedMap.name}
               className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-[#0F1923]/80 via-[#0F1923]/60 to-[#0A0A0A]" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#FF4654]/20 via-transparent to-transparent" />
@@ -200,7 +201,6 @@ export default function ValorantHub() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             
-            {/* TAG DO MAPA */}
             <div className="inline-flex items-center gap-3 mb-6">
                 <div className="px-3 py-1 border border-[#FF4654] text-[#FF4654] text-xs font-bold tracking-widest uppercase bg-[#FF4654]/10">
                     Active Map
@@ -219,7 +219,7 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* Map Selector (Estilo High End) */}
+      {/* Map Selector */}
       <section className="px-8 lg:px-16 py-8 border-y border-white/5 bg-white/[0.02] relative z-20">
          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide items-center">
           <span className="text-xs font-bold text-white/30 uppercase tracking-widest mr-4 sticky left-0 bg-[#0A0A0A]/80 backdrop-blur p-2">Select Map:</span>
@@ -258,7 +258,6 @@ export default function ValorantHub() {
                 whileHover={{ y: -5 }}
                 className={`text-left relative group overflow-hidden ${selectedComp.id === comp.id ? "grayscale-0" : "grayscale opacity-60 hover:grayscale-0 hover:opacity-100"} transition-all duration-500 rounded-xl`}
               >
-                {/* Card Background */}
                 <div className="absolute inset-0 bg-[#1A1A1A] border border-white/10 group-hover:border-[#FF4654]/50 transition-colors" />
                 
                 <div className="relative p-8">
@@ -281,7 +280,6 @@ export default function ValorantHub() {
                                         alt={agent.name}
                                         className="w-10 h-10 object-cover"
                                     />
-                                    {/* Role Indicator Dot */}
                                     <div className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-[#1A1A1A]" style={{ backgroundColor: roleColor }} />
                                 </div>
                             )
@@ -289,7 +287,6 @@ export default function ValorantHub() {
                     </div>
                 </div>
                 
-                {/* Active Indicator Strip */}
                 {selectedComp.id === comp.id && (
                     <motion.div layoutId="activeComp" className="absolute bottom-0 left-0 w-full h-1 bg-[#FF4654]" />
                 )}
@@ -299,10 +296,9 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* Agent Detail Section */}
-      <section className="px-8 lg:px-16 py-12 border-t border-white/5 pb-24">
+      {/* Agent Detail */}
+      <section className="px-8 lg:px-16 py-12 border-t border-white/5 pb-32">
         
-        {/* Toggle Attack/Defense */}
         <div className="flex justify-center mb-16">
           <div className="inline-flex p-1 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
             <button
@@ -324,15 +320,12 @@ export default function ValorantHub() {
           </div>
         </div>
 
-        {/* Selected Agent Display */}
         {selectedAgent && (
            <div className="relative bg-[#111] border border-white/10 rounded-xl overflow-hidden min-h-[400px]">
-             {/* Background Decoration */}
              <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-[#FF4654]/10 to-transparent" />
              
              <div className="relative z-10 flex flex-col md:flex-row items-center">
                  
-                 {/* Agent Portrait */}
                  <div className="w-full md:w-1/3 h-[400px] relative flex items-center justify-center bg-white/5">
                     <img 
                        src={`https://media.valorant-api.com/agents/${currentAgentData.id}/fullportrait.png`}
@@ -341,7 +334,6 @@ export default function ValorantHub() {
                     />
                  </div>
 
-                 {/* Stats & Config */}
                  <div className="w-full md:w-2/3 p-12">
                     <div className="flex items-start justify-between mb-8">
                         <div>
