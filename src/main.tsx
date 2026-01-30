@@ -1,10 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom' // <--- IMPORTANTE
 import App from './App.tsx'
-import './index.css' // <--- ESSA LINHA É OBRIGATÓRIA. SEM ELA, O SITE FICA QUEBRADO.
+import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    {/* O BrowserRouter TEM que abraçar o App, senão dá tela branca */}
+    <BrowserRouter> 
+      <App />
+    </BrowserRouter>
   </React.StrictMode>,
 )

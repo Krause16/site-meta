@@ -1,17 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <mask id="gap-mask">
+    <mask id="cut">
       <rect width="512" height="512" fill="white"/>
-      <rect x="0" y="216" width="512" height="80" fill="black"/>
+      <rect x="-100" y="226" width="800" height="60" fill="black" transform="rotate(-45 256 256)"/>
     </mask>
   </defs>
 
-  <g mask="url(#gap-mask)">
-     <path d="M256 56 A 200 200 0 0 0 256 456" stroke="#DE9B35" stroke-width="64" fill="none" stroke-linecap="round"/>
-     
-     <path d="M256 56 A 200 200 0 0 1 256 456" stroke="#FF4654" stroke-width="64" fill="none" stroke-linecap="round"/>
+  <g mask="url(#cut)">
+    <path d="M256 56 A 200 200 0 0 0 256 456"
+          stroke="#DE9B35" stroke-width="64" fill="none" stroke-linecap="butt"
+          transform="rotate(45 256 256)" />
+
+    <path d="M256 56 A 200 200 0 0 1 256 456"
+          stroke="#FF4654" stroke-width="64" fill="none" stroke-linecap="butt"
+          transform="rotate(45 256 256)"/>
   </g>
 
-  <rect x="236" y="156" width="40" height="200" fill="white" rx="8" />
-  <rect x="156" y="236" width="200" height="40" fill="white" rx="8" />
+  <rect x="236" y="156" width="40" height="200" fill="white" rx="6" />
+  <rect x="156" y="236" width="200" height="40" fill="white" rx="6" />
 </svg>

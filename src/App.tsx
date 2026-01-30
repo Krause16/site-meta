@@ -1,6 +1,13 @@
-import { RouterProvider } from "react-router-dom"; // <--- O SEGREDO TÁ AQUI
-import { router } from "./routes";
+import { Routes, Route } from 'react-router-dom';
+import Landing from './pages/Landing';
 
-export default function App() {
-  return <RouterProvider router={router} />;
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      {/* Outras rotas virão depois */}
+    </Routes>
+  );
 }
+
+export default App;
