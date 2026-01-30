@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, Crosshair, Zap } from "lucide-react";
+import { Crosshair, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// === LISTA DE MAPAS CS2 (High Res Raw Links) ===
-// Imagens extraídas diretamente dos arquivos de loading do jogo
+// === LISTA DE MAPAS CS2 (Links Externos - Wikia) ===
 const CS_MAPS = [
   "https://static.wikia.nocookie.net/cswiki/images/3/36/Anubis_CS2_loading_screen.png", // Anubis
   "https://static.wikia.nocookie.net/cswiki/images/2/23/Mirage_CS2_loading_screen.png", // Mirage
@@ -15,14 +14,15 @@ const CS_MAPS = [
   "https://static.wikia.nocookie.net/cswiki/images/3/35/Ancient_CS2_loading_screen.png", // Ancient
 ];
 
-// === LISTA DE MAPAS VALORANT (Links Limpos sem compressão) ===
+// === LISTA DE MAPAS VALORANT (Arquivos Locais em /public/maps) ===
+// Certifique-se que os arquivos estão na pasta public/maps com esses nomes exatos
 const VAL_MAPS = [
-  "https://static.wikia.nocookie.net/valorant/images/6/61/Loading_Screen_Abyss.png", // Abyss
-  "https://s2-ge.glbimg.com/iGfFJE3OGnDbnLGPs-VOfGeIZig=/0x0:930x522/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2020/g/8/9EWYsQQgWYrFpGZEsggQ/bind.png", // Bind
-  "https://static.wikia.nocookie.net/valorant/images/6/6f/Loading_Screen_Corrode.png", // Corrode (O link que você mandou, limpo)
-  "https://static.wikia.nocookie.net/valorant/images/7/70/Loading_Screen_Haven.png", // Haven
-  "https://static.wikia.nocookie.net/valorant/images/a/af/Loading_Screen_Pearl.png", // Pearl
-  "https://static.wikia.nocookie.net/valorant/images/1/10/Loading_Screen_Breeze.png", // Breeze
+  "/maps/abyss.png",
+  "/maps/bind.png",
+  "/maps/corrode.png", 
+  "/maps/haven.png",
+  "/maps/pearl.png",
+  "/maps/breeze.png",
 ];
 
 export default function Landing() {
@@ -71,7 +71,7 @@ export default function Landing() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
                 src={CS_MAPS[csMapIndex]}
-                // TRUQUE DE PRO: referrerPolicy evita que o site bloqueie a imagem externa
+                // referrerPolicy ainda é útil aqui para as imagens externas do CS
                 referrerPolicy="no-referrer"
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="CS2 Map"
@@ -131,8 +131,6 @@ export default function Landing() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
                 src={VAL_MAPS[valMapIndex]}
-                // TRUQUE DE PRO: Garante qualidade máxima sem compressão da Fandom
-                referrerPolicy="no-referrer"
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="Valorant Map"
               />
