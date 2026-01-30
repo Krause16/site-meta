@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Crosshair, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// === LISTA DE MAPAS CS2 (Links Externos - Wikia) ===
+// === LISTA DE MAPAS CS2
 const CS_MAPS = [
   "/maps/mirage.png",
   "/maps/inferno.png",
@@ -14,8 +14,8 @@ const CS_MAPS = [
   "/maps/nuke.png",
 ];
 
-// === LISTA DE MAPAS VALORANT (Arquivos Locais em /public/maps) ===
-// Certifique-se que os arquivos estão na pasta public/maps com esses nomes exatos
+// === LISTA DE MAPAS VALORANT
+
 const VAL_MAPS = [
   "/maps/abyss.png",
   "/maps/bind.png",
