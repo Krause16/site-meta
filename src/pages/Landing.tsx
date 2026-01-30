@@ -29,13 +29,10 @@ export default function Landing() {
   const [csMapIndex, setCsMapIndex] = useState(0);
   const [valMapIndex, setValMapIndex] = useState(0);
 
-  // LOGOS
   const LOGO_CS2 = "https://upload.wikimedia.org/wikipedia/commons/archive/b/b8/20230323152745%21Counter-Strike_2_logo.svg";
   const LOGO_VALORANT = "https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo_-_pink_color_version.svg";
 
-  // === 1. PRELOAD DE ELITE ===
-  // Garante que todas as imagens estejam na memória antes de serem mostradas.
-  // Isso elimina o "pop" de proporção estranha.
+  // === PRELOAD DE ELITE ===
   useEffect(() => {
     const preloadImages = async () => {
       const allMaps = [...CS_MAPS, ...VAL_MAPS];
@@ -56,11 +53,13 @@ export default function Landing() {
     }
   };
 
-  // Configuração da animação de layout (Mais sólida, menos "bouncy")
+  // === A CORREÇÃO DA FLUIDEZ ===
+  // Trocamos 'spring' (mola/quique) por 'ease' (curva suave).
+  // Essa curva [0.25, 1, 0.5, 1] é conhecida como "Soft Out", usada em sistemas iOS.
+  // Ela garante que os pixels de um lado colem no outro sem gap.
   const layoutTransition = { 
-    type: "spring", 
-    stiffness: 200, // Mais firme
-    damping: 25     // Freia mais rápido pra não "sambar"
+    duration: 0.6, 
+    ease: [0.16, 1, 0.3, 1] // Curva ultra-premium (sem "bounce", zero barra preta)
   };
 
   return (
@@ -68,15 +67,12 @@ export default function Landing() {
       
       {/* === LADO CS2 === */}
       <motion.div
-        // === 2. A MÁGICA DO FLEX ===
-        // Em vez de width, usamos flex. 
-        // flex: 2 (50%), flex: 3 (75%), flex: 1 (25%).
-        // A soma sempre preenche 100% da tela. Zero gaps pretos.
         animate={{ 
           flex: hoveredSide === "cs2" ? 3 : hoveredSide === "valorant" ? 1 : 2 
         }}
         transition={layoutTransition}
-        className="relative h-full overflow-hidden border-r border-white/10 group cursor-pointer z-10"
+        // 'will-change-flex' avisa a placa de vídeo pra preparar o resize antes de acontecer
+        className="relative h-full overflow-hidden border-r border-white/10 group cursor-pointer z-10 will-change-auto"
         onMouseEnter={() => handleMouseEnter("cs2")}
         onMouseLeave={() => setHoveredSide(null)}
       >
@@ -92,26 +88,25 @@ export default function Landing() {
                   scale: hoveredSide === "cs2" ? 1.05 : 1,
                   filter: hoveredSide === "cs2" ? "grayscale(0%) brightness(0.9)" : "grayscale(100%) brightness(0.5)"
                 }}
-                exit={{ opacity: 0 }} // Crossfade suave
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
                 src={CS_MAPS[csMapIndex]}
-                loading="eager" // Prioridade máxima
+                loading="eager"
                 decoding="async"
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="CS2 Map"
               />
             </AnimatePresence>
-            {/* Overlay estático para garantir contraste sempre */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent opacity-90 z-10" />
           </div>
 
           <div className="absolute inset-y-0 left-0 w-[50vw] flex flex-col justify-center px-8 lg:px-24 z-20 pointer-events-none">
             <motion.div
               animate={{ 
-                opacity: hoveredSide === "valorant" ? 0 : 1, // Some totalmente se não for o foco
+                opacity: hoveredSide === "valorant" ? 0 : 1,
                 x: hoveredSide === "cs2" ? 20 : 0 
               }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.4, ease: "easeOut" }} // Texto mais rápido que o fundo
               className="max-w-xl space-y-8 flex flex-col items-start"
             >
               <img 
@@ -138,7 +133,7 @@ export default function Landing() {
           flex: hoveredSide === "valorant" ? 3 : hoveredSide === "cs2" ? 1 : 2 
         }}
         transition={layoutTransition}
-        className="relative h-full overflow-hidden group cursor-pointer z-10"
+        className="relative h-full overflow-hidden group cursor-pointer z-10 will-change-auto"
         onMouseEnter={() => handleMouseEnter("valorant")}
         onMouseLeave={() => setHoveredSide(null)}
       >
@@ -155,7 +150,7 @@ export default function Landing() {
                   filter: hoveredSide === "valorant" ? "brightness(0.8)" : "brightness(0.3) grayscale(80%)"
                 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
                 src={VAL_MAPS[valMapIndex]}
                 loading="eager"
                 decoding="async"
@@ -169,10 +164,10 @@ export default function Landing() {
           <div className="absolute inset-y-0 right-0 w-[50vw] flex flex-col justify-center items-end px-8 lg:px-24 z-20 pointer-events-none">
             <motion.div
               animate={{ 
-                opacity: hoveredSide === "cs2" ? 0 : 1, // Some totalmente se não for o foco
+                opacity: hoveredSide === "cs2" ? 0 : 1,
                 x: hoveredSide === "valorant" ? -20 : 0 
               }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
               className="max-w-xl space-y-8 text-right flex flex-col items-end"
             >
               <img 
