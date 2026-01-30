@@ -54,7 +54,6 @@ export function StreamerSection({ streamers, game }: StreamerSectionProps) {
               style={{
                 backgroundColor:
                   selectedStreamer.id === streamer.id ? `${bgColor}` : "transparent",
-                ringColor: selectedStreamer.id === streamer.id ? accentColor : "transparent",
               }}
             >
               <div className="flex items-center gap-3 mb-2">
