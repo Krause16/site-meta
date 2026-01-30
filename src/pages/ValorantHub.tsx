@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sword, Shield, Settings, Tv } from "lucide-react";
+import { Sword, Shield, Settings, Tv, Users, Play, Radio } from "lucide-react";
 
 // === HEADER DA COLLAB ===
 const HubHeader = () => {
@@ -13,7 +13,6 @@ const HubHeader = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex items-center justify-between bg-gradient-to-b from-black/90 via-black/50 to-transparent backdrop-blur-[2px] pointer-events-none">
         
-        {/* ESQUERDA: A COLLAB */}
         <div className="flex items-center gap-6 pointer-events-auto">
             <Link to="/" className="group relative shrink-0">
                 <svg width="42" height="42" viewBox="0 0 512 512" className="fill-[#FF4654] transition-transform group-hover:scale-110 duration-300">
@@ -32,7 +31,6 @@ const HubHeader = () => {
             />
         </div>
 
-        {/* DIREITA: ATALHOS */}
         <div className="hidden md:flex items-center gap-8 pointer-events-auto">
             {['MAPS', 'COMPS', 'AGENTS', 'STREAMS'].map((item) => (
                 <button 
@@ -49,7 +47,7 @@ const HubHeader = () => {
   );
 };
 
-// === DADOS DO HUB (IDs Corrigidos) ===
+// === DADOS DO HUB ===
 const MAPS = [
   { id: "abyss", name: "Abyss", image: "/maps/abyss.webp" },
   { id: "bind", name: "Bind", image: "/maps/bind.webp" },
@@ -60,31 +58,30 @@ const MAPS = [
   { id: "split", name: "Split", image: "/maps/split.webp" },
 ];
 
-// LISTA OFICIAL CORRIGIDA (Valorant-API v1)
-// Se esses IDs estiverem errados, a imagem quebra. Esses aqui são os garantidos.
-const AGENTS: Record<string, { name: string; role: string; id: string }> = {
-  jett: { name: "Jett", role: "Duelist", id: "add6443a-41bd-29cd-27f6-256975cae690" },
-  sova: { name: "Sova", role: "Initiator", id: "ded3520f-4264-bfed-162d-3080e6b7a948" },
-  cypher: { name: "Cypher", role: "Sentinel", id: "117ed9e3-49f3-6512-3ccf-0cada7e3823b" },
-  killjoy: { name: "Killjoy", role: "Sentinel", id: "1e58de9c-4950-5125-93e9-a0aee9f98746" },
-  omen: { name: "Omen", role: "Controller", id: "8e253930-4c05-31dd-1b6c-968525494517" },
-  brimstone: { name: "Brimstone", role: "Controller", id: "9f0d8ba9-4140-b941-57d3-a7ad57c6b417" },
-  raze: { name: "Raze", role: "Duelist", id: "f94c3b30-42be-e959-889c-5aa313dba261" },
-  gekko: { name: "Gekko", role: "Initiator", id: "e370fa57-4757-3604-3648-499e1f642d3f" },
-  viper: { name: "Viper", role: "Controller", id: "707eab51-4836-f488-046a-cda6bf494859" },
-  neon: { name: "Neon", role: "Duelist", id: "bb2a4828-46eb-8cd1-e765-15848195d751" },
-  kayo: { name: "KAY/O", role: "Initiator", id: "601dbbe6-8aa3-53e1-762d-578130388baf" },
-  fade: { name: "Fade", role: "Initiator", id: "ade4ef5f-43e9-9512-5261-26a5bef7d2dd" },
-  breach: { name: "Breach", role: "Initiator", id: "5f8d3a7f-467b-97f3-062c-13acf203c006" },
-  astra: { name: "Astra", role: "Controller", id: "41fb69c1-4189-7b37-f117-bcaf1e96f1bf" },
-  harbor: { name: "Harbor", role: "Controller", id: "95b78ed7-4637-86d9-7e41-71ba8c293152" },
-  iso: { name: "Iso", role: "Duelist", id: "0e38b510-41a8-5780-5e8f-568b2a4f2d6c" },
-  skye: { name: "Skye", role: "Initiator", id: "6f2a04ca-43e0-be17-7f36-a3908627744d" },
-  yoru: { name: "Yoru", role: "Duelist", id: "7f94d92c-4234-0a36-9006-c67d09106433" },
-  reyna: { name: "Reyna", role: "Duelist", id: "a3bf3253-43b2-9b34-0bbc-11850741cc81" },
-  chamber: { name: "Chamber", role: "Sentinel", id: "22697a3d-45bf-8dd7-4fec-84a9e28c69d7" },
-  deadlock: { name: "Deadlock", role: "Sentinel", id: "cc8b64c8-4b25-4ff9-6e7f-37b4da43d234" },
-  clove: { name: "Clove", role: "Controller", id: "709e9188-43d6-119a-a45e-4999c6736a53" }
+// LISTA OFICIAL VERIFICADA (IDs Corretos + Cores Temáticas)
+const AGENTS: Record<string, { name: string; role: string; id: string; color: string }> = {
+  jett: { name: "Jett", role: "Duelist", id: "add6443a-41bd-29cd-27f6-256975cae690", color: "#92E0EB" },
+  sova: { name: "Sova", role: "Initiator", id: "ded3520f-4264-bfed-162d-3080e6b7a948", color: "#3F4F8F" },
+  cypher: { name: "Cypher", role: "Sentinel", id: "117ed9e3-49f3-6512-3ccf-0cada7e3823b", color: "#C3CED6" },
+  killjoy: { name: "Killjoy", role: "Sentinel", id: "1e58de9c-4950-5125-93e9-a0aee9f98746", color: "#F5D342" },
+  omen: { name: "Omen", role: "Controller", id: "8e253930-4c05-31dd-1b6c-968525494517", color: "#4D5575" },
+  brimstone: { name: "Brimstone", role: "Controller", id: "9f0d8ba9-4140-b941-57d3-a7ad57c6b417", color: "#D96C2B" },
+  raze: { name: "Raze", role: "Duelist", id: "f94c3b30-42be-e959-889c-5aa313dba261", color: "#F28B3D" },
+  gekko: { name: "Gekko", role: "Initiator", id: "e370fa57-4757-3604-3648-499e1f642d3f", color: "#C7F458" },
+  viper: { name: "Viper", role: "Controller", id: "707eab51-4836-f488-046a-cda6bf494859", color: "#4FB363" },
+  neon: { name: "Neon", role: "Duelist", id: "bb2a4828-46eb-8cd1-e765-15848195d751", color: "#F5F93F" },
+  kayo: { name: "KAY/O", role: "Initiator", id: "601dbbe6-8aa3-53e1-762d-578130388baf", color: "#41B1C4" },
+  fade: { name: "Fade", role: "Initiator", id: "ade4ef5f-43e9-9512-5261-26a5bef7d2dd", color: "#5C5C5C" },
+  breach: { name: "Breach", role: "Initiator", id: "5f8d3a7f-467b-97f3-062c-13acf203c006", color: "#D96C2B" },
+  astra: { name: "Astra", role: "Controller", id: "41fb69c1-4189-7b37-f117-bcaf1e96f1bf", color: "#6A3B9E" },
+  harbor: { name: "Harbor", role: "Controller", id: "95b78ed7-4637-86d9-7e41-71ba8c293152", color: "#2B8F8F" },
+  iso: { name: "Iso", role: "Duelist", id: "0e38b510-41a8-5780-5e8f-568b2a4f2d6c", color: "#6A3B9E" },
+  skye: { name: "Skye", role: "Initiator", id: "6f2a04ca-43e0-be17-7f36-a3908627744d", color: "#6A9E3B" },
+  yoru: { name: "Yoru", role: "Duelist", id: "7f94d92c-4234-0a36-9006-c67d09106433", color: "#3F4F8F" },
+  reyna: { name: "Reyna", role: "Duelist", id: "a3bf3253-43b2-9b34-0bbc-11850741cc81", color: "#9E3B9E" },
+  chamber: { name: "Chamber", role: "Sentinel", id: "22697a3d-45bf-8dd7-4fec-84a9e28c69d7", color: "#D9BA3B" },
+  deadlock: { name: "Deadlock", role: "Sentinel", id: "cc8b64c8-4b25-4ff9-6e7f-37b4da43d234", color: "#9E3B3B" },
+  clove: { name: "Clove", role: "Controller", id: "709e9188-43d6-119a-a45e-4999c6736a53", color: "#E66AB4" }
 };
 
 const META_COMPS = [
@@ -166,16 +163,16 @@ export default function ValorantHub() {
                     <button
                         key={map.id}
                         onClick={() => setSelectedMap(map)}
+                        // CORREÇÃO DO BOTÃO: flex items-center justify-center para centralizar o texto perfeitamente
                         className={`relative w-48 h-24 shrink-0 rounded-lg overflow-hidden border-2 transition-all duration-300 group ${
                             selectedMap.id === map.id 
-                            ? "border-[#FF4654] shadow-[0_0_30px_rgba(255,70,84,0.4)] scale-105" 
+                            ? "border-[#FF4654] shadow-[0_0_30px_rgba(255,70,84,0.4)] scale-105 bg-[#FF4654] flex items-center justify-center" 
                             : "border-white/10 hover:border-white/30 opacity-70 hover:opacity-100"
                         }`}
                     >
                         {selectedMap.id === map.id ? (
-                             <div className="absolute inset-0 bg-[#FF4654] flex items-center justify-center">
-                                 <span className="text-2xl font-black italic uppercase tracking-tighter text-white">{map.name}</span>
-                             </div>
+                             // Texto centralizado sem div extra
+                             <span className="text-2xl font-black italic uppercase tracking-tighter text-white">{map.name}</span>
                         ) : (
                             <>
                                 <img src={map.image} className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110" />
@@ -189,7 +186,7 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === COMPS (CORRIGIDO: CLIQUE NO AGENTE FUNCIONANDO) === */}
+      {/* === COMPS === */}
       <section id="comps" className="px-8 lg:px-16 py-20 bg-[#0A0A0A]">
         <div className="mb-12">
              <h2 className="text-4xl font-black uppercase text-white italic">Meta <span className="text-[#FF4654]">Comps</span></h2>
@@ -202,7 +199,6 @@ export default function ValorantHub() {
                 key={comp.id}
                 onClick={() => { 
                     setSelectedComp(comp); 
-                    // Se clicar no card vazio, seleciona o primeiro agente por padrão
                     if (!comp.agents.some(a => a.key === selectedAgent)) {
                         setSelectedAgent(comp.agents[0].key);
                     }
@@ -219,7 +215,6 @@ export default function ValorantHub() {
                     <span className="text-2xl font-black text-white/20">{comp.winRate}</span>
                 </div>
                 
-                {/* LISTA DE AGENTES CLICÁVEIS */}
                 <div className="flex gap-2 relative z-10">
                     {comp.agents.map((a) => {
                         const isSelected = selectedAgent === a.key && selectedComp.id === comp.id;
@@ -227,7 +222,7 @@ export default function ValorantHub() {
                             <button 
                                 key={a.key} 
                                 onClick={(e) => {
-                                    e.stopPropagation(); // <--- O SEGREDO: IMPEDE O CLIQUE DO PAI
+                                    e.stopPropagation();
                                     setSelectedComp(comp);
                                     setSelectedAgent(a.key);
                                 }}
@@ -247,32 +242,39 @@ export default function ValorantHub() {
                     })}
                 </div>
                 
-                {/* Efeito Hover Fundo */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
             </div>
           ))}
         </div>
       </section>
 
-      {/* === AGENTS & UTILITY (DINÂMICO) === */}
+      {/* === AGENTS & UTILITY (COM Fundo Temático) === */}
       {currentAgentData && (
           <section id="agents" className="px-8 lg:px-16 py-12 border-t border-white/5">
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                  
                  {/* Left: Agent Portrait & Config */}
-                 <div className="lg:col-span-4 relative h-[500px] bg-gradient-to-b from-[#1A1A1A] to-black rounded-2xl border border-white/10 overflow-hidden flex flex-col items-center justify-end group">
-                      <div className="absolute top-0 inset-x-0 h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
+                 <div className="lg:col-span-4 relative h-[500px] rounded-2xl border border-white/10 overflow-hidden flex flex-col items-center justify-end group bg-[#1A1A1A]">
                       
-                      {/* IMAGEM FULL PORTRAIT CORRIGIDA */}
+                      {/* NOVO: Degradê Temático Dinâmico */}
+                      <div 
+                          className="absolute inset-0 opacity-40 transition-colors duration-500"
+                          style={{
+                              background: `radial-gradient(circle at center bottom, ${currentAgentData.color}, transparent 70%)`
+                          }}
+                      />
+
+                      <div className="absolute top-0 inset-x-0 h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay" />
+                      
                       <img 
-                           key={currentAgentData.id} // Força o refresh da imagem ao trocar
+                           key={currentAgentData.id}
                            src={`https://media.valorant-api.com/agents/${currentAgentData.id}/fullportrait.png`}
                            className="h-[90%] object-cover relative z-10 drop-shadow-[0_0_50px_rgba(0,0,0,0.8)] transition-transform group-hover:scale-105 duration-500"
                       />
                       
                       <div className="absolute bottom-6 z-20 text-center">
                           <h3 className="text-5xl font-black text-white uppercase italic leading-none">{selectedAgentPlayer}</h3>
-                          <p className="text-[#FF4654] font-bold tracking-widest uppercase text-sm mt-1">{currentAgentData.name}</p>
+                          <p className="text-[#FF4654] font-bold tracking-widest uppercase text-sm mt-1" style={{ color: currentAgentData.color }}>{currentAgentData.name}</p>
                       </div>
                  </div>
 
