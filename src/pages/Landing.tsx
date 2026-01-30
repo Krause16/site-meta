@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 
 // === LISTA DE MAPAS CS2 (Links Externos - Wikia) ===
 const CS_MAPS = [
-  "https://static.wikia.nocookie.net/cswiki/images/3/36/Anubis_CS2_loading_screen.png", // Anubis
-  "https://static.wikia.nocookie.net/cswiki/images/2/23/Mirage_CS2_loading_screen.png", // Mirage
-  "https://static.wikia.nocookie.net/cswiki/images/3/3b/Overpass_CS2_loading_screen.png", // Overpass
-  "https://static.wikia.nocookie.net/cswiki/images/0/00/Inferno_CS2_loading_screen.png", // Inferno
-  "https://static.wikia.nocookie.net/cswiki/images/5/52/Dust_II_CS2_loading_screen.png", // Dust 2
-  "https://static.wikia.nocookie.net/cswiki/images/4/4b/Nuke_CS2_loading_screen.png", // Nuke
-  "https://static.wikia.nocookie.net/cswiki/images/3/35/Ancient_CS2_loading_screen.png", // Ancient
+  "/maps/mirage.png",
+  "/maps/inferno.png",
+  "/maps/overpass.png", 
+  "/maps/ancient.png",
+  "/maps/anubis.png",
+  "/maps/dust2.png",
+  "/maps/nuke.png",
 ];
 
 // === LISTA DE MAPAS VALORANT (Arquivos Locais em /public/maps) ===
@@ -23,6 +23,7 @@ const VAL_MAPS = [
   "/maps/haven.png",
   "/maps/pearl.png",
   "/maps/breeze.png",
+  "/maps/split.png",
 ];
 
 export default function Landing() {
