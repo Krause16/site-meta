@@ -39,14 +39,12 @@ export default function Landing() {
   };
 
   const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
-
-  // Lógica da posição da câmera
   const xValue = hoveredSide === "cs2" ? "-5vw" : hoveredSide === "valorant" ? "-95vw" : "-50vw";
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-black font-sans relative">
       
-      {/* CONTAINER MESTRE (200vw) */}
+      {/* CONTAINER MESTRE */}
       <motion.div 
         className="flex h-full w-[200vw] absolute top-0"
         initial={false}
@@ -54,14 +52,16 @@ export default function Landing() {
         transition={transition}
       >
 
-        {/* === BLOCO CS2 === */}
+        {/* =======================
+            BLOCO CS2 (ESQUERDA) 
+           ======================= */}
         <div 
           className="w-screen h-full relative border-r border-white/10 overflow-hidden group/cs"
           onMouseEnter={() => handleMouseEnter("cs2")}
         >
           <Link to="/cs2" className="block w-full h-full relative">
             
-            {/* Background Parallax */}
+            {/* Background & Efeitos */}
             <motion.div 
               className="absolute inset-0"
               animate={{ 
@@ -83,7 +83,7 @@ export default function Landing() {
               </AnimatePresence>
               <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
               
-              {/* Seta de Retorno */}
+              {/* Seta de Retorno CS */}
               <motion.div 
                 className="absolute inset-y-0 right-0 w-32 flex items-center justify-center bg-gradient-to-l from-black/60 to-transparent"
                 animate={{ opacity: hoveredSide === "valorant" ? 1 : 0 }}
@@ -93,18 +93,30 @@ export default function Landing() {
               </motion.div>
             </motion.div>
 
-            {/* CONTEÚDO CS2 */}
-            {/* Aumentei o padding-left (pl) para desgrudar da borda */}
+            {/* CONTEÚDO CS2 - ALINHAMENTO POR RÉGUA 
+              Usamos 'flex items-center' no pai para centralizar o bloco todo na tela,
+              mas dentro do bloco usamos alturas fixas.
+            */}
             <motion.div 
               className="absolute inset-0 flex items-center pl-16 lg:pl-48 z-20 pointer-events-none"
               animate={{ x: hoveredSide === "cs2" ? "0vw" : "12.5vw", opacity: hoveredSide === "valorant" ? 0 : 1 }} 
               transition={transition}
             >
-              <div className="max-w-2xl space-y-8">
-                 {/* Logo do CS AUMENTADA (w-96 no desktop) */}
-                 <img src={LOGO_CS2} className="w-64 lg:w-[500px] drop-shadow-2xl" alt="CS2" />
+              <div className="flex flex-col items-start">
                  
-                 <div className="overflow-hidden pr-4">
+                 {/* 1. CAIXA DA LOGO (Altura Fixa: h-32/40) 
+                     Alinha pela BASE (items-end) para garantir que o texto comece igual nos dois lados.
+                 */}
+                 <div className="h-24 lg:h-40 flex items-end mb-6">
+                    <img 
+                      src={LOGO_CS2} 
+                      className="w-64 lg:w-[500px] h-auto object-contain drop-shadow-2xl origin-bottom-left" 
+                      alt="CS2" 
+                    />
+                 </div>
+                 
+                 {/* 2. CAIXA DO TÍTULO */}
+                 <div className="overflow-hidden pr-4 mb-10">
                    <motion.h2 
                      initial={{ y: 20, opacity: 0 }}
                      animate={{ y: 0, opacity: 1 }}
@@ -114,24 +126,33 @@ export default function Landing() {
                    </motion.h2>
                  </div>
 
+                 {/* 3. BOTÃO (Alinhado com a régua) */}
                  <motion.div 
-                   className="flex items-center gap-3 text-[#DE9B35] font-bold tracking-widest uppercase border border-[#DE9B35] w-fit px-8 py-4 text-lg pointer-events-auto hover:bg-[#DE9B35] hover:text-black transition-colors"
+                   className="pointer-events-auto"
+                   whileHover={{ scale: 1.05 }}
+                   whileTap={{ scale: 0.95 }}
                  >
-                   <Crosshair size={24} /> Enter Hub
+                   <div className="flex items-center gap-4 text-[#DE9B35] font-bold tracking-widest uppercase border-2 border-[#DE9B35] px-10 py-5 text-lg hover:bg-[#DE9B35] hover:text-black transition-all cursor-pointer shadow-[0_0_20px_rgba(222,155,53,0.2)] hover:shadow-[0_0_40px_rgba(222,155,53,0.6)]">
+                     <Crosshair size={24} strokeWidth={3} /> 
+                     <span>ENTER HUB</span>
+                   </div>
                  </motion.div>
+
               </div>
             </motion.div>
           </Link>
         </div>
 
-        {/* === BLOCO VALORANT === */}
+        {/* =======================
+            BLOCO VALORANT (DIREITA) 
+           ======================= */}
         <div 
           className="w-screen h-full relative overflow-hidden group/val"
           onMouseEnter={() => handleMouseEnter("valorant")}
         >
           <Link to="/valorant" className="block w-full h-full relative">
             
-            {/* Background Parallax */}
+            {/* Background & Efeitos */}
             <motion.div 
               className="absolute inset-0"
               animate={{ 
@@ -153,9 +174,9 @@ export default function Landing() {
               </AnimatePresence>
               <div className="absolute inset-0 bg-gradient-to-l from-black/60 to-transparent" />
 
-              {/* Seta de Retorno */}
+              {/* Seta de Retorno Val */}
               <motion.div 
-                className="absolute inset-y-0 left-0 w-32 flex items-center justify-center bg-gradient-to-r from-black/60 to-transparent"
+                className="absolute inset-y-0 left-0 w-32 flex items-center justify-start pl-4 bg-gradient-to-r from-black/60 to-transparent"
                 animate={{ opacity: hoveredSide === "cs2" ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
               >
@@ -163,18 +184,25 @@ export default function Landing() {
               </motion.div>
             </motion.div>
 
-            {/* CONTEÚDO VALORANT */}
-            {/* Aumentei o padding-right (pr) para desgrudar da borda */}
+            {/* CONTEÚDO VALORANT - ALINHAMENTO ESPELHADO */}
             <motion.div 
               className="absolute inset-0 flex items-center justify-end pr-16 lg:pr-48 z-20 pointer-events-none"
               animate={{ x: hoveredSide === "valorant" ? "0vw" : "-12.5vw", opacity: hoveredSide === "cs2" ? 0 : 1 }}
               transition={transition}
             >
-              <div className="max-w-2xl space-y-8 text-right flex flex-col items-end">
-                 {/* Logo Valorant ajustada */}
-                 <img src={LOGO_VALORANT} className="w-56 lg:w-80 drop-shadow-2xl" alt="Valorant" />
+              <div className="flex flex-col items-end text-right">
                  
-                 <div className="overflow-hidden pr-2">
+                 {/* 1. CAIXA DA LOGO (Mesma Altura Fixa: h-32/40) */}
+                 <div className="h-24 lg:h-40 flex items-end mb-6">
+                    <img 
+                      src={LOGO_VALORANT} 
+                      className="w-56 lg:w-80 h-auto object-contain drop-shadow-2xl origin-bottom-right" 
+                      alt="Valorant" 
+                    />
+                 </div>
+                 
+                 {/* 2. CAIXA DO TÍTULO */}
+                 <div className="overflow-hidden pr-2 mb-10">
                    <motion.h2 
                      initial={{ y: 20, opacity: 0 }}
                      animate={{ y: 0, opacity: 1 }}
@@ -184,11 +212,18 @@ export default function Landing() {
                    </motion.h2>
                  </div>
 
+                 {/* 3. BOTÃO (Alinhado com a régua) */}
                  <motion.div 
-                   className="flex items-center gap-3 text-[#FF4654] font-bold tracking-widest uppercase border border-[#FF4654] w-fit px-8 py-4 text-lg pointer-events-auto hover:bg-[#FF4654] hover:text-white transition-colors"
+                   className="pointer-events-auto"
+                   whileHover={{ scale: 1.05 }}
+                   whileTap={{ scale: 0.95 }}
                  >
-                   Enter Hub <Zap size={24} fill="currentColor" />
+                   <div className="flex items-center gap-4 text-[#FF4654] font-bold tracking-widest uppercase border-2 border-[#FF4654] px-10 py-5 text-lg hover:bg-[#FF4654] hover:text-white transition-all cursor-pointer shadow-[0_0_20px_rgba(255,70,84,0.2)] hover:shadow-[0_0_40px_rgba(255,70,84,0.6)]">
+                     <span>ENTER HUB</span>
+                     <Zap size={24} fill="currentColor" />
+                   </div>
                  </motion.div>
+
               </div>
             </motion.div>
           </Link>
