@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Crosshair, Zap } from "lucide-react";
+import { Crosshair, Zap, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // === LISTA DE MAPAS ===
@@ -38,39 +38,36 @@ export default function Landing() {
     else setValMapIndex((p) => (p + 1) % VAL_MAPS.length);
   };
 
-  // === FÍSICA APPLE (Ultra Smooth) ===
   const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
 
-  // === CÁLCULO DE POSIÇÃO (GPU ONLY) ===
-  // O container tem 200% de largura (100% pra cada jogo).
-  // A gente só desliza ele pra esquerda ou direita.
-  // Isso evita que o navegador tenha que recalcular largura.
-  
+  // === CÁLCULO DA POSIÇÃO (TEORIA DA FAIXA DE 5%) ===
+  // Container tem 200vw.
+  // -50vw = Centro (50/50 na tela).
+  // -5vw = Mostra 95% do CS (Esquerda) e sobra 5% do Val na direita.
+  // -95vw = Mostra 5% do CS na esquerda e 95% do Val (Direita).
+  const xValue = hoveredSide === "cs2" ? "-5vw" : hoveredSide === "valorant" ? "-95vw" : "-50vw";
+
   return (
     <div className="h-screen w-screen overflow-hidden bg-black font-sans relative">
       
-      {/* CONTAINER MESTRE (O Segredo da Performance) */}
+      {/* CONTAINER MESTRE */}
       <motion.div 
-        className="flex h-full w-[200vw] absolute top-0" // 200vw = Dobro da tela
+        className="flex h-full w-[200vw] absolute top-0"
         initial={false}
-        animate={{ 
-          // Se CS focado: Puxa pra direita (mostra mais CS)
-          // Se Valorant focado: Puxa pra esquerda (mostra mais Val)
-          // Se nada: Centraliza (-50vw)
-          x: hoveredSide === "cs2" ? "0vw" : hoveredSide === "valorant" ? "-100vw" : "-50vw" 
-        }}
+        animate={{ x: xValue }}
         transition={transition}
       >
 
-        {/* === BLOCO CS2 (Ocupa 100vw fixo) === */}
+        {/* === BLOCO CS2 === */}
         <div 
-          className="w-screen h-full relative border-r border-white/10 overflow-hidden"
+          className="w-screen h-full relative border-r border-white/10 overflow-hidden group/cs"
           onMouseEnter={() => handleMouseEnter("cs2")}
-          onMouseLeave={() => setHoveredSide(null)}
+          // Removemos o onMouseLeave global para evitar "flicker". 
+          // O estado muda quando entra no outro lado.
         >
-          <Link to="/cs2" className="block w-full h-full relative cursor-none"> {/* cursor-none pra imersão */}
+          <Link to="/cs2" className="block w-full h-full relative">
             
-            {/* Background Parallax Reverso (Compensa o movimento do container) */}
+            {/* Background */}
             <motion.div 
               className="absolute inset-0"
               animate={{ 
@@ -91,31 +88,39 @@ export default function Landing() {
                 />
               </AnimatePresence>
               <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+              
+              {/* INDICADOR DE RETORNO (Só aparece quando o CS está encolhido) */}
+              <motion.div 
+                className="absolute inset-y-0 right-0 w-full flex items-center justify-end pr-4 bg-black/40 backdrop-blur-[2px]"
+                animate={{ opacity: hoveredSide === "valorant" ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                 <ChevronRight className="text-white/50 w-12 h-12 animate-pulse" />
+              </motion.div>
             </motion.div>
 
-            {/* Conteúdo (Texto Fixo na Tela) */}
+            {/* Conteúdo */}
             <motion.div 
-              className="absolute inset-0 flex items-center px-24 z-20 pointer-events-none"
-              // Mantém o texto parado enquanto o fundo mexe
-              animate={{ x: hoveredSide === "cs2" ? "0vw" : "12.5vw" }} 
+              className="absolute inset-0 flex items-center px-8 lg:px-24 z-20 pointer-events-none"
+              animate={{ x: hoveredSide === "cs2" ? "0vw" : "12.5vw", opacity: hoveredSide === "valorant" ? 0 : 1 }} 
               transition={transition}
             >
               <div className="max-w-xl space-y-6">
-                 <img src={LOGO_CS2} className="w-64 drop-shadow-2xl" alt="CS2" />
+                 <img src={LOGO_CS2} className="w-48 lg:w-64 drop-shadow-2xl" alt="CS2" />
                  
-                 <div className="overflow-hidden">
+                 {/* PR-4 Adicionado para evitar corte do itálico */}
+                 <div className="overflow-hidden pr-4">
                    <motion.h2 
                      initial={{ y: 20, opacity: 0 }}
                      animate={{ y: 0, opacity: 1 }}
-                     className="text-[#ECE8E1] text-6xl font-black italic tracking-tighter leading-none"
+                     className="text-[#ECE8E1] text-4xl lg:text-6xl font-black italic tracking-tighter leading-none"
                    >
                      MASTER <span className="text-[#DE9B35]">STRATS</span>
                    </motion.h2>
                  </div>
 
                  <motion.div 
-                   animate={{ opacity: hoveredSide === "cs2" ? 1 : 0, y: hoveredSide === "cs2" ? 0 : 20 }}
-                   className="flex items-center gap-3 text-[#DE9B35] font-bold tracking-widest uppercase border border-[#DE9B35] w-fit px-6 py-3"
+                   className="flex items-center gap-3 text-[#DE9B35] font-bold tracking-widest uppercase border border-[#DE9B35] w-fit px-6 py-3 pointer-events-auto hover:bg-[#DE9B35] hover:text-black transition-colors"
                  >
                    <Crosshair size={20} /> Enter Hub
                  </motion.div>
@@ -124,14 +129,14 @@ export default function Landing() {
           </Link>
         </div>
 
-        {/* === BLOCO VALORANT (Ocupa 100vw fixo) === */}
+        {/* === BLOCO VALORANT === */}
         <div 
-          className="w-screen h-full relative overflow-hidden"
+          className="w-screen h-full relative overflow-hidden group/val"
           onMouseEnter={() => handleMouseEnter("valorant")}
-          onMouseLeave={() => setHoveredSide(null)}
         >
-          <Link to="/valorant" className="block w-full h-full relative cursor-none">
+          <Link to="/valorant" className="block w-full h-full relative">
             
+            {/* Background */}
             <motion.div 
               className="absolute inset-0"
               animate={{ 
@@ -152,29 +157,39 @@ export default function Landing() {
                 />
               </AnimatePresence>
               <div className="absolute inset-0 bg-gradient-to-l from-black/60 to-transparent" />
+
+              {/* INDICADOR DE RETORNO (Só aparece quando o Val está encolhido) */}
+              <motion.div 
+                className="absolute inset-y-0 left-0 w-full flex items-center justify-start pl-4 bg-black/40 backdrop-blur-[2px]"
+                animate={{ opacity: hoveredSide === "cs2" ? 1 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                 <ChevronLeft className="text-white/50 w-12 h-12 animate-pulse" />
+              </motion.div>
             </motion.div>
 
+            {/* Conteúdo */}
             <motion.div 
-              className="absolute inset-0 flex items-center justify-end px-24 z-20 pointer-events-none"
-              animate={{ x: hoveredSide === "valorant" ? "0vw" : "-12.5vw" }}
+              className="absolute inset-0 flex items-center justify-end px-8 lg:px-24 z-20 pointer-events-none"
+              animate={{ x: hoveredSide === "valorant" ? "0vw" : "-12.5vw", opacity: hoveredSide === "cs2" ? 0 : 1 }}
               transition={transition}
             >
               <div className="max-w-xl space-y-6 text-right flex flex-col items-end">
-                 <img src={LOGO_VALORANT} className="w-64 drop-shadow-2xl" alt="Valorant" />
+                 <img src={LOGO_VALORANT} className="w-48 lg:w-64 drop-shadow-2xl" alt="Valorant" />
                  
-                 <div className="overflow-hidden">
+                 {/* PR-4 Adicionado aqui também */}
+                 <div className="overflow-hidden pr-4">
                    <motion.h2 
                      initial={{ y: 20, opacity: 0 }}
                      animate={{ y: 0, opacity: 1 }}
-                     className="text-[#ECE8E1] text-6xl font-black italic tracking-tighter leading-none"
+                     className="text-[#ECE8E1] text-4xl lg:text-6xl font-black italic tracking-tighter leading-none"
                    >
                      MASTER <span className="text-[#FF4654]">META</span>
                    </motion.h2>
                  </div>
 
                  <motion.div 
-                   animate={{ opacity: hoveredSide === "valorant" ? 1 : 0, y: hoveredSide === "valorant" ? 0 : 20 }}
-                   className="flex items-center gap-3 text-[#FF4654] font-bold tracking-widest uppercase border border-[#FF4654] w-fit px-6 py-3"
+                   className="flex items-center gap-3 text-[#FF4654] font-bold tracking-widest uppercase border border-[#FF4654] w-fit px-6 py-3 pointer-events-auto hover:bg-[#FF4654] hover:text-white transition-colors"
                  >
                    Enter Hub <Zap size={20} fill="currentColor" />
                  </motion.div>
