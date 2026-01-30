@@ -3,25 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Crosshair, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// === LISTA DE MAPAS (OTIMIZADOS WEBP) ===
+// === LISTA DE MAPAS ===
 const CS_MAPS = [
-  "/maps/mirage.webp",
-  "/maps/inferno.webp",
-  "/maps/overpass.webp", 
-  "/maps/ancient.webp",
-  "/maps/anubis.webp",
-  "/maps/dust2.webp",
-  "/maps/nuke.webp",
+  "/maps/mirage.webp", "/maps/inferno.webp", "/maps/overpass.webp", 
+  "/maps/ancient.webp", "/maps/anubis.webp", "/maps/dust2.webp", "/maps/nuke.webp",
 ];
 
 const VAL_MAPS = [
-  "/maps/abyss.webp",
-  "/maps/bind.webp",
-  "/maps/corrode.webp", 
-  "/maps/haven.webp",
-  "/maps/pearl.webp",
-  "/maps/breeze.webp",
-  "/maps/split.webp",
+  "/maps/abyss.webp", "/maps/bind.webp", "/maps/corrode.webp", 
+  "/maps/haven.webp", "/maps/pearl.webp", "/maps/breeze.webp", "/maps/split.webp",
 ];
 
 export default function Landing() {
@@ -35,10 +25,8 @@ export default function Landing() {
   // === PRELOAD ===
   useEffect(() => {
     const preloadImages = async () => {
-      const allMaps = [...CS_MAPS, ...VAL_MAPS];
-      allMaps.forEach((src) => {
-        const img = new Image();
-        img.src = src;
+      [...CS_MAPS, ...VAL_MAPS].forEach((src) => {
+        new Image().src = src;
       });
     };
     preloadImages();
@@ -46,149 +34,155 @@ export default function Landing() {
 
   const handleMouseEnter = (side: "cs2" | "valorant") => {
     setHoveredSide(side);
-    if (side === "cs2") {
-      setCsMapIndex((prev) => (prev + 1) % CS_MAPS.length);
-    } else {
-      setValMapIndex((prev) => (prev + 1) % VAL_MAPS.length);
-    }
+    if (side === "cs2") setCsMapIndex((p) => (p + 1) % CS_MAPS.length);
+    else setValMapIndex((p) => (p + 1) % VAL_MAPS.length);
   };
 
-  // Curva de Bezier para movimento "Apple-like" (Suave e magnético)
-  const layoutTransition = { 
-    duration: 0.55, 
-    ease: [0.16, 1, 0.3, 1] 
-  };
+  // === FÍSICA APPLE (Ultra Smooth) ===
+  const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
 
+  // === CÁLCULO DE POSIÇÃO (GPU ONLY) ===
+  // O container tem 200% de largura (100% pra cada jogo).
+  // A gente só desliza ele pra esquerda ou direita.
+  // Isso evita que o navegador tenha que recalcular largura.
+  
   return (
-    <div className="h-screen w-screen flex overflow-hidden relative bg-black selection:bg-white/20 font-sans">
+    <div className="h-screen w-screen overflow-hidden bg-black font-sans relative">
       
-      {/* === LADO CS2 === */}
-      <motion.div
-        // Use 'layout' para o Framer Motion tratar isso como mudança de geometria (mais suave que animar width/flex manualmente)
-        layout
+      {/* CONTAINER MESTRE (O Segredo da Performance) */}
+      <motion.div 
+        className="flex h-full w-[200vw] absolute top-0" // 200vw = Dobro da tela
+        initial={false}
         animate={{ 
-          flex: hoveredSide === "cs2" ? 3 : hoveredSide === "valorant" ? 1 : 2,
-          // TRUQUE DE MESTRE: O lado ativo sempre fica por cima (z-20) pra esconder a costura
-          zIndex: hoveredSide === "cs2" ? 20 : 10
+          // Se CS focado: Puxa pra direita (mostra mais CS)
+          // Se Valorant focado: Puxa pra esquerda (mostra mais Val)
+          // Se nada: Centraliza (-50vw)
+          x: hoveredSide === "cs2" ? "0vw" : hoveredSide === "valorant" ? "-100vw" : "-50vw" 
         }}
-        transition={layoutTransition}
-        className="relative h-full overflow-hidden border-r border-white/10 group cursor-pointer will-change-auto"
-        onMouseEnter={() => handleMouseEnter("cs2")}
-        onMouseLeave={() => setHoveredSide(null)}
+        transition={transition}
       >
-        <Link to="/cs2" className="block h-full w-full relative">
-          
-          <div className="absolute inset-0 bg-[#1a1a1a]">
-            <AnimatePresence mode="popLayout">
-              <motion.img
-                key={csMapIndex}
-                initial={{ opacity: 0, scale: 1.1 }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: hoveredSide === "cs2" ? 1.05 : 1,
-                  filter: hoveredSide === "cs2" ? "grayscale(0%) brightness(0.9)" : "grayscale(100%) brightness(0.5)"
-                }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                src={CS_MAPS[csMapIndex]}
-                loading="eager"
-                decoding="async"
-                className="absolute inset-0 w-full h-full object-cover"
-                alt="CS2 Map"
-              />
-            </AnimatePresence>
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent opacity-90 z-10" />
-          </div>
 
-          <div className="absolute inset-y-0 left-0 w-[50vw] flex flex-col justify-center px-8 lg:px-24 z-20 pointer-events-none">
-            <motion.div
+        {/* === BLOCO CS2 (Ocupa 100vw fixo) === */}
+        <div 
+          className="w-screen h-full relative border-r border-white/10 overflow-hidden"
+          onMouseEnter={() => handleMouseEnter("cs2")}
+          onMouseLeave={() => setHoveredSide(null)}
+        >
+          <Link to="/cs2" className="block w-full h-full relative cursor-none"> {/* cursor-none pra imersão */}
+            
+            {/* Background Parallax Reverso (Compensa o movimento do container) */}
+            <motion.div 
+              className="absolute inset-0"
               animate={{ 
-                opacity: hoveredSide === "valorant" ? 0 : 1,
-                x: hoveredSide === "cs2" ? 20 : 0 
+                x: hoveredSide === "cs2" ? "0vw" : hoveredSide === "valorant" ? "25vw" : "12.5vw",
+                scale: hoveredSide === "cs2" ? 1.05 : 1
               }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="max-w-xl space-y-8 flex flex-col items-start"
+              transition={transition}
             >
-              <img 
-                src={LOGO_CS2} 
-                className="w-48 lg:w-80 h-auto object-contain drop-shadow-[0_0_30px_rgba(222,155,53,0.3)]" 
-                alt="CS2"
-              />
-              <h2 className="text-[#ECE8E1] text-3xl lg:text-5xl font-black uppercase italic tracking-tighter leading-[0.9]">
-                MASTER <span className="text-[#DE9B35]">LINEUPS</span>,<br />
-                EXECUTES & STRATS.
-              </h2>
-              <div className="pointer-events-auto group/btn relative inline-flex items-center gap-4 px-8 py-4 border-2 border-[#DE9B35] text-[#DE9B35] font-black uppercase italic tracking-wide transition-all hover:bg-[#DE9B35] hover:text-black hover:scale-105 active:scale-95">
-                <Crosshair className="w-6 h-6" />
-                <span>ENTER HUB</span>
+              <AnimatePresence mode="popLayout">
+                <motion.img
+                  key={csMapIndex}
+                  src={CS_MAPS[csMapIndex]}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1, filter: hoveredSide === "cs2" ? "grayscale(0%)" : "grayscale(100%) brightness(0.4)" }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover"
+                />
+              </AnimatePresence>
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+            </motion.div>
+
+            {/* Conteúdo (Texto Fixo na Tela) */}
+            <motion.div 
+              className="absolute inset-0 flex items-center px-24 z-20 pointer-events-none"
+              // Mantém o texto parado enquanto o fundo mexe
+              animate={{ x: hoveredSide === "cs2" ? "0vw" : "12.5vw" }} 
+              transition={transition}
+            >
+              <div className="max-w-xl space-y-6">
+                 <img src={LOGO_CS2} className="w-64 drop-shadow-2xl" alt="CS2" />
+                 
+                 <div className="overflow-hidden">
+                   <motion.h2 
+                     initial={{ y: 20, opacity: 0 }}
+                     animate={{ y: 0, opacity: 1 }}
+                     className="text-[#ECE8E1] text-6xl font-black italic tracking-tighter leading-none"
+                   >
+                     MASTER <span className="text-[#DE9B35]">STRATS</span>
+                   </motion.h2>
+                 </div>
+
+                 <motion.div 
+                   animate={{ opacity: hoveredSide === "cs2" ? 1 : 0, y: hoveredSide === "cs2" ? 0 : 20 }}
+                   className="flex items-center gap-3 text-[#DE9B35] font-bold tracking-widest uppercase border border-[#DE9B35] w-fit px-6 py-3"
+                 >
+                   <Crosshair size={20} /> Enter Hub
+                 </motion.div>
               </div>
             </motion.div>
-          </div>
-        </Link>
-      </motion.div>
+          </Link>
+        </div>
 
-      {/* === LADO VALORANT === */}
-      <motion.div
-        layout
-        animate={{ 
-          flex: hoveredSide === "valorant" ? 3 : hoveredSide === "cs2" ? 1 : 2,
-          // TRUQUE DE MESTRE: Se o Valorant ativa, ele sobe. Se não, ele fica embaixo.
-          zIndex: hoveredSide === "valorant" ? 20 : 10
-        }}
-        transition={layoutTransition}
-        className="relative h-full overflow-hidden group cursor-pointer will-change-auto"
-        onMouseEnter={() => handleMouseEnter("valorant")}
-        onMouseLeave={() => setHoveredSide(null)}
-      >
-        <Link to="/valorant" className="block h-full w-full relative">
-          
-          <div className="absolute inset-0 bg-[#0f1923]">
-            <AnimatePresence mode="popLayout">
-              <motion.img
-                key={valMapIndex}
-                initial={{ opacity: 0, scale: 1.1 }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: hoveredSide === "valorant" ? 1.05 : 1,
-                  filter: hoveredSide === "valorant" ? "brightness(0.8)" : "brightness(0.3) grayscale(80%)"
-                }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                src={VAL_MAPS[valMapIndex]}
-                loading="eager"
-                decoding="async"
-                className="absolute inset-0 w-full h-full object-cover"
-                alt="Valorant Map"
-              />
-            </AnimatePresence>
-            <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-transparent to-transparent opacity-90 z-10" />
-          </div>
-
-          <div className="absolute inset-y-0 right-0 w-[50vw] flex flex-col justify-center items-end px-8 lg:px-24 z-20 pointer-events-none">
-            <motion.div
+        {/* === BLOCO VALORANT (Ocupa 100vw fixo) === */}
+        <div 
+          className="w-screen h-full relative overflow-hidden"
+          onMouseEnter={() => handleMouseEnter("valorant")}
+          onMouseLeave={() => setHoveredSide(null)}
+        >
+          <Link to="/valorant" className="block w-full h-full relative cursor-none">
+            
+            <motion.div 
+              className="absolute inset-0"
               animate={{ 
-                opacity: hoveredSide === "cs2" ? 0 : 1,
-                x: hoveredSide === "valorant" ? -20 : 0 
+                x: hoveredSide === "valorant" ? "0vw" : hoveredSide === "cs2" ? "-25vw" : "-12.5vw",
+                scale: hoveredSide === "valorant" ? 1.05 : 1
               }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="max-w-xl space-y-8 text-right flex flex-col items-end"
+              transition={transition}
             >
-              <img 
-                src={LOGO_VALORANT} 
-                className="w-48 lg:w-80 h-auto object-contain drop-shadow-[0_0_30px_rgba(255,70,84,0.4)]" 
-                alt="VALORANT"
-              />
-              <h2 className="text-[#ECE8E1] text-3xl lg:text-5xl font-black uppercase italic tracking-tighter leading-[0.9]">
-                MASTER <span className="text-[#FF4654]">AGENT SETUPS</span>,<br />
-                UTILITY & SYNERGIES.
-              </h2>
-              <div className="pointer-events-auto group/btn relative inline-flex items-center gap-4 px-8 py-4 border-2 border-[#FF4654] text-[#FF4654] font-black uppercase italic tracking-wide transition-all hover:bg-[#FF4654] hover:text-white hover:scale-105 active:scale-95">
-                <span>ENTER HUB</span>
-                <Zap className="w-6 h-6 fill-current" />
+              <AnimatePresence mode="popLayout">
+                <motion.img
+                  key={valMapIndex}
+                  src={VAL_MAPS[valMapIndex]}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1, filter: hoveredSide === "valorant" ? "brightness(0.9)" : "brightness(0.3) grayscale(100%)" }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover"
+                />
+              </AnimatePresence>
+              <div className="absolute inset-0 bg-gradient-to-l from-black/60 to-transparent" />
+            </motion.div>
+
+            <motion.div 
+              className="absolute inset-0 flex items-center justify-end px-24 z-20 pointer-events-none"
+              animate={{ x: hoveredSide === "valorant" ? "0vw" : "-12.5vw" }}
+              transition={transition}
+            >
+              <div className="max-w-xl space-y-6 text-right flex flex-col items-end">
+                 <img src={LOGO_VALORANT} className="w-64 drop-shadow-2xl" alt="Valorant" />
+                 
+                 <div className="overflow-hidden">
+                   <motion.h2 
+                     initial={{ y: 20, opacity: 0 }}
+                     animate={{ y: 0, opacity: 1 }}
+                     className="text-[#ECE8E1] text-6xl font-black italic tracking-tighter leading-none"
+                   >
+                     MASTER <span className="text-[#FF4654]">META</span>
+                   </motion.h2>
+                 </div>
+
+                 <motion.div 
+                   animate={{ opacity: hoveredSide === "valorant" ? 1 : 0, y: hoveredSide === "valorant" ? 0 : 20 }}
+                   className="flex items-center gap-3 text-[#FF4654] font-bold tracking-widest uppercase border border-[#FF4654] w-fit px-6 py-3"
+                 >
+                   Enter Hub <Zap size={20} fill="currentColor" />
+                 </motion.div>
               </div>
             </motion.div>
-          </div>
-        </Link>
+          </Link>
+        </div>
+
       </motion.div>
     </div>
   );
