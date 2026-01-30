@@ -1,22 +1,20 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom"; // Importante para voltar pra Home
+import { Link } from "react-router-dom";
 import { Sword, Shield, Settings, ChevronLeft } from "lucide-react";
 
-// === HEADER DA COLLAB (ONSITE x VALORANT) ===
+// === HEADER DA COLLAB (ONSITE x V) ===
 const HubHeader = () => (
-  <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 mix-blend-difference text-white">
-    <div className="flex items-center gap-6">
+  <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 mix-blend-difference text-white flex items-center gap-6">
       
-      {/* 1. LOGO ONSITE (OS) - SIMPLIFICADA E NA COR DO HUB */}
-      <Link to="/" className="group relative">
+      {/* 1. LOGO ONSITE (OS) */}
+      <Link to="/" className="group relative shrink-0">
         <svg 
           width="48" 
           height="48" 
           viewBox="0 0 512 512" 
-          className="fill-[#FF4654] transition-transform group-hover:scale-110 duration-300" // COR DO VALORANT
+          className="fill-[#FF4654] transition-transform group-hover:scale-110 duration-300"
         >
-          {/* MÁSCARA DO CORTE DIAGONAL */}
           <defs>
             <mask id="cut-header">
               <rect width="512" height="512" fill="white"/>
@@ -24,34 +22,26 @@ const HubHeader = () => (
             </mask>
           </defs>
           <g mask="url(#cut-header)">
-             {/* Círculo Completo (Unificado) */}
              <circle cx="256" cy="256" r="200" stroke="currentColor" strokeWidth="64" fill="none" />
           </g>
-          {/* A Cruz Central */}
           <rect x="236" y="156" width="40" height="200" fill="white" rx="6" />
           <rect x="156" y="236" width="200" height="40" fill="white" rx="6" />
         </svg>
       </Link>
 
-      {/* 2. BARRA DE SEPARAÇÃO (COLLAB STYLE) */}
-      <div className="h-8 w-[2px] bg-white/20 -skew-x-12" />
+      {/* 2. BARRA DE SEPARAÇÃO */}
+      <div className="h-8 w-[2px] bg-white/20 -skew-x-12 shrink-0" />
 
-      {/* 3. LOGO DO JOGO (TEXTO) */}
-      <div className="flex flex-col justify-center">
-        <h1 className="text-2xl font-black tracking-[0.2em] leading-none text-white">
-          VALORANT
-        </h1>
-        <span className="text-[10px] font-bold tracking-widest text-[#FF4654] uppercase opacity-80">
-          Hub 2026
-        </span>
-      </div>
-
-    </div>
+      {/* 3. LOGO V (ROSA) */}
+      <img 
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Valorant_pink_version_logo.svg/2560px-Valorant_pink_version_logo.svg.png"
+        alt="Valorant V Logo"
+        className="h-10 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,70,84,0.5)]"
+      />
   </nav>
 );
 
-// === DADOS (Mantive os seus, estão ótimos) ===
-// IDs OFICIAIS E FIXOS DA RIOT API (v1)
+// === DADOS ===
 const AGENT_IDS = {
   jett: "add6443a-41bd-29cd-27f6-256975cae690",
   sova: "ded3520f-4264-bfed-162d-3080e6b7a948",
@@ -68,15 +58,20 @@ const AGENT_IDS = {
   harbor: "95b78ed7-4637-86d9-7e41-71ba8c293152",
   neon: "bb2a4828-46eb-8cd1-e765-15848195d751",
   kayo: "601dbbe6-8aa3-53e1-762d-578130388baf",
-  fade: "ade4ef5f-43e9-9512-5261-26a5bef7d2dd"
+  fade: "ade4ef5f-43e9-9512-5261-26a5bef7d2dd",
+  breach: "5f8d3a7f-467b-97f3-062c-13acf203c006",
+  astra: "41fb69c1-4189-7b37-f117-bcaf1e96f1bf"
 };
 
+// ROTAÇÃO COMPETITIVA (7 MAPAS + Abyss que é novo)
 const MAPS = [
-  { id: "ascent", name: "Ascent" },
-  { id: "bind", name: "Bind" },
-  { id: "haven", name: "Haven" },
-  { id: "lotus", name: "Lotus" },
-  { id: "abyss", name: "Abyss" },
+  { id: "abyss", name: "Abyss", image: "https://static.wikia.nocookie.net/valorant/images/6/61/Loading_Screen_Abyss.png" },
+  { id: "ascent", name: "Ascent", image: "https://static.wikia.nocookie.net/valorant/images/e/e7/Loading_Screen_Ascent.png" },
+  { id: "bind", name: "Bind", image: "https://static.wikia.nocookie.net/valorant/images/2/23/Loading_Screen_Bind.png" },
+  { id: "haven", name: "Haven", image: "https://static.wikia.nocookie.net/valorant/images/7/70/Loading_Screen_Haven.png" },
+  { id: "lotus", name: "Lotus", image: "https://static.wikia.nocookie.net/valorant/images/d/d0/Loading_Screen_Lotus.png" },
+  { id: "sunset", name: "Sunset", image: "https://static.wikia.nocookie.net/valorant/images/5/5c/Loading_Screen_Sunset.png" },
+  { id: "split", name: "Split", image: "https://static.wikia.nocookie.net/valorant/images/d/d6/Loading_Screen_Split.png" },
 ];
 
 const ROLE_COLORS = {
@@ -102,7 +97,9 @@ const AGENTS = {
   harbor: { name: "Harbor", role: "Controller", id: AGENT_IDS.harbor },
   neon: { name: "Neon", role: "Duelist", id: AGENT_IDS.neon },
   kayo: { name: "KAY/O", role: "Initiator", id: AGENT_IDS.kayo },
-  fade: { name: "Fade", role: "Initiator", id: AGENT_IDS.fade }
+  fade: { name: "Fade", role: "Initiator", id: AGENT_IDS.fade },
+  breach: { name: "Breach", role: "Initiator", id: AGENT_IDS.breach },
+  astra: { name: "Astra", role: "Controller", id: AGENT_IDS.astra }
 };
 
 const ORGS = {
@@ -146,7 +143,7 @@ const META_COMPS = [
     org: "prx",
     agents: [
       { key: "neon", player: "something" },
-      { key: "kayo", player: "f0rsakeN" },
+      { key: "breach", player: "f0rsakeN" },
       { key: "gekko", player: "Jinggg" },
       { key: "brimstone", player: "mindfreak" },
       { key: "fade", player: "d4v41" }, 
@@ -166,29 +163,42 @@ export default function ValorantHub() {
   const currentAgentData = AGENTS[selectedAgent as keyof typeof AGENTS];
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] font-sans selection:bg-[#FF4654] selection:text-white">
+    // CORREÇÃO DE SCROLL: min-h-screen permite crescer, overflow-x-hidden evita scroll lateral, mas Y é liberado
+    <div className="min-h-screen w-full bg-[#0A0A0A] font-sans selection:bg-[#FF4654] selection:text-white overflow-x-hidden">
       
-      {/* HEADER NOVO */}
+      {/* HEADER NOVO (Logo V) */}
       <HubHeader />
 
-      {/* Hero Section */}
+      {/* Hero Section (Background Dinâmico) */}
       <section className="relative h-[60vh] overflow-hidden">
-        <div className="absolute inset-0">
-          {/* Adicionei um parallax leve aqui se quiser depois */}
-          <motion.img
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 2 }}
-            src="https://images.unsplash.com/photo-1629759882260-264627d422e6?q=80&w=2070&auto=format&fit=crop"
-            alt="Valorant Map"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0F1923]/80 via-[#0F1923]/60 to-[#0A0A0A]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#FF4654]/20 via-transparent to-transparent" />
-        </div>
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={selectedMap.id} 
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} 
+            className="absolute inset-0"
+          >
+            {/* Imagem do mapa (Fundo) */}
+            <img
+              src={selectedMap.image}
+              alt={selectedMap.name}
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0F1923]/80 via-[#0F1923]/60 to-[#0A0A0A]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#FF4654]/20 via-transparent to-transparent" />
+          </motion.div>
+        </AnimatePresence>
 
-        <div className="relative h-full flex flex-col justify-end px-8 lg:px-16 pb-16 pt-32">
-          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+        <div className="relative h-full flex flex-col justify-end px-8 lg:px-16 pb-16 pt-32 z-10">
+          <motion.div 
+            key={selectedMap.id + "text"} 
+            initial={{ opacity: 0, x: -30 }} 
+            animate={{ opacity: 1, x: 0 }} 
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             
             {/* TAG DO MAPA */}
             <div className="inline-flex items-center gap-3 mb-6">
@@ -198,11 +208,11 @@ export default function ValorantHub() {
                 <div className="h-[1px] w-12 bg-white/20"></div>
             </div>
 
-            <h1 className="text-6xl lg:text-9xl font-black uppercase tracking-tighter text-white mb-4 leading-none">
+            <h1 className="text-6xl lg:text-9xl font-black uppercase tracking-tighter text-white mb-4 leading-none drop-shadow-lg">
               {selectedMap.name}
             </h1>
             
-            <p className="text-xl text-[#ECE8E1]/60 max-w-xl border-l-2 border-[#FF4654] pl-6">
+            <p className="text-xl text-[#ECE8E1]/80 max-w-xl border-l-2 border-[#FF4654] pl-6 drop-shadow-md">
               Dominating the meta with elite compositions directly from VCT 2026.
             </p>
           </motion.div>
@@ -210,16 +220,16 @@ export default function ValorantHub() {
       </section>
 
       {/* Map Selector (Estilo High End) */}
-      <section className="px-8 lg:px-16 py-8 border-y border-white/5 bg-white/[0.02]">
+      <section className="px-8 lg:px-16 py-8 border-y border-white/5 bg-white/[0.02] relative z-20">
          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide items-center">
-          <span className="text-xs font-bold text-white/30 uppercase tracking-widest mr-4">Select Map:</span>
+          <span className="text-xs font-bold text-white/30 uppercase tracking-widest mr-4 sticky left-0 bg-[#0A0A0A]/80 backdrop-blur p-2">Select Map:</span>
           {MAPS.map((map) => (
             <button
               key={map.id}
               onClick={() => setSelectedMap(map)}
               className={`flex-shrink-0 px-8 py-3 transition-all uppercase tracking-widest font-bold text-sm border ${
                 selectedMap.id === map.id 
-                ? "bg-[#FF4654] text-white border-[#FF4654]" 
+                ? "bg-[#FF4654] text-white border-[#FF4654] shadow-[0_0_20px_rgba(255,70,84,0.3)]" 
                 : "bg-transparent text-white/40 border-white/10 hover:border-white/30 hover:text-white"
               }`}
             >
@@ -234,7 +244,7 @@ export default function ValorantHub() {
         <div className="mb-12 flex items-end justify-between">
             <div>
                 <h2 className="text-4xl font-black uppercase text-white mb-2 italic">Meta <span className="text-[#FF4654]">Comps</span></h2>
-                <p className="text-white/40">Select a team composition to analyze</p>
+                <p className="text-white/40">Select a team composition to analyze on {selectedMap.name}</p>
             </div>
         </div>
 
@@ -246,7 +256,7 @@ export default function ValorantHub() {
                 key={comp.id}
                 onClick={() => { setSelectedComp(comp); setSelectedAgent(comp.agents[0].key); }}
                 whileHover={{ y: -5 }}
-                className={`text-left relative group overflow-hidden ${selectedComp.id === comp.id ? "grayscale-0" : "grayscale opacity-60 hover:grayscale-0 hover:opacity-100"} transition-all duration-500`}
+                className={`text-left relative group overflow-hidden ${selectedComp.id === comp.id ? "grayscale-0" : "grayscale opacity-60 hover:grayscale-0 hover:opacity-100"} transition-all duration-500 rounded-xl`}
               >
                 {/* Card Background */}
                 <div className="absolute inset-0 bg-[#1A1A1A] border border-white/10 group-hover:border-[#FF4654]/50 transition-colors" />
@@ -290,7 +300,7 @@ export default function ValorantHub() {
       </section>
 
       {/* Agent Detail Section */}
-      <section className="px-8 lg:px-16 py-12 border-t border-white/5">
+      <section className="px-8 lg:px-16 py-12 border-t border-white/5 pb-24">
         
         {/* Toggle Attack/Defense */}
         <div className="flex justify-center mb-16">
