@@ -40,17 +40,13 @@ export default function Landing() {
 
   const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
 
-  // === CÁLCULO DA POSIÇÃO (TEORIA DA FAIXA DE 5%) ===
-  // Container tem 200vw.
-  // -50vw = Centro (50/50 na tela).
-  // -5vw = Mostra 95% do CS (Esquerda) e sobra 5% do Val na direita.
-  // -95vw = Mostra 5% do CS na esquerda e 95% do Val (Direita).
+  // Lógica da posição da câmera
   const xValue = hoveredSide === "cs2" ? "-5vw" : hoveredSide === "valorant" ? "-95vw" : "-50vw";
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-black font-sans relative">
       
-      {/* CONTAINER MESTRE */}
+      {/* CONTAINER MESTRE (200vw) */}
       <motion.div 
         className="flex h-full w-[200vw] absolute top-0"
         initial={false}
@@ -62,12 +58,10 @@ export default function Landing() {
         <div 
           className="w-screen h-full relative border-r border-white/10 overflow-hidden group/cs"
           onMouseEnter={() => handleMouseEnter("cs2")}
-          // Removemos o onMouseLeave global para evitar "flicker". 
-          // O estado muda quando entra no outro lado.
         >
           <Link to="/cs2" className="block w-full h-full relative">
             
-            {/* Background */}
+            {/* Background Parallax */}
             <motion.div 
               className="absolute inset-0"
               animate={{ 
@@ -89,40 +83,41 @@ export default function Landing() {
               </AnimatePresence>
               <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
               
-              {/* INDICADOR DE RETORNO (Só aparece quando o CS está encolhido) */}
+              {/* Seta de Retorno */}
               <motion.div 
-                className="absolute inset-y-0 right-0 w-full flex items-center justify-end pr-4 bg-black/40 backdrop-blur-[2px]"
+                className="absolute inset-y-0 right-0 w-32 flex items-center justify-center bg-gradient-to-l from-black/60 to-transparent"
                 animate={{ opacity: hoveredSide === "valorant" ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
               >
-                 <ChevronRight className="text-white/50 w-12 h-12 animate-pulse" />
+                 <ChevronRight className="text-white/80 w-16 h-16 animate-pulse drop-shadow-lg" />
               </motion.div>
             </motion.div>
 
-            {/* Conteúdo */}
+            {/* CONTEÚDO CS2 */}
+            {/* Aumentei o padding-left (pl) para desgrudar da borda */}
             <motion.div 
-              className="absolute inset-0 flex items-center px-8 lg:px-24 z-20 pointer-events-none"
+              className="absolute inset-0 flex items-center pl-16 lg:pl-48 z-20 pointer-events-none"
               animate={{ x: hoveredSide === "cs2" ? "0vw" : "12.5vw", opacity: hoveredSide === "valorant" ? 0 : 1 }} 
               transition={transition}
             >
-              <div className="max-w-xl space-y-6">
-                 <img src={LOGO_CS2} className="w-48 lg:w-64 drop-shadow-2xl" alt="CS2" />
+              <div className="max-w-2xl space-y-8">
+                 {/* Logo do CS AUMENTADA (w-96 no desktop) */}
+                 <img src={LOGO_CS2} className="w-64 lg:w-[500px] drop-shadow-2xl" alt="CS2" />
                  
-                 {/* PR-4 Adicionado para evitar corte do itálico */}
                  <div className="overflow-hidden pr-4">
                    <motion.h2 
                      initial={{ y: 20, opacity: 0 }}
                      animate={{ y: 0, opacity: 1 }}
-                     className="text-[#ECE8E1] text-4xl lg:text-6xl font-black italic tracking-tighter leading-none"
+                     className="text-[#ECE8E1] text-5xl lg:text-7xl font-black italic tracking-tighter leading-[0.9]"
                    >
                      MASTER <span className="text-[#DE9B35]">STRATS</span>
                    </motion.h2>
                  </div>
 
                  <motion.div 
-                   className="flex items-center gap-3 text-[#DE9B35] font-bold tracking-widest uppercase border border-[#DE9B35] w-fit px-6 py-3 pointer-events-auto hover:bg-[#DE9B35] hover:text-black transition-colors"
+                   className="flex items-center gap-3 text-[#DE9B35] font-bold tracking-widest uppercase border border-[#DE9B35] w-fit px-8 py-4 text-lg pointer-events-auto hover:bg-[#DE9B35] hover:text-black transition-colors"
                  >
-                   <Crosshair size={20} /> Enter Hub
+                   <Crosshair size={24} /> Enter Hub
                  </motion.div>
               </div>
             </motion.div>
@@ -136,7 +131,7 @@ export default function Landing() {
         >
           <Link to="/valorant" className="block w-full h-full relative">
             
-            {/* Background */}
+            {/* Background Parallax */}
             <motion.div 
               className="absolute inset-0"
               animate={{ 
@@ -158,40 +153,41 @@ export default function Landing() {
               </AnimatePresence>
               <div className="absolute inset-0 bg-gradient-to-l from-black/60 to-transparent" />
 
-              {/* INDICADOR DE RETORNO (Só aparece quando o Val está encolhido) */}
+              {/* Seta de Retorno */}
               <motion.div 
-                className="absolute inset-y-0 left-0 w-full flex items-center justify-start pl-4 bg-black/40 backdrop-blur-[2px]"
+                className="absolute inset-y-0 left-0 w-32 flex items-center justify-center bg-gradient-to-r from-black/60 to-transparent"
                 animate={{ opacity: hoveredSide === "cs2" ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
               >
-                 <ChevronLeft className="text-white/50 w-12 h-12 animate-pulse" />
+                 <ChevronLeft className="text-white/80 w-16 h-16 animate-pulse drop-shadow-lg" />
               </motion.div>
             </motion.div>
 
-            {/* Conteúdo */}
+            {/* CONTEÚDO VALORANT */}
+            {/* Aumentei o padding-right (pr) para desgrudar da borda */}
             <motion.div 
-              className="absolute inset-0 flex items-center justify-end px-8 lg:px-24 z-20 pointer-events-none"
+              className="absolute inset-0 flex items-center justify-end pr-16 lg:pr-48 z-20 pointer-events-none"
               animate={{ x: hoveredSide === "valorant" ? "0vw" : "-12.5vw", opacity: hoveredSide === "cs2" ? 0 : 1 }}
               transition={transition}
             >
-              <div className="max-w-xl space-y-6 text-right flex flex-col items-end">
-                 <img src={LOGO_VALORANT} className="w-48 lg:w-64 drop-shadow-2xl" alt="Valorant" />
+              <div className="max-w-2xl space-y-8 text-right flex flex-col items-end">
+                 {/* Logo Valorant ajustada */}
+                 <img src={LOGO_VALORANT} className="w-56 lg:w-80 drop-shadow-2xl" alt="Valorant" />
                  
-                 {/* PR-4 Adicionado aqui também */}
-                 <div className="overflow-hidden pr-4">
+                 <div className="overflow-hidden pr-2">
                    <motion.h2 
                      initial={{ y: 20, opacity: 0 }}
                      animate={{ y: 0, opacity: 1 }}
-                     className="text-[#ECE8E1] text-4xl lg:text-6xl font-black italic tracking-tighter leading-none"
+                     className="text-[#ECE8E1] text-5xl lg:text-7xl font-black italic tracking-tighter leading-[0.9]"
                    >
                      MASTER <span className="text-[#FF4654]">META</span>
                    </motion.h2>
                  </div>
 
                  <motion.div 
-                   className="flex items-center gap-3 text-[#FF4654] font-bold tracking-widest uppercase border border-[#FF4654] w-fit px-6 py-3 pointer-events-auto hover:bg-[#FF4654] hover:text-white transition-colors"
+                   className="flex items-center gap-3 text-[#FF4654] font-bold tracking-widest uppercase border border-[#FF4654] w-fit px-8 py-4 text-lg pointer-events-auto hover:bg-[#FF4654] hover:text-white transition-colors"
                  >
-                   Enter Hub <Zap size={20} fill="currentColor" />
+                   Enter Hub <Zap size={24} fill="currentColor" />
                  </motion.div>
               </div>
             </motion.div>
