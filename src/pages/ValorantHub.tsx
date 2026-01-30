@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Navigation } from "../components/Navigation";
 import { StreamerSection } from "../components/StreamerSection";
 import { Sword, Shield, Users, Sparkles, Target, MapPin, Settings } from "lucide-react";
