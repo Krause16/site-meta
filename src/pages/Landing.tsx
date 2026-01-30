@@ -32,7 +32,7 @@ export default function Landing() {
   const LOGO_CS2 = "https://upload.wikimedia.org/wikipedia/commons/archive/b/b8/20230323152745%21Counter-Strike_2_logo.svg";
   const LOGO_VALORANT = "https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo_-_pink_color_version.svg";
 
-  // === PRELOAD DE ELITE ===
+  // === PRELOAD ===
   useEffect(() => {
     const preloadImages = async () => {
       const allMaps = [...CS_MAPS, ...VAL_MAPS];
@@ -53,13 +53,10 @@ export default function Landing() {
     }
   };
 
-  // === A CORREÇÃO DA FLUIDEZ ===
-  // Trocamos 'spring' (mola/quique) por 'ease' (curva suave).
-  // Essa curva [0.25, 1, 0.5, 1] é conhecida como "Soft Out", usada em sistemas iOS.
-  // Ela garante que os pixels de um lado colem no outro sem gap.
+  // Curva de Bezier para movimento "Apple-like" (Suave e magnético)
   const layoutTransition = { 
-    duration: 0.6, 
-    ease: [0.16, 1, 0.3, 1] // Curva ultra-premium (sem "bounce", zero barra preta)
+    duration: 0.55, 
+    ease: [0.16, 1, 0.3, 1] 
   };
 
   return (
@@ -67,12 +64,15 @@ export default function Landing() {
       
       {/* === LADO CS2 === */}
       <motion.div
+        // Use 'layout' para o Framer Motion tratar isso como mudança de geometria (mais suave que animar width/flex manualmente)
+        layout
         animate={{ 
-          flex: hoveredSide === "cs2" ? 3 : hoveredSide === "valorant" ? 1 : 2 
+          flex: hoveredSide === "cs2" ? 3 : hoveredSide === "valorant" ? 1 : 2,
+          // TRUQUE DE MESTRE: O lado ativo sempre fica por cima (z-20) pra esconder a costura
+          zIndex: hoveredSide === "cs2" ? 20 : 10
         }}
         transition={layoutTransition}
-        // 'will-change-flex' avisa a placa de vídeo pra preparar o resize antes de acontecer
-        className="relative h-full overflow-hidden border-r border-white/10 group cursor-pointer z-10 will-change-auto"
+        className="relative h-full overflow-hidden border-r border-white/10 group cursor-pointer will-change-auto"
         onMouseEnter={() => handleMouseEnter("cs2")}
         onMouseLeave={() => setHoveredSide(null)}
       >
@@ -106,7 +106,7 @@ export default function Landing() {
                 opacity: hoveredSide === "valorant" ? 0 : 1,
                 x: hoveredSide === "cs2" ? 20 : 0 
               }}
-              transition={{ duration: 0.4, ease: "easeOut" }} // Texto mais rápido que o fundo
+              transition={{ duration: 0.4, ease: "easeOut" }}
               className="max-w-xl space-y-8 flex flex-col items-start"
             >
               <img 
@@ -129,11 +129,14 @@ export default function Landing() {
 
       {/* === LADO VALORANT === */}
       <motion.div
+        layout
         animate={{ 
-          flex: hoveredSide === "valorant" ? 3 : hoveredSide === "cs2" ? 1 : 2 
+          flex: hoveredSide === "valorant" ? 3 : hoveredSide === "cs2" ? 1 : 2,
+          // TRUQUE DE MESTRE: Se o Valorant ativa, ele sobe. Se não, ele fica embaixo.
+          zIndex: hoveredSide === "valorant" ? 20 : 10
         }}
         transition={layoutTransition}
-        className="relative h-full overflow-hidden group cursor-pointer z-10 will-change-auto"
+        className="relative h-full overflow-hidden group cursor-pointer will-change-auto"
         onMouseEnter={() => handleMouseEnter("valorant")}
         onMouseLeave={() => setHoveredSide(null)}
       >
