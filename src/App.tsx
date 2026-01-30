@@ -5,7 +5,6 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
-      {/* Outras rotas virão depois */}
     </Routes>
   );
 }
