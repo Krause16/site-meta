@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crosshair, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// === LISTA DE MAPAS CS2
+// === LISTA DE MAPAS (OTIMIZADOS WEBP) ===
 const CS_MAPS = [
   "/maps/mirage.webp",
   "/maps/inferno.webp",
@@ -13,8 +13,6 @@ const CS_MAPS = [
   "/maps/dust2.webp",
   "/maps/nuke.webp",
 ];
-
-// === LISTA DE MAPAS VALORANT
 
 const VAL_MAPS = [
   "/maps/abyss.webp",
@@ -31,9 +29,23 @@ export default function Landing() {
   const [csMapIndex, setCsMapIndex] = useState(0);
   const [valMapIndex, setValMapIndex] = useState(0);
 
-  // LOGOS BLINDADAS (Wikimedia CDN)
+  // LOGOS
   const LOGO_CS2 = "https://upload.wikimedia.org/wikipedia/commons/archive/b/b8/20230323152745%21Counter-Strike_2_logo.svg";
   const LOGO_VALORANT = "https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo_-_pink_color_version.svg";
+
+  // === 1. PRELOAD DE ELITE ===
+  // Garante que todas as imagens estejam na memória antes de serem mostradas.
+  // Isso elimina o "pop" de proporção estranha.
+  useEffect(() => {
+    const preloadImages = async () => {
+      const allMaps = [...CS_MAPS, ...VAL_MAPS];
+      allMaps.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+      });
+    };
+    preloadImages();
+  }, []);
 
   const handleMouseEnter = (side: "cs2" | "valorant") => {
     setHoveredSide(side);
@@ -44,15 +56,26 @@ export default function Landing() {
     }
   };
 
+  // Configuração da animação de layout (Mais sólida, menos "bouncy")
+  const layoutTransition = { 
+    type: "spring", 
+    stiffness: 200, // Mais firme
+    damping: 25     // Freia mais rápido pra não "sambar"
+  };
+
   return (
     <div className="h-screen w-screen flex overflow-hidden relative bg-black selection:bg-white/20 font-sans">
       
       {/* === LADO CS2 === */}
       <motion.div
+        // === 2. A MÁGICA DO FLEX ===
+        // Em vez de width, usamos flex. 
+        // flex: 2 (50%), flex: 3 (75%), flex: 1 (25%).
+        // A soma sempre preenche 100% da tela. Zero gaps pretos.
         animate={{ 
-          width: hoveredSide === "cs2" ? "75%" : hoveredSide === "valorant" ? "25%" : "50%" 
+          flex: hoveredSide === "cs2" ? 3 : hoveredSide === "valorant" ? 1 : 2 
         }}
-        transition={{ type: "spring", damping: 30, stiffness: 120 }}
+        transition={layoutTransition}
         className="relative h-full overflow-hidden border-r border-white/10 group cursor-pointer z-10"
         onMouseEnter={() => handleMouseEnter("cs2")}
         onMouseLeave={() => setHoveredSide(null)}
@@ -69,24 +92,26 @@ export default function Landing() {
                   scale: hoveredSide === "cs2" ? 1.05 : 1,
                   filter: hoveredSide === "cs2" ? "grayscale(0%) brightness(0.9)" : "grayscale(100%) brightness(0.5)"
                 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
+                exit={{ opacity: 0 }} // Crossfade suave
+                transition={{ duration: 0.4, ease: "easeOut" }}
                 src={CS_MAPS[csMapIndex]}
-                // referrerPolicy ainda é útil aqui para as imagens externas do CS
-                referrerPolicy="no-referrer"
+                loading="eager" // Prioridade máxima
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="CS2 Map"
               />
             </AnimatePresence>
+            {/* Overlay estático para garantir contraste sempre */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent opacity-90 z-10" />
           </div>
 
           <div className="absolute inset-y-0 left-0 w-[50vw] flex flex-col justify-center px-8 lg:px-24 z-20 pointer-events-none">
             <motion.div
               animate={{ 
-                opacity: hoveredSide === "valorant" ? 0.2 : 1,
+                opacity: hoveredSide === "valorant" ? 0 : 1, // Some totalmente se não for o foco
                 x: hoveredSide === "cs2" ? 20 : 0 
               }}
+              transition={{ duration: 0.3 }}
               className="max-w-xl space-y-8 flex flex-col items-start"
             >
               <img 
@@ -110,9 +135,9 @@ export default function Landing() {
       {/* === LADO VALORANT === */}
       <motion.div
         animate={{ 
-          width: hoveredSide === "valorant" ? "75%" : hoveredSide === "cs2" ? "25%" : "50%" 
+          flex: hoveredSide === "valorant" ? 3 : hoveredSide === "cs2" ? 1 : 2 
         }}
-        transition={{ type: "spring", damping: 30, stiffness: 120 }}
+        transition={layoutTransition}
         className="relative h-full overflow-hidden group cursor-pointer z-10"
         onMouseEnter={() => handleMouseEnter("valorant")}
         onMouseLeave={() => setHoveredSide(null)}
@@ -130,8 +155,10 @@ export default function Landing() {
                   filter: hoveredSide === "valorant" ? "brightness(0.8)" : "brightness(0.3) grayscale(80%)"
                 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
                 src={VAL_MAPS[valMapIndex]}
+                loading="eager"
+                decoding="async"
                 className="absolute inset-0 w-full h-full object-cover"
                 alt="Valorant Map"
               />
@@ -142,9 +169,10 @@ export default function Landing() {
           <div className="absolute inset-y-0 right-0 w-[50vw] flex flex-col justify-center items-end px-8 lg:px-24 z-20 pointer-events-none">
             <motion.div
               animate={{ 
-                opacity: hoveredSide === "cs2" ? 0.2 : 1,
+                opacity: hoveredSide === "cs2" ? 0 : 1, // Some totalmente se não for o foco
                 x: hoveredSide === "valorant" ? -20 : 0 
               }}
+              transition={{ duration: 0.3 }}
               className="max-w-xl space-y-8 text-right flex flex-col items-end"
             >
               <img 
