@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router-dom";
 import { Target, Crosshair } from "lucide-react";
 
 export function Navigation() {
