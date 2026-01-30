@@ -5,25 +5,25 @@ import { Link } from "react-router-dom";
 
 // === LISTA DE MAPAS CS2
 const CS_MAPS = [
-  "/maps/mirage.png",
-  "/maps/inferno.png",
-  "/maps/overpass.png", 
-  "/maps/ancient.png",
-  "/maps/anubis.png",
-  "/maps/dust2.png",
-  "/maps/nuke.png",
+  "/maps/mirage.webp",
+  "/maps/inferno.webp",
+  "/maps/overpass.webp", 
+  "/maps/ancient.webp",
+  "/maps/anubis.webp",
+  "/maps/dust2.webp",
+  "/maps/nuke.webp",
 ];
 
 // === LISTA DE MAPAS VALORANT
 
 const VAL_MAPS = [
-  "/maps/abyss.png",
-  "/maps/bind.png",
-  "/maps/corrode.png", 
-  "/maps/haven.png",
-  "/maps/pearl.png",
-  "/maps/breeze.png",
-  "/maps/split.png",
+  "/maps/abyss.webp",
+  "/maps/bind.webp",
+  "/maps/corrode.webp", 
+  "/maps/haven.webp",
+  "/maps/pearl.webp",
+  "/maps/breeze.webp",
+  "/maps/split.webp",
 ];
 
 export default function Landing() {
