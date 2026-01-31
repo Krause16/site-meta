@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sword, Shield, Settings, Tv, Users, Play, Radio } from "lucide-react";
+import { Sword, Shield, Settings, Tv, Users, Play, Radio, AlertCircle } from "lucide-react";
 
 // === HEADER DA COLLAB ===
 const HubHeader = () => {
@@ -12,32 +12,21 @@ const HubHeader = () => {
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex items-center justify-between bg-gradient-to-b from-black/90 via-black/50 to-transparent backdrop-blur-[2px] pointer-events-none">
-        
         <div className="flex items-center gap-6 pointer-events-auto">
             <Link to="/" className="group relative shrink-0">
                 <svg width="42" height="42" viewBox="0 0 512 512" className="fill-[#FF4654] transition-transform group-hover:scale-110 duration-300">
-                <defs>
-                    <mask id="cut-header"><rect width="512" height="512" fill="white"/><rect x="-100" y="226" width="800" height="60" fill="black" transform="rotate(-45 256 256)"/></mask>
-                </defs>
+                <defs><mask id="cut-header"><rect width="512" height="512" fill="white"/><rect x="-100" y="226" width="800" height="60" fill="black" transform="rotate(-45 256 256)"/></mask></defs>
                 <g mask="url(#cut-header)"><circle cx="256" cy="256" r="200" stroke="currentColor" strokeWidth="64" fill="none" /></g>
                 <rect x="236" y="156" width="40" height="200" fill="white" rx="6" />
                 <rect x="156" y="236" width="200" height="40" fill="white" rx="6" />
                 </svg>
             </Link>
             <div className="h-6 w-[2px] bg-white/20 -skew-x-12 shrink-0" />
-            <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Valorant_pink_version_logo.svg/2560px-Valorant_pink_version_logo.svg.png"
-                alt="V Logo" className="h-8 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,70,84,0.5)]"
-            />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Valorant_pink_version_logo.svg/2560px-Valorant_pink_version_logo.svg.png" alt="V Logo" className="h-8 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,70,84,0.5)]" />
         </div>
-
         <div className="hidden md:flex items-center gap-8 pointer-events-auto">
             {['MAPS', 'COMPS', 'AGENTS', 'STREAMS'].map((item) => (
-                <button 
-                    key={item} 
-                    onClick={() => scrollToSection(item.toLowerCase())}
-                    className="text-sm font-bold tracking-widest text-white/60 hover:text-[#FF4654] transition-colors uppercase relative group"
-                >
+                <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-sm font-bold tracking-widest text-white/60 hover:text-[#FF4654] transition-colors uppercase relative group">
                     {item}
                     <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#FF4654] transition-all group-hover:w-full" />
                 </button>
@@ -47,7 +36,7 @@ const HubHeader = () => {
   );
 };
 
-// === DADOS DO HUB ===
+// === DADOS ===
 const MAPS = [
   { id: "abyss", name: "Abyss", image: "/maps/abyss.webp" },
   { id: "bind", name: "Bind", image: "/maps/bind.webp" },
@@ -58,7 +47,7 @@ const MAPS = [
   { id: "split", name: "Split", image: "/maps/split.webp" },
 ];
 
-// LISTA OFICIAL VERIFICADA (IDs Corretos + Cores Temáticas)
+// LISTA OFICIAL VERIFICADA (Valorant-API v1)
 const AGENTS: Record<string, { name: string; role: string; id: string; color: string }> = {
   jett: { name: "Jett", role: "Duelist", id: "add6443a-41bd-29cd-27f6-256975cae690", color: "#92E0EB" },
   sova: { name: "Sova", role: "Initiator", id: "ded3520f-4264-bfed-162d-3080e6b7a948", color: "#3F4F8F" },
@@ -71,14 +60,14 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
   viper: { name: "Viper", role: "Controller", id: "707eab51-4836-f488-046a-cda6bf494859", color: "#4FB363" },
   neon: { name: "Neon", role: "Duelist", id: "bb2a4828-46eb-8cd1-e765-15848195d751", color: "#F5F93F" },
   kayo: { name: "KAY/O", role: "Initiator", id: "601dbbe6-8aa3-53e1-762d-578130388baf", color: "#41B1C4" },
-  fade: { name: "Fade", role: "Initiator", id: "ade4ef5f-43e9-9512-5261-26a5bef7d2dd", color: "#5C5C5C" },
+  fade: { name: "Fade", role: "Initiator", id: "ade4ef5f-43e9-9512-5261-26a5bef7d2dd", color: "#4C5B63" },
   breach: { name: "Breach", role: "Initiator", id: "5f8d3a7f-467b-97f3-062c-13acf203c006", color: "#D96C2B" },
   astra: { name: "Astra", role: "Controller", id: "41fb69c1-4189-7b37-f117-bcaf1e96f1bf", color: "#6A3B9E" },
   harbor: { name: "Harbor", role: "Controller", id: "95b78ed7-4637-86d9-7e41-71ba8c293152", color: "#2B8F8F" },
   iso: { name: "Iso", role: "Duelist", id: "0e38b510-41a8-5780-5e8f-568b2a4f2d6c", color: "#6A3B9E" },
   skye: { name: "Skye", role: "Initiator", id: "6f2a04ca-43e0-be17-7f36-a3908627744d", color: "#6A9E3B" },
   yoru: { name: "Yoru", role: "Duelist", id: "7f94d92c-4234-0a36-9006-c67d09106433", color: "#3F4F8F" },
-  reyna: { name: "Reyna", role: "Duelist", id: "a3bf3253-43b2-9b34-0bbc-11850741cc81", color: "#9E3B9E" },
+  reyna: { name: "Reyna", role: "Duelist", id: "a3bf3253-43b2-9b34-0bbc-11850741cc81", color: "#E04296" },
   chamber: { name: "Chamber", role: "Sentinel", id: "22697a3d-45bf-8dd7-4fec-84a9e28c69d7", color: "#D9BA3B" },
   deadlock: { name: "Deadlock", role: "Sentinel", id: "cc8b64c8-4b25-4ff9-6e7f-37b4da43d234", color: "#9E3B3B" },
   clove: { name: "Clove", role: "Controller", id: "709e9188-43d6-119a-a45e-4999c6736a53", color: "#E66AB4" }
@@ -129,7 +118,6 @@ export default function ValorantHub() {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(META_COMPS[0].agents[0].key);
   const [sideMode, setSideMode] = useState<"attack" | "defense">("attack");
   const [streamTab, setStreamTab] = useState<"pros" | "creators">("pros");
-  const [showConfig, setShowConfig] = useState<string | null>(null);
 
   const selectedAgentPlayer = selectedComp.agents.find(a => a.key === selectedAgent)?.player;
   const currentAgentData = AGENTS[selectedAgent as keyof typeof AGENTS];
@@ -158,12 +146,12 @@ export default function ValorantHub() {
               {selectedMap.name}
             </h1>
             
-            <div className="flex gap-4 overflow-x-auto pb-4 pt-8 scrollbar-hide">
+            {/* CORREÇÃO DO BOTÃO: PADDING p-6 NO PAI PARA NÃO CORTAR SOMBRA */}
+            <div className="flex gap-4 overflow-x-auto pb-6 pt-8 scrollbar-hide px-4">
                 {MAPS.map((map) => (
                     <button
                         key={map.id}
                         onClick={() => setSelectedMap(map)}
-                        // CORREÇÃO DO BOTÃO: flex items-center justify-center para centralizar o texto perfeitamente
                         className={`relative w-48 h-24 shrink-0 rounded-lg overflow-hidden border-2 transition-all duration-300 group ${
                             selectedMap.id === map.id 
                             ? "border-[#FF4654] shadow-[0_0_30px_rgba(255,70,84,0.4)] scale-105 bg-[#FF4654] flex items-center justify-center" 
@@ -171,8 +159,7 @@ export default function ValorantHub() {
                         }`}
                     >
                         {selectedMap.id === map.id ? (
-                             // Texto centralizado sem div extra
-                             <span className="text-2xl font-black italic uppercase tracking-tighter text-white">{map.name}</span>
+                             <span className="text-2xl font-black italic uppercase tracking-tighter text-white drop-shadow-md">{map.name}</span>
                         ) : (
                             <>
                                 <img src={map.image} className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110" />
@@ -199,9 +186,7 @@ export default function ValorantHub() {
                 key={comp.id}
                 onClick={() => { 
                     setSelectedComp(comp); 
-                    if (!comp.agents.some(a => a.key === selectedAgent)) {
-                        setSelectedAgent(comp.agents[0].key);
-                    }
+                    if (!comp.agents.some(a => a.key === selectedAgent)) setSelectedAgent(comp.agents[0].key);
                 }}
                 className={`text-left p-6 rounded-xl border transition-all relative overflow-hidden group cursor-pointer ${
                     selectedComp.id === comp.id ? "bg-white/5 border-[#FF4654] shadow-lg" : "bg-white/5 border-white/5 hover:border-white/20"
@@ -222,7 +207,7 @@ export default function ValorantHub() {
                             <button 
                                 key={a.key} 
                                 onClick={(e) => {
-                                    e.stopPropagation();
+                                    e.stopPropagation(); // <--- O SEGREDO: IMPEDE O RESET
                                     setSelectedComp(comp);
                                     setSelectedAgent(a.key);
                                 }}
@@ -236,75 +221,97 @@ export default function ValorantHub() {
                                     src={`https://media.valorant-api.com/agents/${AGENTS[a.key as keyof typeof AGENTS]?.id}/displayicon.png`} 
                                     className="w-8 h-8 object-cover" 
                                     alt={a.key}
+                                    onError={(e) => e.currentTarget.src = "https://img.icons8.com/?size=100&id=2sW51z0s1L5H&format=png&color=FFFFFF"} // FALLBACK SE A API FALHAR
                                 />
                             </button>
                         )
                     })}
                 </div>
-                
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
             </div>
           ))}
         </div>
       </section>
 
-      {/* === AGENTS & UTILITY (COM Fundo Temático) === */}
+      {/* === AGENTS (COM FADE TEMÁTICO) === */}
       {currentAgentData && (
           <section id="agents" className="px-8 lg:px-16 py-12 border-t border-white/5">
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                  
-                 {/* Left: Agent Portrait & Config */}
-                 <div className="lg:col-span-4 relative h-[500px] rounded-2xl border border-white/10 overflow-hidden flex flex-col items-center justify-end group bg-[#1A1A1A]">
+                 {/* CARD DO AGENTE */}
+                 <div className="lg:col-span-4 relative h-[600px] rounded-2xl border border-white/10 overflow-hidden flex flex-col items-center justify-end group bg-[#111]">
                       
-                      {/* NOVO: Degradê Temático Dinâmico */}
+                      {/* 1. DEGRADÊ TEMÁTICO NO FUNDO (COR DO AGENTE) */}
                       <div 
-                          className="absolute inset-0 opacity-40 transition-colors duration-500"
+                          className="absolute inset-0 opacity-30 transition-colors duration-700"
                           style={{
                               background: `radial-gradient(circle at center bottom, ${currentAgentData.color}, transparent 70%)`
                           }}
                       />
-
+                      
+                      {/* 2. TEXTURA TÁTICA */}
                       <div className="absolute top-0 inset-x-0 h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay" />
                       
+                      {/* 3. IMAGEM DO AGENTE */}
                       <img 
                            key={currentAgentData.id}
                            src={`https://media.valorant-api.com/agents/${currentAgentData.id}/fullportrait.png`}
-                           className="h-[90%] object-cover relative z-10 drop-shadow-[0_0_50px_rgba(0,0,0,0.8)] transition-transform group-hover:scale-105 duration-500"
+                           className="h-[95%] object-cover relative z-10 drop-shadow-[0_0_50px_rgba(0,0,0,0.8)] transition-transform group-hover:scale-105 duration-500"
+                           onError={(e) => e.currentTarget.style.display = 'none'}
                       />
                       
-                      <div className="absolute bottom-6 z-20 text-center">
-                          <h3 className="text-5xl font-black text-white uppercase italic leading-none">{selectedAgentPlayer}</h3>
-                          <p className="text-[#FF4654] font-bold tracking-widest uppercase text-sm mt-1" style={{ color: currentAgentData.color }}>{currentAgentData.name}</p>
+                      {/* 4. MÁSCARA PRETA NA BASE (FADE PARA TEXTO) */}
+                      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black via-black/80 to-transparent z-10" />
+
+                      <div className="absolute bottom-8 z-20 text-center">
+                          <h3 className="text-6xl font-black text-white uppercase italic leading-none">{selectedAgentPlayer}</h3>
+                          <p className="font-bold tracking-[0.2em] uppercase text-sm mt-2 flex items-center justify-center gap-2">
+                             <span className="w-2 h-2 rounded-full" style={{background: currentAgentData.color}}></span>
+                             <span style={{ color: currentAgentData.color }}>{currentAgentData.name}</span>
+                          </p>
                       </div>
                  </div>
 
-                 {/* Right: Tactics & Utility */}
-                 <div className="lg:col-span-8 flex flex-col">
+                 {/* ESPECIFICAÇÕES TÁTICAS */}
+                 <div className="lg:col-span-8 flex flex-col justify-between">
                       <div className="flex gap-4 mb-8">
-                          <button onClick={() => setSideMode("attack")} className={`flex-1 py-4 rounded-lg font-black uppercase text-xl flex items-center justify-center gap-3 transition-all ${sideMode === 'attack' ? 'bg-[#FF4654] text-white shadow-lg' : 'bg-white/5 text-white/40 hover:text-white'}`}>
-                              <Sword size={24} /> Attack Setups
+                          <button onClick={() => setSideMode("attack")} className={`flex-1 py-6 rounded-xl font-black uppercase text-2xl flex items-center justify-center gap-3 transition-all ${sideMode === 'attack' ? 'bg-[#FF4654] text-white shadow-[0_0_20px_rgba(255,70,84,0.3)]' : 'bg-white/5 text-white/40 hover:text-white border border-white/5 hover:border-white/20'}`}>
+                              <Sword size={28} /> Attack
                           </button>
-                          <button onClick={() => setSideMode("defense")} className={`flex-1 py-4 rounded-lg font-black uppercase text-xl flex items-center justify-center gap-3 transition-all ${sideMode === 'defense' ? 'bg-[#5B3C99] text-white shadow-lg' : 'bg-white/5 text-white/40 hover:text-white'}`}>
-                              <Shield size={24} /> Defense Holds
+                          <button onClick={() => setSideMode("defense")} className={`flex-1 py-6 rounded-xl font-black uppercase text-2xl flex items-center justify-center gap-3 transition-all ${sideMode === 'defense' ? 'bg-[#5B3C99] text-white shadow-[0_0_20px_rgba(91,60,153,0.3)]' : 'bg-white/5 text-white/40 hover:text-white border border-white/5 hover:border-white/20'}`}>
+                              <Shield size={28} /> Defense
                           </button>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
-                          <div className="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-[#FF4654]/50 transition-colors">
-                              <h4 className="text-[#FF4654] font-bold uppercase tracking-widest text-xs mb-2">Key Position</h4>
-                              <p className="text-white font-bold text-lg mb-4">{sideMode === 'attack' ? 'Execução Padrão' : 'Âncora do Site'}</p>
-                              <div className="h-32 bg-black/40 rounded-lg flex items-center justify-center text-white/20 text-sm font-mono border border-white/5">
-                                 [Minimap: {selectedMap.name}]
+                          {/* CARD INFO 1 */}
+                          <div className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-[#FF4654]/30 transition-colors group/card">
+                              <h4 className="text-[#FF4654] font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
+                                  <div className="w-1 h-4 bg-[#FF4654]" /> Key Position
+                              </h4>
+                              <p className="text-white font-bold text-2xl mb-6">{sideMode === 'attack' ? 'Entry Fragger / Space Maker' : 'Anchor / Info Gatherer'}</p>
+                              <div className="h-48 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover/card:border-[#FF4654]/20 transition-colors relative overflow-hidden">
+                                 <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10" />
+                                 <span className="text-white/20 font-mono text-sm">[ Tactical Map Overlay ]</span>
                               </div>
                           </div>
                           
-                          <div className="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-[#FF4654]/50 transition-colors">
-                              <h4 className="text-[#FF4654] font-bold uppercase tracking-widest text-xs mb-2">Essential Utility</h4>
-                              <p className="text-white font-bold text-lg mb-4">{sideMode === 'attack' ? 'Utilitário de Entrada' : 'Utilitário de Retardo'}</p>
-                              <div className="space-y-2">
-                                 <div className="flex items-center gap-3 text-sm text-white/60"><div className="w-2 h-2 rounded-full bg-[#FF4654]" /> Use no início do round</div>
-                                 <div className="flex items-center gap-3 text-sm text-white/60"><div className="w-2 h-2 rounded-full bg-[#FF4654]" /> Combine com a info do time</div>
-                              </div>
+                          {/* CARD INFO 2 */}
+                          <div className="bg-white/5 p-8 rounded-2xl border border-white/10 hover:border-[#FF4654]/30 transition-colors">
+                              <h4 className="text-[#FF4654] font-bold uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
+                                  <div className="w-1 h-4 bg-[#FF4654]" /> Utility Usage
+                              </h4>
+                              <p className="text-white font-bold text-2xl mb-6">{sideMode === 'attack' ? 'Execute / Flash' : 'Delay / Retake'}</p>
+                              <ul className="space-y-4">
+                                 <li className="flex items-start gap-4 text-white/70">
+                                     <div className="w-6 h-6 rounded bg-[#FF4654]/10 border border-[#FF4654]/30 flex items-center justify-center shrink-0 text-[#FF4654] font-bold text-xs">1</div>
+                                     <span className="text-sm">Use utility early to clear close angles before the team pushes.</span>
+                                 </li>
+                                 <li className="flex items-start gap-4 text-white/70">
+                                     <div className="w-6 h-6 rounded bg-[#FF4654]/10 border border-[#FF4654]/30 flex items-center justify-center shrink-0 text-[#FF4654] font-bold text-xs">2</div>
+                                     <span className="text-sm">Combine flashes with Sova dart for maximum info.</span>
+                                 </li>
+                              </ul>
                           </div>
                       </div>
                  </div>
@@ -317,7 +324,6 @@ export default function ValorantHub() {
          <div className="flex items-end justify-between mb-12">
              <div>
                 <h2 className="text-4xl font-black uppercase text-white italic">Live <span className="text-[#9146FF]">Hub</span></h2>
-                <p className="text-white/40">Watch top players & creators live</p>
              </div>
              <div className="flex bg-white/5 rounded-lg p-1">
                  <button onClick={() => setStreamTab('pros')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'pros' ? 'bg-[#9146FF] text-white' : 'text-white/40 hover:text-white'}`}>Pro Players</button>
@@ -338,7 +344,6 @@ export default function ValorantHub() {
                              <div className="w-1.5 h-1.5 rounded-full bg-[#EF4444]" /> {streamer.viewers}
                          </div>
                      </div>
-                     
                      <div className="p-4 flex gap-3">
                          <img src={streamer.avatar} className="w-10 h-10 rounded-full border-2 border-[#9146FF]" />
                          <div>
