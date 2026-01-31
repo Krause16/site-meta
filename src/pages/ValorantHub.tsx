@@ -47,19 +47,27 @@ const MAPS = [
   { id: "split", name: "Split", image: "/maps/split.webp" },
 ];
 
-// LISTA COMPLETA (Sua versão atualizada)
+// ROLES COM ÍCONES DA API (Correção Solicitada)
+const ROLES = [
+    { name: "Duelist", id: "dbe8757e-9e92-4ed4-b39f-9dfc589691d4" },
+    { name: "Initiator", id: "1b47567f-8f7b-444b-aae3-b0c634622d10" },
+    { name: "Controller", id: "4ee40330-ecdd-4f2f-98a8-eb1243428373" },
+    { name: "Sentinel", id: "5fc02f99-4091-4486-a531-98459a3e95e9" },
+];
+
+// LISTA DE AGENTES (KAY/O Corrigido)
 const AGENTS: Record<string, { name: string; role: string; id: string; color: string }> = {
   jett: { name: "Jett", role: "Duelist", id: "add6443a-41bd-e414-f6ad-e58d267f4e95", color: "#92E0EB" },
   sova: { name: "Sova", role: "Initiator", id: "320b2a48-4d9b-a075-30f1-1f93a9b638fa", color: "#3F4F8F" },
   cypher: { name: "Cypher", role: "Sentinel", id: "117ed9e3-49f3-6512-3ccf-0cada7e3823b", color: "#C3CED6" },
   killjoy: { name: "Killjoy", role: "Sentinel", id: "1e58de9c-4950-5125-93e9-a0aee9f98746", color: "#F5D342" },
-  omen: { name: "Omen", role: "Controller", id: "8e253930-4c05-31dd-1b6c-968525494517", color: "#151f49" },
+  omen: { name: "Omen", role: "Controller", id: "8e253930-4c05-31dd-1b6c-968525494517", color: "#4D5575" },
   brimstone: { name: "Brimstone", role: "Controller", id: "9f0d8ba9-4140-b941-57d3-a7ad57c6b417", color: "#D96C2B" },
   raze: { name: "Raze", role: "Duelist", id: "f94c3b30-42be-e959-889c-5aa313dba261", color: "#F28B3D" },
   gekko: { name: "Gekko", role: "Initiator", id: "e370fa57-4757-3604-3648-499e1f642d3f", color: "#C7F458" },
   viper: { name: "Viper", role: "Controller", id: "707eab51-4836-f488-046a-cda6bf494859", color: "#4FB363" },
   neon: { name: "Neon", role: "Duelist", id: "bb2a4828-46eb-8cd1-e765-15848195d751", color: "#F5F93F" },
-  kayo: { name: "KAY/O", role: "Initiator", id: "601dbbe7-43ce-be57-2a40-4abd2495362", color: "#41B1C4" },
+  kayo: { name: "KAY/O", role: "Initiator", id: "601dbbe7-43ce-be57-2a40-4abd24953621", color: "#41B1C4" }, // CORRIGIDO
   fade: { name: "Fade", role: "Initiator", id: "dade69b4-4f5a-8528-247b-219e5a1facd6", color: "#5C5C5C" },
   breach: { name: "Breach", role: "Initiator", id: "5f8d3a7f-467b-97f3-062c-13acf203c006", color: "#D96C2B" },
   astra: { name: "Astra", role: "Controller", id: "41fb69c1-4189-7b37-f117-bcaf1e96f1bf", color: "#6A3B9E" },
@@ -116,8 +124,6 @@ const STREAMERS = {
     ]
 }
 
-const ROLES = ["Duelist", "Initiator", "Controller", "Sentinel"];
-
 export default function ValorantHub() {
   const [selectedMap, setSelectedMap] = useState(MAPS[0]);
   const [selectedComp, setSelectedComp] = useState(META_COMPS[0]);
@@ -156,7 +162,6 @@ export default function ValorantHub() {
               {selectedMap.name}
             </h1>
             
-            {/* CORREÇÃO DO ABYSS: Padding px-6 para a sombra não cortar */}
             <div className="flex gap-4 overflow-x-auto pb-8 pt-8 scrollbar-hide px-6 -mx-6">
                 {MAPS.map((map) => (
                     <button
@@ -175,7 +180,8 @@ export default function ValorantHub() {
                         ) : (
                             <>
                                 <img src={map.image} className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
-                                <div className="absolute inset-0 bg-black/50 group-hover:bg-black/10 transition-colors" />
+                                {/* CORREÇÃO FADE: Gradiente suave para #0A0A0A ou preto leve */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent transition-colors" />
                                 <span className="absolute bottom-2 left-2 text-sm font-bold uppercase tracking-widest text-white">{map.name}</span>
                             </>
                         )}
@@ -248,8 +254,8 @@ export default function ValorantHub() {
           <section id="intel" className="px-8 lg:px-16 py-12 border-t border-white/5 bg-[#0A0A0A]">
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                  
-                 {/* FOTO DO PRO PLAYER */}
                  <div className="lg:col-span-5 relative h-[500px] flex items-end justify-center group">
+                      {/* FADE CORRIGIDO: Vai para #0A0A0A sem marcação */}
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent z-10" />
                       <div className="absolute bottom-0 w-full h-1/2 bg-[#FF4654] blur-[120px] opacity-10" />
                       
@@ -274,7 +280,6 @@ export default function ValorantHub() {
                       </div>
                  </div>
 
-                 {/* TACTICAL GPS */}
                  <div className="lg:col-span-7">
                       <div className="flex items-center gap-3 mb-6">
                           <MapIcon className="text-[#FF4654]" />
@@ -283,9 +288,12 @@ export default function ValorantHub() {
                       
                       <div className="aspect-video w-full bg-[#151515] rounded-xl border border-white/10 relative overflow-hidden group">
                           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
+                          
+                          {/* DICA DE MINIMAPA PARA VOCÊ IMPLEMENTAR: 
+                              Url: `https://media.valorant-api.com/maps/{MAP_UUID}/displayicon.png` 
+                              Você precisa pegar os UUIDs em valorant-api.com/v1/maps */}
                           <img src={selectedMap.image} className="absolute inset-0 w-full h-full object-cover opacity-20 grayscale" />
                           
-                          {/* GPS Point */}
                           <div className="absolute top-1/3 left-1/4">
                               <div className="w-4 h-4 bg-[#FF4654] rounded-full animate-ping absolute" />
                               <div className="w-4 h-4 bg-[#FF4654] rounded-full relative border-2 border-white shadow-[0_0_20px_#FF4654]" />
@@ -306,16 +314,20 @@ export default function ValorantHub() {
               <p className="text-white/40 max-w-2xl mx-auto">Select any agent to view specific setups.</p>
           </div>
 
-          <div className="flex justify-center gap-2 mb-12 flex-wrap">
+          {/* FILTRO COM ÍCONES */}
+          <div className="flex justify-center gap-4 mb-12 flex-wrap">
               {ROLES.map(role => (
                   <button 
-                    key={role}
-                    onClick={() => setMasteryRole(role)}
-                    className={`px-6 py-2 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${
-                        masteryRole === role ? "bg-white text-black" : "bg-white/5 text-white/40 hover:bg-white/10"
+                    key={role.name}
+                    onClick={() => setMasteryRole(role.name)}
+                    className={`w-12 h-12 rounded-lg border flex items-center justify-center transition-all ${
+                        masteryRole === role.name 
+                        ? "bg-white border-white shadow-[0_0_15px_rgba(255,255,255,0.3)]" 
+                        : "bg-white/5 border-white/10 hover:border-white/50"
                     }`}
+                    title={role.name}
                   >
-                      {role}
+                      <img src={`https://media.valorant-api.com/agents/roles/${role.id}/displayicon.png`} className={`w-6 h-6 ${masteryRole === role.name ? 'brightness-0' : 'invert opacity-60'}`} />
                   </button>
               ))}
           </div>
@@ -335,15 +347,26 @@ export default function ValorantHub() {
           </div>
 
           <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[600px] flex flex-col md:flex-row">
-              {/* CORREÇÃO DO FADE DURO: Gradiente agora morre para transparente suave */}
+              {/* LADO ESQUERDO COM MÁSCARA DE FADE PERFEITA */}
               <div className="w-full md:w-1/3 bg-[#161616] p-8 flex flex-col items-center border-r border-white/5 relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-20" style={{ background: `radial-gradient(circle at top, ${masteryAgent.color}, transparent 70%)` }} />
                   
-                  <img src={`https://media.valorant-api.com/agents/${masteryAgent.id}/fullportrait.png`} className="h-64 object-contain relative z-10 drop-shadow-2xl" />
-                  <h3 className="text-4xl font-black text-white uppercase italic mt-4 relative z-10">{masteryAgent.name}</h3>
-                  <p className="text-white/40 text-sm tracking-widest uppercase mb-8 relative z-10">{masteryAgent.role}</p>
+                  {/* FADE REAL: A máscara faz a imagem desaparecer suavemente, sem linha de corte */}
+                  <img 
+                      src={`https://media.valorant-api.com/agents/${masteryAgent.id}/fullportrait.png`} 
+                      className="h-80 object-cover relative z-10 drop-shadow-2xl mb-4"
+                      style={{
+                          maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                          WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
+                      }}
+                  />
+                  
+                  {/* Cor de fundo sutil baseada no boneco */}
+                  <div className="absolute inset-0 opacity-10" style={{ background: `radial-gradient(circle at top, ${masteryAgent.color}, transparent 70%)` }} />
 
-                  <div className="w-full space-y-3 relative z-10">
+                  <h3 className="text-4xl font-black text-white uppercase italic mt-[-2rem] relative z-20">{masteryAgent.name}</h3>
+                  <p className="text-white/40 text-sm tracking-widest uppercase mb-8 relative z-20">{masteryAgent.role}</p>
+
+                  <div className="w-full space-y-3 relative z-20">
                       <button onClick={() => setMasteryPhase('attack')} className={`w-full py-4 rounded font-bold uppercase flex items-center justify-center gap-3 transition-all ${masteryPhase === 'attack' ? 'bg-[#FF4654] text-white' : 'bg-white/5 text-white/40'}`}>
                           <Sword size={20} /> Attack Plays
                       </button>
