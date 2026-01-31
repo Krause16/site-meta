@@ -36,18 +36,18 @@ const HubHeader = () => {
   );
 };
 
-// === DADOS ===
+// === DADOS DOS MAPAS (COM UUIDs PARA MINIMAPA) ===
 const MAPS = [
-  { id: "abyss", name: "Abyss", image: "/maps/abyss.webp" },
-  { id: "bind", name: "Bind", image: "/maps/bind.webp" },
-  { id: "corrode", name: "Corrode", image: "/maps/corrode.webp" }, 
-  { id: "haven", name: "Haven", image: "/maps/haven.webp" },
-  { id: "pearl", name: "Pearl", image: "/maps/pearl.webp" },
-  { id: "breeze", name: "Breeze", image: "/maps/breeze.webp" },
-  { id: "split", name: "Split", image: "/maps/split.webp" },
+  { id: "abyss", name: "Abyss", uuid: "224b0a95-48b9-f703-1bd8-67aca101a61f", image: "/maps/abyss.webp" },
+  { id: "bind", name: "Bind", uuid: "2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba", image: "/maps/bind.webp" },
+  { id: "split", name: "Split", uuid: "d960549e-485c-e861-8d71-aa9d1aed12a2", image: "/maps/split.webp" },
+  { id: "breeze", name: "Breeze", uuid: "2fb9a4fd-47b8-4e7d-a969-74b4046ebd53", image: "/maps/breeze.webp" },
+  { id: "corrode", name: "Corrode", uuid: "1c18ab1f-420d-0d8b-71d0-77ad3c439115", image: "/maps/corrode.webp" }, // Drift/TDM
+  { id: "pearl", name: "Pearl", uuid: "fd267378-4d1d-484f-ff52-77821ed10dc2", image: "/maps/pearl.webp" },
+  { id: "haven", name: "Haven", uuid: "2bee0dc9-4ffe-519b-1cbd-7fbe763a6047", image: "/maps/haven.webp" },
 ];
 
-// ROLES COM ÍCONES DA API (Correção Solicitada)
+// ROLES (IDS CORRETOS PARA ÍCONES)
 const ROLES = [
     { name: "Duelist", id: "dbe8757e-9e92-4ed4-b39f-9dfc589691d4" },
     { name: "Initiator", id: "1b47567f-8f7b-444b-aae3-b0c634622d10" },
@@ -55,7 +55,7 @@ const ROLES = [
     { name: "Sentinel", id: "5fc02f99-4091-4486-a531-98459a3e95e9" },
 ];
 
-// LISTA DE AGENTES (KAY/O Corrigido)
+// LISTA DE AGENTES (KAY/O Corrigido + Todos)
 const AGENTS: Record<string, { name: string; role: string; id: string; color: string }> = {
   jett: { name: "Jett", role: "Duelist", id: "add6443a-41bd-e414-f6ad-e58d267f4e95", color: "#92E0EB" },
   sova: { name: "Sova", role: "Initiator", id: "320b2a48-4d9b-a075-30f1-1f93a9b638fa", color: "#3F4F8F" },
@@ -67,7 +67,7 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
   gekko: { name: "Gekko", role: "Initiator", id: "e370fa57-4757-3604-3648-499e1f642d3f", color: "#C7F458" },
   viper: { name: "Viper", role: "Controller", id: "707eab51-4836-f488-046a-cda6bf494859", color: "#4FB363" },
   neon: { name: "Neon", role: "Duelist", id: "bb2a4828-46eb-8cd1-e765-15848195d751", color: "#F5F93F" },
-  kayo: { name: "KAY/O", role: "Initiator", id: "601dbbe7-43ce-be57-2a40-4abd24953621", color: "#41B1C4" }, // CORRIGIDO
+  kayo: { name: "KAY/O", role: "Initiator", id: "601dbbe7-43ce-be57-2a40-4abd24953621", color: "#41B1C4" },
   fade: { name: "Fade", role: "Initiator", id: "dade69b4-4f5a-8528-247b-219e5a1facd6", color: "#5C5C5C" },
   breach: { name: "Breach", role: "Initiator", id: "5f8d3a7f-467b-97f3-062c-13acf203c006", color: "#D96C2B" },
   astra: { name: "Astra", role: "Controller", id: "41fb69c1-4189-7b37-f117-bcaf1e96f1bf", color: "#6A3B9E" },
@@ -162,15 +162,17 @@ export default function ValorantHub() {
               {selectedMap.name}
             </h1>
             
+            {/* BUTTON FIX: Padding adicionado (p-2 no container) para sombra não cortar */}
             <div className="flex gap-4 overflow-x-auto pb-8 pt-8 scrollbar-hide px-6 -mx-6">
                 {MAPS.map((map) => (
                     <button
                         key={map.id}
                         onClick={() => setSelectedMap(map)}
-                        className={`relative w-48 h-24 shrink-0 rounded-lg overflow-hidden border-2 transition-all duration-300 group ${
+                        // Adicionei overflow-visible no container se precisar, mas o padding resolve
+                        className={`relative w-48 h-24 shrink-0 rounded-lg transition-all duration-300 group overflow-hidden ${
                             selectedMap.id === map.id 
-                            ? "border-[#FF4654] shadow-[0_0_30px_rgba(255,70,84,0.4)] scale-105" 
-                            : "border-white/10 hover:border-white/30 opacity-60 hover:opacity-100"
+                            ? "border-2 border-[#FF4654] shadow-[0_0_25px_rgba(255,70,84,0.5)] scale-105" 
+                            : "border border-white/10 hover:border-white/30 opacity-60 hover:opacity-100"
                         }`}
                     >
                         {selectedMap.id === map.id ? (
@@ -180,8 +182,13 @@ export default function ValorantHub() {
                         ) : (
                             <>
                                 <img src={map.image} className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
-                                {/* CORREÇÃO FADE: Gradiente suave para #0A0A0A ou preto leve */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent transition-colors" />
+                                {/* FADE LISO: Usando mask-image ao invés de overlay de cor */}
+                                <div 
+                                    className="absolute inset-0" 
+                                    style={{
+                                        background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)'
+                                    }}
+                                />
                                 <span className="absolute bottom-2 left-2 text-sm font-bold uppercase tracking-widest text-white">{map.name}</span>
                             </>
                         )}
@@ -255,14 +262,15 @@ export default function ValorantHub() {
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                  
                  <div className="lg:col-span-5 relative h-[500px] flex items-end justify-center group">
-                      {/* FADE CORRIGIDO: Vai para #0A0A0A sem marcação */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent z-10" />
-                      <div className="absolute bottom-0 w-full h-1/2 bg-[#FF4654] blur-[120px] opacity-10" />
-                      
+                      {/* FADE LISO: Usando mask-image para fundir com o fundo sem degrau */}
                       <img 
                            key={currentCompAgentData.id}
                            src={`https://media.valorant-api.com/agents/${currentCompAgentData.id}/fullportrait.png`}
                            className="h-[110%] object-cover relative z-0 drop-shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+                           style={{
+                                maskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
+                                WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)'
+                           }}
                       />
                       
                       <div className="absolute bottom-10 z-20 text-center">
@@ -286,15 +294,20 @@ export default function ValorantHub() {
                           <h3 className="text-2xl font-black text-white uppercase">Operator GPS <span className="text-white/20">// {selectedMap.name}</span></h3>
                       </div>
                       
+                      {/* MINIMAPA TÁTICO PUXANDO DA API */}
                       <div className="aspect-video w-full bg-[#151515] rounded-xl border border-white/10 relative overflow-hidden group">
-                          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
+                          {/* Grid fundo */}
+                          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] z-0" />
                           
-                          {/* DICA DE MINIMAPA PARA VOCÊ IMPLEMENTAR: 
-                              Url: `https://media.valorant-api.com/maps/{MAP_UUID}/displayicon.png` 
-                              Você precisa pegar os UUIDs em valorant-api.com/v1/maps */}
-                          <img src={selectedMap.image} className="absolute inset-0 w-full h-full object-cover opacity-20 grayscale" />
+                          {/* IMAGEM DO MINIMAPA DA API */}
+                          <img 
+                            src={`https://media.valorant-api.com/maps/${selectedMap.uuid}/displayicon.png`} 
+                            className="absolute inset-0 w-full h-full object-contain opacity-40 grayscale"
+                            alt="Minimap"
+                          />
                           
-                          <div className="absolute top-1/3 left-1/4">
+                          {/* Pontos GPS */}
+                          <div className="absolute top-1/3 left-1/4 z-10">
                               <div className="w-4 h-4 bg-[#FF4654] rounded-full animate-ping absolute" />
                               <div className="w-4 h-4 bg-[#FF4654] rounded-full relative border-2 border-white shadow-[0_0_20px_#FF4654]" />
                               <div className="absolute left-6 top-0 bg-black/80 px-3 py-1 rounded text-xs text-white whitespace-nowrap border-l-2 border-[#FF4654]">
@@ -314,20 +327,23 @@ export default function ValorantHub() {
               <p className="text-white/40 max-w-2xl mx-auto">Select any agent to view specific setups.</p>
           </div>
 
-          {/* FILTRO COM ÍCONES */}
+          {/* FILTRO COM ÍCONES (ID da API) */}
           <div className="flex justify-center gap-4 mb-12 flex-wrap">
               {ROLES.map(role => (
                   <button 
                     key={role.name}
                     onClick={() => setMasteryRole(role.name)}
-                    className={`w-12 h-12 rounded-lg border flex items-center justify-center transition-all ${
+                    className={`w-14 h-14 rounded-xl border flex items-center justify-center transition-all ${
                         masteryRole === role.name 
-                        ? "bg-white border-white shadow-[0_0_15px_rgba(255,255,255,0.3)]" 
+                        ? "bg-white border-white shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-110" 
                         : "bg-white/5 border-white/10 hover:border-white/50"
                     }`}
                     title={role.name}
                   >
-                      <img src={`https://media.valorant-api.com/agents/roles/${role.id}/displayicon.png`} className={`w-6 h-6 ${masteryRole === role.name ? 'brightness-0' : 'invert opacity-60'}`} />
+                      <img 
+                        src={`https://media.valorant-api.com/agents/roles/${role.id}/displayicon.png`} 
+                        className={`w-8 h-8 ${masteryRole === role.name ? 'brightness-0' : 'invert opacity-60'}`} 
+                      />
                   </button>
               ))}
           </div>
