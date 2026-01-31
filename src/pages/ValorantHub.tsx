@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sword, Shield, Settings, Tv, Crosshair, Map as MapIcon, Target, Timer, Anchor, RefreshCcw } from "lucide-react";
+import { Sword, Shield, Settings, Map as MapIcon, Target, Timer, Anchor, RefreshCcw } from "lucide-react";
 
 // === HEADER ===
 const HubHeader = () => {
@@ -11,7 +11,7 @@ const HubHeader = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent backdrop-blur-sm pointer-events-none transition-all duration-300">
+    <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] via-[#0A0A0A]/90 to-transparent backdrop-blur-sm pointer-events-none transition-all duration-300">
         <div className="flex items-center gap-6 pointer-events-auto">
             <Link to="/" className="group relative shrink-0">
                 <svg width="42" height="42" viewBox="0 0 512 512" className="fill-[#FF4654] transition-transform group-hover:scale-110 duration-300">
@@ -47,7 +47,7 @@ const MAPS = [
   { id: "split", name: "Split", image: "/maps/split.webp" },
 ];
 
-// LISTA COMPLETA E CORRIGIDA (Valorant API v1)
+// LISTA COMPLETA (Sua versão atualizada)
 const AGENTS: Record<string, { name: string; role: string; id: string; color: string }> = {
   jett: { name: "Jett", role: "Duelist", id: "add6443a-41bd-e414-f6ad-e58d267f4e95", color: "#92E0EB" },
   sova: { name: "Sova", role: "Initiator", id: "320b2a48-4d9b-a075-30f1-1f93a9b638fa", color: "#3F4F8F" },
@@ -64,7 +64,7 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
   breach: { name: "Breach", role: "Initiator", id: "5f8d3a7f-467b-97f3-062c-13acf203c006", color: "#D96C2B" },
   astra: { name: "Astra", role: "Controller", id: "41fb69c1-4189-7b37-f117-bcaf1e96f1bf", color: "#6A3B9E" },
   harbor: { name: "Harbor", role: "Controller", id: "95b78ed7-4637-86d9-7e41-71ba8c293152", color: "#2B8F8F" },
-  phoenix: { name: "Phoenix", role: "Duelist", id: "eb93336a-449b-9c1b-0a54-a891f7921d69", color: "#861000" },
+  phoenix: { name: "Phoenix", role: "Duelist", id: "eb93336a-449b-9c1b-0a54-a891f7921d69", color: "#E25327" },
   iso: { name: "Iso", role: "Duelist", id: "0e38b510-41a8-5780-5e8f-568b2a4f2d6c", color: "#6A3B9E" },
   waylay: { name: "Waylay", role: "Duelist", id: "df1cb487-4902-002e-5c17-d28e83e78588", color: "#c0ff2d" },
   skye: { name: "Skye", role: "Initiator", id: "6f2a04ca-43e0-be17-7f36-b3908627744d", color: "#6A9E3B" },
@@ -124,7 +124,7 @@ export default function ValorantHub() {
   const [selectedCompAgent, setSelectedCompAgent] = useState<string | null>(META_COMPS[0].agents[0].key);
   const [streamTab, setStreamTab] = useState<"pros" | "creators">("pros");
   
-  // NOVOS ESTADOS PARA A NOVA SEÇÃO "MASTERY"
+  // MASTERY STATES
   const [masteryRole, setMasteryRole] = useState("Duelist");
   const [masteryAgent, setMasteryAgent] = useState(AGENTS["jett"]);
   const [masteryPhase, setMasteryPhase] = useState<"attack" | "defense">("attack");
@@ -147,7 +147,7 @@ export default function ValorantHub() {
             className="absolute inset-0"
           >
             <img src={selectedMap.image} alt={selectedMap.name} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-[#0A0A0A]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/90 via-[#0A0A0A]/40 to-[#0A0A0A]" />
           </motion.div>
         </AnimatePresence>
 
@@ -156,8 +156,8 @@ export default function ValorantHub() {
               {selectedMap.name}
             </h1>
             
-            {/* BUTTON FIX: Padding adicionado para sombra não cortar */}
-            <div className="flex gap-4 overflow-x-auto pb-8 pt-8 scrollbar-hide px-2">
+            {/* CORREÇÃO DO ABYSS: Padding px-6 para a sombra não cortar */}
+            <div className="flex gap-4 overflow-x-auto pb-8 pt-8 scrollbar-hide px-6 -mx-6">
                 {MAPS.map((map) => (
                     <button
                         key={map.id}
@@ -185,7 +185,7 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 2: META COMPS (SELEÇÃO) === */}
+      {/* === SEÇÃO 2: META COMPS === */}
       <section id="comps" className="px-8 lg:px-16 py-20 bg-[#0A0A0A]">
         <div className="mb-12">
              <h2 className="text-4xl font-black uppercase text-white italic">Meta <span className="text-[#FF4654]">Comps</span></h2>
@@ -243,16 +243,15 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 3: OPERATOR INTEL (GPS/CONFIG) === */}
+      {/* === SEÇÃO 3: OPERATOR INTEL === */}
       {currentCompAgentData && (
-          <section id="intel" className="px-8 lg:px-16 py-12 border-t border-white/5 bg-[#0F0F0F]">
+          <section id="intel" className="px-8 lg:px-16 py-12 border-t border-white/5 bg-[#0A0A0A]">
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                  
-                 {/* FOTO DO PRO PLAYER / AGENTE */}
+                 {/* FOTO DO PRO PLAYER */}
                  <div className="lg:col-span-5 relative h-[500px] flex items-end justify-center group">
-                      {/* Gradient Fundo */}
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent z-10" />
-                      <div className="absolute bottom-0 w-full h-1/2 bg-[#FF4654] blur-[150px] opacity-10" />
+                      <div className="absolute bottom-0 w-full h-1/2 bg-[#FF4654] blur-[120px] opacity-10" />
                       
                       <img 
                            key={currentCompAgentData.id}
@@ -282,15 +281,11 @@ export default function ValorantHub() {
                           <h3 className="text-2xl font-black text-white uppercase">Operator GPS <span className="text-white/20">// {selectedMap.name}</span></h3>
                       </div>
                       
-                      {/* Placeholder do Minimapa Tático */}
                       <div className="aspect-video w-full bg-[#151515] rounded-xl border border-white/10 relative overflow-hidden group">
-                          {/* Grid Tático */}
                           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
-                          
-                          {/* Mapa (Imagem escura de fundo) */}
                           <img src={selectedMap.image} className="absolute inset-0 w-full h-full object-cover opacity-20 grayscale" />
                           
-                          {/* Pontos de Interesse (GPS) */}
+                          {/* GPS Point */}
                           <div className="absolute top-1/3 left-1/4">
                               <div className="w-4 h-4 bg-[#FF4654] rounded-full animate-ping absolute" />
                               <div className="w-4 h-4 bg-[#FF4654] rounded-full relative border-2 border-white shadow-[0_0_20px_#FF4654]" />
@@ -298,28 +293,19 @@ export default function ValorantHub() {
                                   <strong>Start:</strong> A Main Control
                               </div>
                           </div>
-
-                          <div className="absolute bottom-1/3 right-1/3">
-                              <div className="w-3 h-3 bg-white rounded-full opacity-50" />
-                              <div className="absolute left-5 top-0 text-xs text-white/50 whitespace-nowrap">Rotate Path</div>
-                          </div>
                       </div>
-                      <p className="mt-4 text-white/40 text-sm">
-                          *Real-time positioning data analyzed from VCT 2026 demos.
-                      </p>
                  </div>
              </div>
           </section>
       )}
 
-      {/* === NOVA SEÇÃO: AGENT MASTERY (A Enciclopédia) === */}
-      <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#050505] border-t border-white/5">
+      {/* === SEÇÃO 4: AGENT MASTERY === */}
+      <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16">
               <h2 className="text-5xl font-black uppercase text-white italic mb-4">Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] to-purple-500">Mastery</span></h2>
-              <p className="text-white/40 max-w-2xl mx-auto">Select any agent to view specific setups for Attack (Entry/Post-Plant) and Defense (Hold/Retake).</p>
+              <p className="text-white/40 max-w-2xl mx-auto">Select any agent to view specific setups.</p>
           </div>
 
-          {/* Filtro de Role */}
           <div className="flex justify-center gap-2 mb-12 flex-wrap">
               {ROLES.map(role => (
                   <button 
@@ -334,7 +320,6 @@ export default function ValorantHub() {
               ))}
           </div>
 
-          {/* Grid de Agentes (Filtrado) */}
           <div className="flex flex-wrap justify-center gap-4 mb-16">
               {Object.values(AGENTS).filter(a => a.role === masteryRole).map(agent => (
                   <button
@@ -349,11 +334,10 @@ export default function ValorantHub() {
               ))}
           </div>
 
-          {/* ÁREA DE PLAYS (O Core da nova seção) */}
           <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[600px] flex flex-col md:flex-row">
-              {/* Lado Esquerdo: Boneco + Controle */}
+              {/* CORREÇÃO DO FADE DURO: Gradiente agora morre para transparente suave */}
               <div className="w-full md:w-1/3 bg-[#161616] p-8 flex flex-col items-center border-r border-white/5 relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-20" style={{ background: `radial-gradient(circle at top, ${masteryAgent.color}, transparent 60%)` }} />
+                  <div className="absolute inset-0 opacity-20" style={{ background: `radial-gradient(circle at top, ${masteryAgent.color}, transparent 70%)` }} />
                   
                   <img src={`https://media.valorant-api.com/agents/${masteryAgent.id}/fullportrait.png`} className="h-64 object-contain relative z-10 drop-shadow-2xl" />
                   <h3 className="text-4xl font-black text-white uppercase italic mt-4 relative z-10">{masteryAgent.name}</h3>
@@ -369,40 +353,35 @@ export default function ValorantHub() {
                   </div>
               </div>
 
-              {/* Lado Direito: Os 2 Cards de Play */}
               <div className="w-full md:w-2/3 p-8 md:p-12">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-                      
-                      {/* Play 1: Early / Start */}
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-6 hover:border-white/30 transition-all group">
                           <div className="flex items-center gap-3 mb-4">
                               <div className={`p-2 rounded ${masteryPhase === 'attack' ? 'bg-[#FF4654]/20 text-[#FF4654]' : 'bg-[#5B3C99]/20 text-[#5B3C99]'}`}>
                                   {masteryPhase === 'attack' ? <Target size={20} /> : <Anchor size={20} />}
                               </div>
                               <h4 className="font-bold text-white uppercase tracking-widest">
-                                  {masteryPhase === 'attack' ? 'Early Round / Entry' : 'Start Round / Hold'}
+                                  {masteryPhase === 'attack' ? 'Early Round' : 'Start Hold'}
                               </h4>
                           </div>
                           <div className="aspect-video bg-[#1A1A1A] rounded border border-white/5 mb-4 flex items-center justify-center relative overflow-hidden">
                               <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-20" />
                               <span className="text-white/20 text-xs font-mono">VIDEO / LINEUP PLACEHOLDER</span>
-                              <div className="absolute bottom-2 right-2 px-2 py-1 bg-black/80 text-[10px] text-white border border-white/10 rounded">ON {selectedMap.name.toUpperCase()}</div>
                           </div>
                           <p className="text-white/60 text-sm leading-relaxed">
                               {masteryPhase === 'attack' 
-                                ? `Use ${masteryAgent.name}'s ability to clear close angles immediately. Prioritize spacing for your team.` 
-                                : `Hold passive angles. Don't peek main without utility support. Use signature ability to delay push.`}
+                                ? `Use ${masteryAgent.name}'s utility to break crosshair placement.` 
+                                : `Hold passive angles. Delay push for rotations.`}
                           </p>
                       </div>
 
-                      {/* Play 2: Late / Post-Plant */}
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-6 hover:border-white/30 transition-all group">
                           <div className="flex items-center gap-3 mb-4">
                               <div className={`p-2 rounded ${masteryPhase === 'attack' ? 'bg-[#FF4654]/20 text-[#FF4654]' : 'bg-[#5B3C99]/20 text-[#5B3C99]'}`}>
                                   {masteryPhase === 'attack' ? <Timer size={20} /> : <RefreshCcw size={20} />}
                               </div>
                               <h4 className="font-bold text-white uppercase tracking-widest">
-                                  {masteryPhase === 'attack' ? 'Post-Plant / Late' : 'Retake / Late Round'}
+                                  {masteryPhase === 'attack' ? 'Post-Plant' : 'Retake'}
                               </h4>
                           </div>
                           <div className="aspect-video bg-[#1A1A1A] rounded border border-white/5 mb-4 flex items-center justify-center relative overflow-hidden">
@@ -411,11 +390,10 @@ export default function ValorantHub() {
                           </div>
                           <p className="text-white/60 text-sm leading-relaxed">
                               {masteryPhase === 'attack' 
-                                ? `Play for time. Use remaining utility to deny defuse. Don't overheat.` 
-                                : `Wait for team regroup. Isolate 1v1 fights using flashes or re-positioning tools.`}
+                                ? `Play for time. Use lineup from safe distance.` 
+                                : `Isolate 1v1 fights. Flash for teammates.`}
                           </p>
                       </div>
-
                   </div>
               </div>
           </div>
