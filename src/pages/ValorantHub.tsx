@@ -39,12 +39,14 @@ const HubHeader = () => {
   );
 };
 
-// === DADOS ===
+// === DADOS COMPLETOS (Maps & Agents Atualizados) ===
 const MAPS = [
   { id: "abyss", name: "Abyss", uuid: "224b0a95-48b9-f703-1bd8-67aca101a61f", image: "/maps/abyss.webp" },
   { id: "bind", name: "Bind", uuid: "2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba", image: "/maps/bind.webp" },
   { id: "split", name: "Split", uuid: "d960549e-485c-e861-8d71-aa9d1aed12a2", image: "/maps/split.webp" },
   { id: "breeze", name: "Breeze", uuid: "2fb9a4fd-47b8-4e7d-a969-74b4046ebd53", image: "/maps/breeze.webp" },
+  { id: "corrode", name: "Corrode", uuid: "1c18ab1f-420d-0d8b-71d0-77ad3c439115", image: "/maps/corrode.webp" },
+  { id: "pearl", name: "Pearl", uuid: "fd267378-4d1d-484f-ff52-77821ed10dc2", image: "/maps/pearl.webp" },
   { id: "haven", name: "Haven", uuid: "2bee0dc9-4ffe-519b-1cbd-7fbe763a6047", image: "/maps/haven.webp" },
 ];
 
@@ -73,37 +75,49 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
   harbor: { name: "Harbor", role: "Controller", id: "95b78ed7-4637-86d9-7e41-71ba8c293152", color: "#2B8F8F" },
   phoenix: { name: "Phoenix", role: "Duelist", id: "eb93336a-449b-9c1b-0a54-a891f7921d69", color: "#E25327" },
   iso: { name: "Iso", role: "Duelist", id: "0e38b510-41a8-5780-5e8f-568b2a4f2d6c", color: "#6A3B9E" },
+  waylay: { name: "Waylay", role: "Duelist", id: "df1cb487-4902-002e-5c17-d28e83e78588", color: "#c0ff2d" },
+  skye: { name: "Skye", role: "Initiator", id: "6f2a04ca-43e0-be17-7f36-b3908627744d", color: "#6A9E3B" },
+  tejo: { name: "Tejo", role: "Initiator", id: "b444168c-4e35-8076-db47-ef9bf368f384", color: "#fffb00" },
+  yoru: { name: "Yoru", role: "Duelist", id: "7f94d92c-4234-0a36-9646-3a87eb8b5c89", color: "#3F4F8F" },
+  reyna: { name: "Reyna", role: "Duelist", id: "a3bfb853-43b2-7238-a4f1-ad90e9e46bcc", color: "#E04296" },
+  chamber: { name: "Chamber", role: "Sentinel", id: "22697a3d-45bf-8dd7-4fec-84a9e28c69d7", color: "#D9BA3B" },
+  deadlock: { name: "Deadlock", role: "Sentinel", id: "cc8b64c8-4b25-4ff9-6e7f-37b4da43d235", color: "#9E3B3B" },
+  sage: { name: "Sage", role: "Sentinel", id: "569fdd95-4d10-43ab-ca70-79becc718b46", color: "#00ffea" },
+  veto: { name: "Veto", role: "Sentinel", id: "92eeef5d-43b5-1d4a-8d03-b3927a09034b", color: "#005177" },
+  vyse: { name: "Vyse", role: "Sentinel", id: "efba5359-4016-a1e5-7626-b1ae76895940", color: "#811097" },
   clove: { name: "Clove", role: "Controller", id: "1dbf2edd-4729-0984-3115-daa5eed44993", color: "#E66AB4" }
 };
 
-// DADOS DE PLAYER MOCKADOS PARA EXEMPLO
+// DADOS DE PLAYER MOCKADOS (Exemplo)
 const PLAYER_STATS: Record<string, any> = {
     default: { sens: "0.35", dpi: "800", res: "1920x1080", crosshair: "1422", color: "Yellow" },
     aspas: { sens: "0.4", dpi: "800", res: "1280x960", crosshair: "0;P;c;5;h;0;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Yellow (Deut)" },
     less: { sens: "0.58", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;5;h;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
     demon1: { sens: "0.1", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Red" },
+    boaster: { sens: "0.52", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
 };
 
+// COMPS ATUALIZADAS (NRG, MIBR, FNATIC)
 const META_COMPS = [
   {
-    id: 1, name: "Brazil Superteam", winRate: "68%", org: "MIBR", color: "#009944",
+    id: 1, name: "NA Superteam", winRate: "62%", org: "NRG", color: "#54E627",
+    agents: [
+      { key: "jett", player: "Demon1" }, { key: "kayo", player: "Ethan" },
+      { key: "omen", player: "Marved" }, { key: "sova", player: "crashies" }, { key: "raze", player: "Victor" },
+    ],
+  },
+  {
+    id: 2, name: "Brazil Superteam", winRate: "68%", org: "MIBR", color: "#009944",
     agents: [
       { key: "jett", player: "aspas" }, { key: "gekko", player: "cauanzin" },
       { key: "sova", player: "nzr" }, { key: "omen", player: "art" }, { key: "killjoy", player: "less" },
     ],
   },
   {
-    id: 2, name: "Double Controller", winRate: "64%", org: "Sentinels", color: "#CE0037",
+    id: 3, name: "EMEA Dynasty", winRate: "71%", org: "FNATIC", color: "#FF5900",
     agents: [
-      { key: "raze", player: "zekken" }, { key: "sova", player: "N4RRATE" },
-      { key: "cypher", player: "johnqt" }, { key: "omen", player: "bang" }, { key: "viper", player: "Zellsis" },
-    ],
-  },
-  {
-    id: 3, name: "W-Gaming 3.0", winRate: "59%", org: "Paper Rex", color: "#A05BC3",
-    agents: [
-      { key: "neon", player: "something" }, { key: "breach", player: "f0rsakeN" },
-      { key: "gekko", player: "Jinggg" }, { key: "brimstone", player: "mindfreak" }, { key: "fade", player: "d4v41" },
+      { key: "omen", player: "Boaster" }, { key: "jett", player: "Derke" },
+      { key: "killjoy", player: "Alfajer" }, { key: "sova", player: "Leo" }, { key: "viper", player: "Chronicle" },
     ],
   },
 ];
@@ -132,10 +146,8 @@ export default function ValorantHub() {
   const [masteryPhase, setMasteryPhase] = useState<"attack" | "defense">("attack");
 
   const selectedAgentPlayer = selectedComp.agents.find(a => a.key === selectedCompAgent)?.player || "Player";
-  const currentCompAgentData = AGENTS[selectedCompAgent as keyof typeof AGENTS];
   const playerStats = PLAYER_STATS[selectedAgentPlayer.toLowerCase()] || PLAYER_STATS["default"];
 
-  // Mock das habilidades (slots padrão da API)
   const abilitySlots = ['Grenade', 'Ability1', 'Ability2', 'Ultimate'];
 
   return (
@@ -145,7 +157,6 @@ export default function ValorantHub() {
 
       {/* === HERO: MAPAS === */}
       <section id="maps" className="relative h-[80vh] overflow-hidden">
-        {/* Background Dinâmico */}
         <AnimatePresence mode="popLayout">
           <motion.div
             key={selectedMap.id}
@@ -159,7 +170,6 @@ export default function ValorantHub() {
         </AnimatePresence>
 
         <div className="relative h-full flex flex-col justify-end px-8 lg:px-16 pb-16 z-10">
-            {/* Título Grande do Mapa Selecionado */}
             <motion.h1 
                 key={selectedMap.name}
                 initial={{ y: 20, opacity: 0 }}
@@ -197,69 +207,78 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 2: META COMPS & PLAYER INTEL (Fudido) === */}
-      <section id="comps" className="px-8 lg:px-16 py-24 bg-[#0A0A0A]">
+      {/* === SEÇÃO 2: META COMPS & PLAYER INTEL === */}
+      <section id="comps" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
         <div className="mb-12 flex items-end gap-4">
              <h2 className="text-4xl font-black uppercase text-white italic">Meta <span className="text-[#FF4654]">Comps</span></h2>
              <div className="h-[2px] bg-white/10 flex-1 mb-2"></div>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-            {/* COLUNA ESQUERDA: LISTA DE TIMES (30%) */}
-            <div className="xl:col-span-4 flex flex-col gap-4">
-                {META_COMPS.map((comp) => (
-                    <div
-                        key={comp.id}
-                        onClick={() => {
-                            setSelectedComp(comp);
-                            if (!comp.agents.some(a => a.key === selectedCompAgent)) setSelectedCompAgent(comp.agents[0].key);
-                        }}
-                        className={`p-6 rounded-xl border cursor-pointer transition-all relative overflow-hidden group ${
-                            selectedComp.id === comp.id 
-                            ? "bg-white/5 border-[#FF4654] shadow-[0_0_20px_rgba(255,70,84,0.1)]" 
-                            : "bg-[#111] border-white/5 hover:bg-white/10"
-                        }`}
-                    >
-                        <div className="flex justify-between items-start relative z-10">
-                            <div>
-                                <span className="text-xs font-bold tracking-widest uppercase mb-1 block" style={{color: comp.color}}>{comp.org}</span>
-                                <h3 className="text-xl font-black text-white uppercase italic">{comp.name}</h3>
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 h-full">
+            {/* COLUNA ESQUERDA: LISTA DE TIMES (EXPANDIDA PRA ACABAR COM O VÃO) */}
+            <div className="xl:col-span-5 flex flex-col gap-4 h-full">
+                {META_COMPS.map((comp) => {
+                    const isActive = selectedComp.id === comp.id;
+                    return (
+                        <div
+                            key={comp.id}
+                            onClick={() => {
+                                setSelectedComp(comp);
+                                if (!comp.agents.some(a => a.key === selectedCompAgent)) setSelectedCompAgent(comp.agents[0].key);
+                            }}
+                            className={`flex-1 p-6 rounded-xl border cursor-pointer transition-all relative overflow-hidden group flex flex-col justify-center gap-4 ${
+                                isActive 
+                                ? "bg-gradient-to-r from-white/10 to-[#111] border-[#FF4654] shadow-[0_0_30px_rgba(255,70,84,0.15)]" 
+                                : "bg-[#111] border-white/5 hover:bg-white/10 hover:border-white/20"
+                            }`}
+                            style={{ minHeight: '180px' }} // Altura mínima pra preencher o vão
+                        >
+                            {/* HEADER DO CARD */}
+                            <div className="flex justify-between items-start relative z-10">
+                                <div>
+                                    <span className="text-sm font-black tracking-widest uppercase mb-1 block" style={{color: comp.color}}>{comp.org}</span>
+                                    <h3 className={`text-2xl font-black uppercase italic transition-colors ${isActive ? 'text-white' : 'text-white/60'}`}>{comp.name}</h3>
+                                </div>
+                                <span className="text-3xl font-black text-white/10 group-hover:text-white/30 transition-colors">{comp.winRate}</span>
                             </div>
-                            <span className="text-2xl font-black text-white/20 group-hover:text-white/40 transition-colors">{comp.winRate}</span>
+
+                            {/* AGENTES (MOVIDOS PARA CÁ) */}
+                            <div className="flex gap-2 relative z-10 mt-auto">
+                                {comp.agents.map((a) => (
+                                    <div key={a.key} className={`w-10 h-10 rounded overflow-hidden border transition-all ${selectedCompAgent === a.key && isActive ? 'border-[#FF4654] scale-110' : 'border-white/10 opacity-60'}`}>
+                                        <img src={`https://media.valorant-api.com/agents/${AGENTS[a.key as keyof typeof AGENTS]?.id}/displayicon.png`} className="w-full h-full object-cover bg-black" />
+                                    </div>
+                                ))}
+                            </div>
+
+                            {isActive && (
+                                <motion.div layoutId="activeGlow" className="absolute inset-0 bg-gradient-to-r from-[#FF4654]/5 to-transparent pointer-events-none" />
+                            )}
                         </div>
-                        {selectedComp.id === comp.id && (
-                            <motion.div layoutId="activeGlow" className="absolute inset-0 bg-gradient-to-r from-[#FF4654]/10 to-transparent pointer-events-none" />
-                        )}
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
-            {/* COLUNA DIREITA: DETALHES DO TIME E DO PLAYER (70%) */}
-            <div className="xl:col-span-8 bg-[#111] rounded-2xl border border-white/10 p-8 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF4654] opacity-5 blur-[120px] rounded-full pointer-events-none" />
+            {/* COLUNA DIREITA: DETALHES DO PLAYER (FIXADA) */}
+            <div className="xl:col-span-7 bg-[#111] rounded-2xl border border-white/10 p-10 relative overflow-hidden flex flex-col justify-between min-h-[500px]">
+                <div className="absolute top-0 right-0 w-80 h-80 bg-[#FF4654] opacity-5 blur-[150px] rounded-full pointer-events-none" />
 
-                {/* Header do Time Selecionado */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 border-b border-white/5 pb-8">
-                    <div>
-                        <h3 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-2">
-                            {selectedComp.name} <span className="text-white/20 not-italic ml-2">ROSTER</span>
-                        </h3>
-                        <p className="text-white/40 text-sm">Select a player to view detailed settings</p>
-                    </div>
-                    {/* Lista de Agentes/Players */}
-                    <div className="flex gap-3 mt-4 md:mt-0">
+                {/* Seleção de Player do Roster */}
+                <div>
+                    <h3 className="text-xl text-white/40 uppercase tracking-widest mb-6 border-b border-white/5 pb-4">Selected Roster</h3>
+                    <div className="flex flex-wrap gap-4">
                         {selectedComp.agents.map((a) => {
                             const isSelected = selectedCompAgent === a.key;
                             return (
                                 <button
                                     key={a.key}
-                                    onClick={() => setSelectedCompAgent(a.key)}
+                                    onClick={(e) => { e.stopPropagation(); setSelectedCompAgent(a.key); }}
                                     className={`relative group transition-all duration-300 ${isSelected ? '-translate-y-2' : 'hover:-translate-y-1'}`}
                                 >
-                                    <div className={`w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-[#FF4654] shadow-lg shadow-[#FF4654]/20' : 'border-white/10 grayscale hover:grayscale-0'}`}>
-                                        <img src={`https://media.valorant-api.com/agents/${AGENTS[a.key as keyof typeof AGENTS]?.id}/displayicon.png`} className="w-full h-full object-cover bg-[#222]" />
+                                    <div className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${isSelected ? 'border-[#FF4654] shadow-[0_10px_30px_rgba(255,70,84,0.3)]' : 'border-white/10 grayscale hover:grayscale-0'}`}>
+                                        <img src={`https://media.valorant-api.com/agents/${AGENTS[a.key as keyof typeof AGENTS]?.id}/displayicon.png`} className="w-full h-full object-cover bg-[#1A1A1A]" />
                                     </div>
-                                    <div className={`absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-colors ${isSelected ? 'text-[#FF4654]' : 'text-white/40'}`}>
+                                    <div className={`absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors bg-black/80 px-2 py-1 rounded ${isSelected ? 'text-[#FF4654]' : 'text-white/40'}`}>
                                         {a.player}
                                     </div>
                                 </button>
@@ -268,38 +287,34 @@ export default function ValorantHub() {
                     </div>
                 </div>
 
-                {/* PAINEL DE STATUS DO PLAYER (SUBSTITUIU O MAPA) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                     <div className="p-4 rounded-lg bg-black/40 border border-white/5 flex flex-col items-center justify-center text-center group hover:border-white/20 transition-colors">
-                        <MousePointer2 className="text-[#FF4654] mb-2 w-6 h-6" />
-                        <span className="text-xs text-white/40 uppercase tracking-widest mb-1">Sensitivity</span>
-                        <span className="text-xl font-mono font-bold text-white">{playerStats.sens}</span>
+                {/* Status do Player Selecionado */}
+                <div className="mt-12">
+                     <h3 className="text-4xl font-black uppercase text-white italic mb-8">{selectedAgentPlayer} <span className="text-white/20 not-italic text-lg ml-2">// SETTINGS</span></h3>
+                     
+                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        {[
+                            { label: "Sensitivity", val: playerStats.sens, icon: MousePointer2 },
+                            { label: "DPI / eDPI", val: playerStats.dpi, icon: Target },
+                            { label: "Resolution", val: playerStats.res, icon: Monitor },
+                            { label: "Enemy Color", val: playerStats.color, icon: Eye }
+                        ].map((stat, idx) => (
+                            <div key={idx} className="p-4 rounded-lg bg-black/40 border border-white/5 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors">
+                                <stat.icon className="text-[#FF4654] mb-2 w-5 h-5" />
+                                <span className="text-[10px] text-white/40 uppercase tracking-widest mb-1">{stat.label}</span>
+                                <span className="text-lg font-mono font-bold text-white">{stat.val}</span>
+                            </div>
+                        ))}
                      </div>
-                     <div className="p-4 rounded-lg bg-black/40 border border-white/5 flex flex-col items-center justify-center text-center group hover:border-white/20 transition-colors">
-                        <Target className="text-[#FF4654] mb-2 w-6 h-6" />
-                        <span className="text-xs text-white/40 uppercase tracking-widest mb-1">DPI / eDPI</span>
-                        <span className="text-xl font-mono font-bold text-white">{playerStats.dpi}</span>
-                     </div>
-                     <div className="p-4 rounded-lg bg-black/40 border border-white/5 flex flex-col items-center justify-center text-center group hover:border-white/20 transition-colors">
-                        <Monitor className="text-[#FF4654] mb-2 w-6 h-6" />
-                        <span className="text-xs text-white/40 uppercase tracking-widest mb-1">Resolution</span>
-                        <span className="text-xl font-mono font-bold text-white">{playerStats.res}</span>
-                     </div>
-                     <div className="p-4 rounded-lg bg-black/40 border border-white/5 flex flex-col items-center justify-center text-center group hover:border-white/20 transition-colors">
-                        <Eye className="text-[#FF4654] mb-2 w-6 h-6" />
-                        <span className="text-xs text-white/40 uppercase tracking-widest mb-1">Enemy Color</span>
-                        <span className="text-xl font-mono font-bold text-white">{playerStats.color}</span>
-                     </div>
-                </div>
 
-                <div className="mt-6 p-4 rounded-lg bg-black/40 border border-white/5 flex items-center justify-between group hover:border-[#FF4654]/50 transition-colors">
-                    <div className="flex items-center gap-3">
-                        <Crosshair className="text-[#FF4654]" />
-                        <span className="text-sm font-bold text-white uppercase tracking-widest">Crosshair Code</span>
-                    </div>
-                    <code className="font-mono text-xs text-white/60 bg-white/5 px-3 py-1 rounded select-all cursor-text hover:text-white transition-colors">
-                        {playerStats.crosshair}
-                    </code>
+                     <div className="p-5 rounded-lg bg-black/40 border border-white/5 flex items-center justify-between group hover:border-[#FF4654]/50 transition-colors">
+                        <div className="flex items-center gap-4">
+                            <Crosshair className="text-[#FF4654] w-6 h-6" />
+                            <span className="text-sm font-bold text-white uppercase tracking-widest">Crosshair Code</span>
+                        </div>
+                        <code className="font-mono text-xs text-white/60 bg-white/5 px-4 py-2 rounded-md select-all cursor-text hover:text-white hover:bg-white/10 transition-colors">
+                            {playerStats.crosshair}
+                        </code>
+                     </div>
                 </div>
             </div>
         </div>
@@ -308,7 +323,6 @@ export default function ValorantHub() {
       {/* === SEÇÃO 4: AGENT MASTERY === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16 px-4">
-              {/* CORREÇÃO 1: REMOVIDO ITÁLICO DA PALAVRA MASTERY E TÍTULO ALINHADO */}
               <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 inline-block">
                   Agent <span className="not-italic text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] via-[#ff7e89] to-white ml-2">MASTERY</span>
               </h2>
@@ -348,7 +362,6 @@ export default function ValorantHub() {
           </div>
 
           <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[500px] flex flex-col md:flex-row">
-              {/* ESQUERDA: INFOS DO AGENTE + HABILIDADES (SEM FOTO GIGANTE) */}
               <div className="w-full md:w-1/3 bg-[#161616] p-10 flex flex-col justify-between border-r border-white/5 relative overflow-hidden">
                   <div className="relative z-20">
                     <h3 className="text-5xl font-black text-white uppercase italic tracking-tighter mb-2">{masteryAgent.name}</h3>
@@ -356,7 +369,6 @@ export default function ValorantHub() {
                         {masteryAgent.role}
                     </div>
 
-                    {/* CORREÇÃO 2: ÍCONES DAS HABILIDADES NO LUGAR DA FOTO */}
                     <div className="grid grid-cols-4 gap-3 mb-12">
                         {abilitySlots.map((slot, i) => (
                             <div key={i} className="aspect-square bg-black/40 rounded-lg border border-white/10 p-2 flex items-center justify-center hover:border-white/40 transition-colors cursor-help group" title={slot}>
@@ -374,14 +386,12 @@ export default function ValorantHub() {
                       <button onClick={() => setMasteryPhase('attack')} className={`w-full py-4 rounded font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all ${masteryPhase === 'attack' ? 'bg-[#FF4654] text-white shadow-lg shadow-[#FF4654]/20' : 'bg-white/5 text-white/40 hover:bg-white/10'}`}>
                           <Sword size={18} /> Attack
                       </button>
-                      {/* CORREÇÃO 2 (PARTE B): BOTÃO DEFESA BRANCO E PRETO */}
                       <button onClick={() => setMasteryPhase('defense')} className={`w-full py-4 rounded font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all ${masteryPhase === 'defense' ? 'bg-white text-black shadow-lg shadow-white/10' : 'bg-white/5 text-white/40 hover:bg-white/10'}`}>
                           <Shield size={18} /> Defense
                       </button>
                   </div>
               </div>
 
-              {/* DIREITA: CARDS DE SETUP */}
               <div className="w-full md:w-2/3 p-8 md:p-12 bg-[#0A0A0A]/50">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-6 hover:border-white/30 transition-all group flex flex-col">
