@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Sword, Shield, Settings, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, PlayCircle } from "lucide-react";
@@ -109,7 +109,6 @@ const META_COMPS = [
   },
 ];
 
-// LISTA ATUALIZADA DE STREAMERS
 const STREAMERS = {
     pros: [
         { name: "aspas", team: "MIBR", channel: "aspaszin", live: true, avatar: "https://liquipedia.net/commons/images/thumb/5/53/Leviat%C3%A1n_aspas_at_VCT_Americas_2024_Stage_1.png/600px-Leviat%C3%A1n_aspas_at_VCT_Americas_2024_Stage_1.png" },
@@ -132,6 +131,14 @@ export default function ValorantHub() {
   const [selectedComp, setSelectedComp] = useState(META_COMPS[0]);
   const [selectedCompAgent, setSelectedCompAgent] = useState<string | null>(META_COMPS[0].agents[0].key);
   const [streamTab, setStreamTab] = useState<"pros" | "creators">("pros");
+  const [hostname, setHostname] = useState("");
+
+  // TENTATIVA DE FIX DA TWITCH: Pega o hostname atual para o embed
+  useEffect(() => {
+      if (typeof window !== "undefined") {
+          setHostname(window.location.hostname);
+      }
+  }, []);
   
   // MASTERY STATES
   const [masteryRole, setMasteryRole] = useState("Duelist");
@@ -316,11 +323,11 @@ export default function ValorantHub() {
       {/* === SEÇÃO 4: AGENT MASTERY === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16 px-4">
-              {/* CORREÇÃO DO Y CORTADO: Adicionei padding-right (pr-4) e leading-relaxed */}
-              <h2 className="text-5xl font-black uppercase text-white italic mb-4 leading-relaxed pr-4 inline-block">
+              {/* Y CORTADO RESOLVIDO: leading-[1.2] e py-2 para dar espaço vertical ao itálico */}
+              <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.2] py-2 inline-block">
                   Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] to-white">Mastery</span>
               </h2>
-              <p className="text-white/40 max-w-2xl mx-auto">Select any agent to view specific setups.</p>
+              {/* SUBTÍTULO REMOVIDO AQUI */}
           </div>
 
           <div className="flex justify-center gap-4 mb-12 flex-wrap">
@@ -375,7 +382,8 @@ export default function ValorantHub() {
                       <button onClick={() => setMasteryPhase('attack')} className={`w-full py-4 rounded font-bold uppercase flex items-center justify-center gap-3 transition-all ${masteryPhase === 'attack' ? 'bg-[#FF4654] text-white' : 'bg-white/5 text-white/40'}`}>
                           <Sword size={20} /> Attack Plays
                       </button>
-                      <button onClick={() => setMasteryPhase('defense')} className={`w-full py-4 rounded font-bold uppercase flex items-center justify-center gap-3 transition-all ${masteryPhase === 'defense' ? 'bg-[#5B3C99] text-white' : 'bg-white/5 text-white/40'}`}>
+                      {/* DRESS CODE FIX: Botão de Defesa agora é Branco Gelo/Prata (Clean) */}
+                      <button onClick={() => setMasteryPhase('defense')} className={`w-full py-4 rounded font-bold uppercase flex items-center justify-center gap-3 transition-all ${masteryPhase === 'defense' ? 'bg-[#EBEBEB] text-[#0A0A0A]' : 'bg-white/5 text-white/40'}`}>
                           <Shield size={20} /> Defense Plays
                       </button>
                   </div>
@@ -385,7 +393,8 @@ export default function ValorantHub() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-6 hover:border-white/30 transition-all group">
                           <div className="flex items-center gap-3 mb-4">
-                              <div className={`p-2 rounded ${masteryPhase === 'attack' ? 'bg-[#FF4654]/20 text-[#FF4654]' : 'bg-[#5B3C99]/20 text-[#5B3C99]'}`}>
+                              {/* Ícone muda de cor baseado na fase */}
+                              <div className={`p-2 rounded ${masteryPhase === 'attack' ? 'bg-[#FF4654]/20 text-[#FF4654]' : 'bg-[#EBEBEB] text-[#0A0A0A]'}`}>
                                   {masteryPhase === 'attack' ? <Target size={20} /> : <Anchor size={20} />}
                               </div>
                               <h4 className="font-bold text-white uppercase tracking-widest">
@@ -405,7 +414,7 @@ export default function ValorantHub() {
 
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-6 hover:border-white/30 transition-all group">
                           <div className="flex items-center gap-3 mb-4">
-                              <div className={`p-2 rounded ${masteryPhase === 'attack' ? 'bg-[#FF4654]/20 text-[#FF4654]' : 'bg-[#5B3C99]/20 text-[#5B3C99]'}`}>
+                              <div className={`p-2 rounded ${masteryPhase === 'attack' ? 'bg-[#FF4654]/20 text-[#FF4654]' : 'bg-[#EBEBEB] text-[#0A0A0A]'}`}>
                                   {masteryPhase === 'attack' ? <Timer size={20} /> : <RefreshCcw size={20} />}
                               </div>
                               <h4 className="font-bold text-white uppercase tracking-widest">
@@ -431,33 +440,33 @@ export default function ValorantHub() {
       <section id="streams" className="px-8 lg:px-16 py-20 bg-black border-t border-white/10">
          <div className="flex items-end justify-between mb-12">
              <div>
-                {/* CORREÇÃO DO ROXO: Agora é RED */}
-                <h2 className="text-4xl font-black uppercase text-white italic">Live <span className="text-[#FF4654]">Hub</span></h2>
+                {/* VOLTA DO ROXO TWITCH */}
+                <h2 className="text-4xl font-black uppercase text-white italic">Live <span className="text-[#9146FF]">Hub</span></h2>
              </div>
              <div className="flex bg-white/5 rounded-lg p-1">
-                 <button onClick={() => setStreamTab('pros')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'pros' ? 'bg-[#FF4654] text-white' : 'text-white/40 hover:text-white'}`}>Pro Players</button>
-                 <button onClick={() => setStreamTab('creators')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'creators' ? 'bg-[#FF4654] text-white' : 'text-white/40 hover:text-white'}`}>Creators</button>
+                 <button onClick={() => setStreamTab('pros')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'pros' ? 'bg-[#9146FF] text-white' : 'text-white/40 hover:text-white'}`}>Pro Players</button>
+                 <button onClick={() => setStreamTab('creators')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'creators' ? 'bg-[#9146FF] text-white' : 'text-white/40 hover:text-white'}`}>Creators</button>
              </div>
          </div>
 
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
              {STREAMERS[streamTab].map((streamer, idx) => (
-                 <div key={idx} className="bg-[#18181B] rounded-xl overflow-hidden group border border-white/5 hover:border-[#FF4654] transition-all cursor-pointer relative aspect-video">
-                     {/* IFRAME LÓGICA: Se live, mostra Twitch. Se off, mostra Video */}
+                 // BORDA ROXA
+                 <div key={idx} className="bg-[#18181B] rounded-xl overflow-hidden group border border-white/5 hover:border-[#9146FF] transition-all cursor-pointer relative aspect-video">
                      {streamer.live ? (
                          <div className="absolute inset-0 w-full h-full">
+                             {/* TWITCH EMBED FIX: Usa o hostname dinâmico para permitir o embed em localhost/dev */}
                              <iframe
-                                src={`https://player.twitch.tv/?channel=${streamer.channel}&parent=localhost&parent=site-meta.vercel.app&muted=true`}
+                                src={`https://player.twitch.tv/?channel=${streamer.channel}&parent=${hostname}&muted=true`}
                                 height="100%"
                                 width="100%"
                                 allowFullScreen
                                 className="w-full h-full object-cover"
                              />
-                             <div className="absolute top-3 left-3 bg-[#FF4654] text-white text-[10px] font-bold px-2 py-0.5 rounded animate-pulse pointer-events-none">LIVE</div>
+                             <div className="absolute top-3 left-3 bg-[#9146FF] text-white text-[10px] font-bold px-2 py-0.5 rounded animate-pulse pointer-events-none">LIVE</div>
                          </div>
                      ) : (
                          <div className="absolute inset-0 w-full h-full">
-                             {/* VIDEO PLACEHOLDER PARA OFFLINE */}
                              <video 
                                 src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" 
                                 className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
@@ -467,14 +476,13 @@ export default function ValorantHub() {
                                 <span className="w-2 h-2 bg-gray-500 rounded-full"></span> OFFLINE
                              </div>
                              <div className="absolute inset-0 flex items-center justify-center">
-                                 <PlayCircle className="w-12 h-12 text-white/50 group-hover:text-[#FF4654] transition-colors" />
+                                 <PlayCircle className="w-12 h-12 text-white/50 group-hover:text-[#9146FF] transition-colors" />
                              </div>
                          </div>
                      )}
                      
-                     {/* Overlay de Info (Só aparece se hover ou offline) */}
                      <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent flex items-center gap-3 pointer-events-none">
-                         <img src={streamer.avatar} className="w-10 h-10 rounded-full border-2 border-[#FF4654]" />
+                         <img src={streamer.avatar} className="w-10 h-10 rounded-full border-2 border-[#9146FF]" />
                          <div>
                              <h4 className="text-white font-bold leading-none shadow-black drop-shadow-md">{streamer.name}</h4>
                              <p className="text-white/60 text-xs mt-1">{streamer.team}</p>
