@@ -13,14 +13,22 @@ const HubHeader = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] via-[#0A0A0A]/90 to-transparent backdrop-blur-sm pointer-events-none transition-all duration-300">
         <div className="flex items-center gap-6 pointer-events-auto">
+            {/* LOGO ONSITE CORRIGIDA: BRANCO FORA, ROSA DENTRO */}
             <Link to="/" className="group relative shrink-0">
-                <svg width="42" height="42" viewBox="0 0 512 512" className="fill-[#FF4654] transition-transform group-hover:scale-110 duration-300">
-                <defs><mask id="cut-header"><rect width="512" height="512" fill="white"/><rect x="-100" y="226" width="800" height="60" fill="black" transform="rotate(-45 256 256)"/></mask></defs>
-                <g mask="url(#cut-header)"><circle cx="256" cy="256" r="200" stroke="currentColor" strokeWidth="64" fill="none" /></g>
-                <rect x="236" y="156" width="40" height="200" fill="white" rx="6" />
-                <rect x="156" y="236" width="200" height="40" fill="white" rx="6" />
+                <svg width="42" height="42" viewBox="0 0 512 512" className="transition-transform group-hover:scale-110 duration-300">
+                    <defs><mask id="cut-header"><rect width="512" height="512" fill="white"/><rect x="-100" y="226" width="800" height="60" fill="black" transform="rotate(-45 256 256)"/></mask></defs>
+                    
+                    {/* Círculo Externo Branco */}
+                    <g mask="url(#cut-header)">
+                        <circle cx="256" cy="256" r="200" stroke="white" strokeWidth="64" fill="none" />
+                    </g>
+                    
+                    {/* Cruz Interna Rosa Valorant */}
+                    <rect x="236" y="156" width="40" height="200" fill="#FF4654" rx="6" />
+                    <rect x="156" y="236" width="200" height="40" fill="#FF4654" rx="6" />
                 </svg>
             </Link>
+            
             <div className="h-6 w-[2px] bg-white/20 -skew-x-12 shrink-0" />
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Valorant_pink_version_logo.svg/2560px-Valorant_pink_version_logo.svg.png" alt="V Logo" className="h-8 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,70,84,0.5)]" />
         </div>
@@ -109,31 +117,21 @@ const META_COMPS = [
   },
 ];
 
-const STREAMERS = {
-    pros: [
-        { name: "aspas", team: "MIBR", channel: "aspaszin", live: true, avatar: "https://liquipedia.net/commons/images/thumb/5/53/Leviat%C3%A1n_aspas_at_VCT_Americas_2024_Stage_1.png/600px-Leviat%C3%A1n_aspas_at_VCT_Americas_2024_Stage_1.png" },
-        { name: "Primmie", team: "Talon", channel: "primmie", live: true, avatar: "https://liquipedia.net/commons/images/thumb/3/3d/Talon_Esports_primmie_at_VALORANT_Champions_2024.png/600px-Talon_Esports_primmie_at_VALORANT_Champions_2024.png" },
-        { name: "Wo0t", team: "Heretics", channel: "woot", live: false, avatar: "https://liquipedia.net/commons/images/thumb/8/87/Team_Heretics_Wo0t_at_VCT_EMEA_2024_Stage_1.png/600px-Team_Heretics_Wo0t_at_VCT_EMEA_2024_Stage_1.png" },
-        { name: "ZmjjKK", team: "EDG", channel: "zmjjkk", live: true, avatar: "https://liquipedia.net/commons/images/thumb/e/e9/EDward_Gaming_ZmjjKK_at_VCT_China_2024_Stage_1.png/600px-EDward_Gaming_ZmjjKK_at_VCT_China_2024_Stage_1.png" },
-        { name: "johnqt", team: "Sentinels", channel: "johnqt", live: false, avatar: "https://liquipedia.net/commons/images/thumb/7/7b/Sentinels_johnqt_at_VCT_Americas_2024_Stage_1.png/600px-Sentinels_johnqt_at_VCT_Americas_2024_Stage_1.png" },
-    ],
-    creators: [
-        { name: "TcK", team: "Cloud9", channel: "tck10", live: true, avatar: "https://pbs.twimg.com/profile_images/1676678229986500608/s3Xo78W3_400x400.jpg" },
-        { name: "Tarik", team: "Sentinels", channel: "tarik", live: true, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/c/ca/Sentinels_tarik_at_VCT_2023_Lock_In.png" },
-        { name: "Kyedae", team: "Content", channel: "kyedae", live: false, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/9/98/100_Thieves_Kyedae_at_VCT_2023_Lock_In.png" },
-        { name: "FNS", team: "G2", channel: "gofns", live: true, avatar: "https://liquipedia.net/commons/images/thumb/7/73/NRG_FNS_at_VCT_Americas_2023.png/600px-NRG_FNS_at_VCT_Americas_2023.png" },
-        { name: "Sacy", team: "MIBR", channel: "sacy", live: false, avatar: "https://liquipedia.net/commons/images/thumb/0/07/Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png/600px-Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png" },
-    ]
-}
+// LISTA UNIFICADA (TOP 4)
+const STREAMERS = [
+    { name: "Sacy", team: "MIBR", channel: "sacy", live: false, avatar: "https://liquipedia.net/commons/images/thumb/0/07/Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png/600px-Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png" },
+    { name: "TcK", team: "Cloud9", channel: "tck10", live: true, avatar: "https://pbs.twimg.com/profile_images/1676678229986500608/s3Xo78W3_400x400.jpg" },
+    { name: "TenZ", team: "Sentinels", channel: "tenz", live: true, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/6/61/TenZ_at_VCT_2024_Masters_Madrid.png" },
+    { name: "Tarik", team: "Sentinels", channel: "tarik", live: true, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/c/ca/Sentinels_tarik_at_VCT_2023_Lock_In.png" }
+];
 
 export default function ValorantHub() {
   const [selectedMap, setSelectedMap] = useState(MAPS[0]);
   const [selectedComp, setSelectedComp] = useState(META_COMPS[0]);
   const [selectedCompAgent, setSelectedCompAgent] = useState<string | null>(META_COMPS[0].agents[0].key);
-  const [streamTab, setStreamTab] = useState<"pros" | "creators">("pros");
   const [hostname, setHostname] = useState("");
 
-  // TENTATIVA DE FIX DA TWITCH: Pega o hostname atual para o embed
+  // FIX TWITCH
   useEffect(() => {
       if (typeof window !== "undefined") {
           setHostname(window.location.hostname);
@@ -168,10 +166,9 @@ export default function ValorantHub() {
         </AnimatePresence>
 
         <div className="relative h-full flex flex-col justify-end px-8 lg:px-16 pb-12 z-10">
-            <h1 className="text-8xl lg:text-[10rem] font-black uppercase tracking-tighter text-white leading-[0.8] drop-shadow-2xl opacity-90">
-              {selectedMap.name}
-            </h1>
+            {/* TÍTULO REMOVIDO PARA LIMPAR POLUIÇÃO VISUAL */}
             
+            {/* MAP SELECTOR */}
             <div className="flex gap-4 overflow-x-auto pb-8 pt-8 scrollbar-hide px-6 -mx-6">
                 {MAPS.map((map) => (
                     <button
@@ -323,11 +320,10 @@ export default function ValorantHub() {
       {/* === SEÇÃO 4: AGENT MASTERY === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16 px-4">
-              {/* Y CORTADO RESOLVIDO: leading-[1.2] e py-2 para dar espaço vertical ao itálico */}
-              <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.2] py-2 inline-block">
+              {/* Y RESOLVIDO: padding-right (pr-4) e py-2 */}
+              <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.2] py-2 inline-block pr-4">
                   Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] to-white">Mastery</span>
               </h2>
-              {/* SUBTÍTULO REMOVIDO AQUI */}
           </div>
 
           <div className="flex justify-center gap-4 mb-12 flex-wrap">
@@ -382,7 +378,6 @@ export default function ValorantHub() {
                       <button onClick={() => setMasteryPhase('attack')} className={`w-full py-4 rounded font-bold uppercase flex items-center justify-center gap-3 transition-all ${masteryPhase === 'attack' ? 'bg-[#FF4654] text-white' : 'bg-white/5 text-white/40'}`}>
                           <Sword size={20} /> Attack Plays
                       </button>
-                      {/* DRESS CODE FIX: Botão de Defesa agora é Branco Gelo/Prata (Clean) */}
                       <button onClick={() => setMasteryPhase('defense')} className={`w-full py-4 rounded font-bold uppercase flex items-center justify-center gap-3 transition-all ${masteryPhase === 'defense' ? 'bg-[#EBEBEB] text-[#0A0A0A]' : 'bg-white/5 text-white/40'}`}>
                           <Shield size={20} /> Defense Plays
                       </button>
@@ -393,7 +388,6 @@ export default function ValorantHub() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-6 hover:border-white/30 transition-all group">
                           <div className="flex items-center gap-3 mb-4">
-                              {/* Ícone muda de cor baseado na fase */}
                               <div className={`p-2 rounded ${masteryPhase === 'attack' ? 'bg-[#FF4654]/20 text-[#FF4654]' : 'bg-[#EBEBEB] text-[#0A0A0A]'}`}>
                                   {masteryPhase === 'attack' ? <Target size={20} /> : <Anchor size={20} />}
                               </div>
@@ -440,22 +434,16 @@ export default function ValorantHub() {
       <section id="streams" className="px-8 lg:px-16 py-20 bg-black border-t border-white/10">
          <div className="flex items-end justify-between mb-12">
              <div>
-                {/* VOLTA DO ROXO TWITCH */}
                 <h2 className="text-4xl font-black uppercase text-white italic">Live <span className="text-[#9146FF]">Hub</span></h2>
-             </div>
-             <div className="flex bg-white/5 rounded-lg p-1">
-                 <button onClick={() => setStreamTab('pros')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'pros' ? 'bg-[#9146FF] text-white' : 'text-white/40 hover:text-white'}`}>Pro Players</button>
-                 <button onClick={() => setStreamTab('creators')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'creators' ? 'bg-[#9146FF] text-white' : 'text-white/40 hover:text-white'}`}>Creators</button>
              </div>
          </div>
 
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-             {STREAMERS[streamTab].map((streamer, idx) => (
-                 // BORDA ROXA
+             {STREAMERS.map((streamer, idx) => (
                  <div key={idx} className="bg-[#18181B] rounded-xl overflow-hidden group border border-white/5 hover:border-[#9146FF] transition-all cursor-pointer relative aspect-video">
                      {streamer.live ? (
                          <div className="absolute inset-0 w-full h-full">
-                             {/* TWITCH EMBED FIX: Usa o hostname dinâmico para permitir o embed em localhost/dev */}
+                             {/* TWITCH EMBED FIX: Usa o hostname dinâmico */}
                              <iframe
                                 src={`https://player.twitch.tv/?channel=${streamer.channel}&parent=${hostname}&muted=true`}
                                 height="100%"
