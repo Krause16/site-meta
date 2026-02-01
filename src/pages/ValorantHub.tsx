@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sword, Shield, Settings, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, PlayCircle } from "lucide-react";
+import { Sword, Shield, Settings, Map as MapIcon, Target, Timer, Anchor, RefreshCcw } from "lucide-react";
 
 // === HEADER ===
 const HubHeader = () => {
@@ -13,17 +13,13 @@ const HubHeader = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] via-[#0A0A0A]/90 to-transparent backdrop-blur-sm pointer-events-none transition-all duration-300">
         <div className="flex items-center gap-6 pointer-events-auto">
-            {/* LOGO ONSITE CORRIGIDA: BRANCO FORA, ROSA DENTRO */}
+            {/* LOGO ONSITE */}
             <Link to="/" className="group relative shrink-0">
                 <svg width="42" height="42" viewBox="0 0 512 512" className="transition-transform group-hover:scale-110 duration-300">
                     <defs><mask id="cut-header"><rect width="512" height="512" fill="white"/><rect x="-100" y="226" width="800" height="60" fill="black" transform="rotate(-45 256 256)"/></mask></defs>
-                    
-                    {/* Círculo Externo Branco */}
                     <g mask="url(#cut-header)">
                         <circle cx="256" cy="256" r="200" stroke="white" strokeWidth="64" fill="none" />
                     </g>
-                    
-                    {/* Cruz Interna Rosa Valorant */}
                     <rect x="236" y="156" width="40" height="200" fill="#FF4654" rx="6" />
                     <rect x="156" y="236" width="200" height="40" fill="#FF4654" rx="6" />
                 </svg>
@@ -117,12 +113,12 @@ const META_COMPS = [
   },
 ];
 
-// LISTA UNIFICADA (TOP 4)
+// TOP 4 UNIFICADO - Sacy, TcK, TenZ, Tarik
 const STREAMERS = [
-    { name: "Sacy", team: "MIBR", channel: "sacy", live: false, avatar: "https://liquipedia.net/commons/images/thumb/0/07/Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png/600px-Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png" },
-    { name: "TcK", team: "Cloud9", channel: "tck10", live: true, avatar: "https://pbs.twimg.com/profile_images/1676678229986500608/s3Xo78W3_400x400.jpg" },
-    { name: "TenZ", team: "Sentinels", channel: "tenz", live: true, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/6/61/TenZ_at_VCT_2024_Masters_Madrid.png" },
-    { name: "Tarik", team: "Sentinels", channel: "tarik", live: true, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/c/ca/Sentinels_tarik_at_VCT_2023_Lock_In.png" }
+    { name: "Sacy", team: "MIBR", channel: "sacy", avatar: "https://liquipedia.net/commons/images/thumb/0/07/Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png/600px-Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png" },
+    { name: "TcK", team: "Cloud9", channel: "tck10", avatar: "https://pbs.twimg.com/profile_images/1676678229986500608/s3Xo78W3_400x400.jpg" },
+    { name: "TenZ", team: "Sentinels", channel: "tenz", avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/6/61/TenZ_at_VCT_2024_Masters_Madrid.png" },
+    { name: "Tarik", team: "Sentinels", channel: "tarik", avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/c/ca/Sentinels_tarik_at_VCT_2023_Lock_In.png" }
 ];
 
 export default function ValorantHub() {
@@ -131,14 +127,12 @@ export default function ValorantHub() {
   const [selectedCompAgent, setSelectedCompAgent] = useState<string | null>(META_COMPS[0].agents[0].key);
   const [hostname, setHostname] = useState("");
 
-  // FIX TWITCH
   useEffect(() => {
       if (typeof window !== "undefined") {
           setHostname(window.location.hostname);
       }
   }, []);
   
-  // MASTERY STATES
   const [masteryRole, setMasteryRole] = useState("Duelist");
   const [masteryAgent, setMasteryAgent] = useState(AGENTS["jett"]);
   const [masteryPhase, setMasteryPhase] = useState<"attack" | "defense">("attack");
@@ -166,9 +160,6 @@ export default function ValorantHub() {
         </AnimatePresence>
 
         <div className="relative h-full flex flex-col justify-end px-8 lg:px-16 pb-12 z-10">
-            {/* TÍTULO REMOVIDO PARA LIMPAR POLUIÇÃO VISUAL */}
-            
-            {/* MAP SELECTOR */}
             <div className="flex gap-4 overflow-x-auto pb-8 pt-8 scrollbar-hide px-6 -mx-6">
                 {MAPS.map((map) => (
                     <button
@@ -206,7 +197,7 @@ export default function ValorantHub() {
       <section id="comps" className="px-8 lg:px-16 py-20 bg-[#0A0A0A]">
         <div className="mb-12">
              <h2 className="text-4xl font-black uppercase text-white italic">Meta <span className="text-[#FF4654]">Comps</span></h2>
-             <p className="text-white/40">Select a composition to see pro intel on {selectedMap.name}</p>
+             {/* TEXTO REMOVIDO COMO PEDIDO */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -320,8 +311,8 @@ export default function ValorantHub() {
       {/* === SEÇÃO 4: AGENT MASTERY === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16 px-4">
-              {/* Y RESOLVIDO: padding-right (pr-4) e py-2 */}
-              <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.2] py-2 inline-block pr-4">
+              {/* Y RESOLVIDO: padding-right (pr-12) e padding-vertical (py-4) */}
+              <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 pr-12 inline-block">
                   Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] to-white">Mastery</span>
               </h2>
           </div>
@@ -430,7 +421,7 @@ export default function ValorantHub() {
           </div>
       </section>
 
-      {/* === STREAMS === */}
+      {/* === STREAMS (FINAL) === */}
       <section id="streams" className="px-8 lg:px-16 py-20 bg-black border-t border-white/10">
          <div className="flex items-end justify-between mb-12">
              <div>
@@ -441,35 +432,19 @@ export default function ValorantHub() {
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
              {STREAMERS.map((streamer, idx) => (
                  <div key={idx} className="bg-[#18181B] rounded-xl overflow-hidden group border border-white/5 hover:border-[#9146FF] transition-all cursor-pointer relative aspect-video">
-                     {streamer.live ? (
-                         <div className="absolute inset-0 w-full h-full">
-                             {/* TWITCH EMBED FIX: Usa o hostname dinâmico */}
-                             <iframe
-                                src={`https://player.twitch.tv/?channel=${streamer.channel}&parent=${hostname}&muted=true`}
-                                height="100%"
-                                width="100%"
-                                allowFullScreen
-                                className="w-full h-full object-cover"
-                             />
-                             <div className="absolute top-3 left-3 bg-[#9146FF] text-white text-[10px] font-bold px-2 py-0.5 rounded animate-pulse pointer-events-none">LIVE</div>
-                         </div>
-                     ) : (
-                         <div className="absolute inset-0 w-full h-full">
-                             <video 
-                                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" 
-                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
-                                autoPlay loop muted playsInline
-                             />
-                             <div className="absolute top-3 left-3 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-2">
-                                <span className="w-2 h-2 bg-gray-500 rounded-full"></span> OFFLINE
-                             </div>
-                             <div className="absolute inset-0 flex items-center justify-center">
-                                 <PlayCircle className="w-12 h-12 text-white/50 group-hover:text-[#9146FF] transition-colors" />
-                             </div>
-                         </div>
-                     )}
+                     {/* IFRAME SEMPRE PRESENTE (TWITCH CUIDA DO OFFLINE) */}
+                     <div className="absolute inset-0 w-full h-full">
+                         <iframe
+                            src={`https://player.twitch.tv/?channel=${streamer.channel}&parent=${hostname}&muted=true`}
+                            height="100%"
+                            width="100%"
+                            allowFullScreen
+                            className="w-full h-full object-cover"
+                         />
+                     </div>
                      
-                     <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent flex items-center gap-3 pointer-events-none">
+                     {/* Overlay de Info (Hover) */}
+                     <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent flex items-center gap-3 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
                          <img src={streamer.avatar} className="w-10 h-10 rounded-full border-2 border-[#9146FF]" />
                          <div>
                              <h4 className="text-white font-bold leading-none shadow-black drop-shadow-md">{streamer.name}</h4>
