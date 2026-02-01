@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sword, Shield, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, MousePointer2, Monitor, Eye, Crosshair } from "lucide-react";
+import { Sword, Shield, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, MousePointer2, Monitor, Eye, Crosshair, Copy, Check } from "lucide-react";
 
 // === HEADER ===
 const HubHeader = () => {
@@ -13,7 +13,6 @@ const HubHeader = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] via-[#0A0A0A]/90 to-transparent backdrop-blur-sm pointer-events-none transition-all duration-300">
         <div className="flex items-center gap-6 pointer-events-auto">
-            {/* LOGO ONSITE */}
             <Link to="/" className="group relative shrink-0">
                 <svg width="42" height="42" viewBox="0 0 512 512" className="transition-transform group-hover:scale-110 duration-300">
                     <defs><mask id="cut-header"><rect width="512" height="512" fill="white"/><rect x="-100" y="226" width="800" height="60" fill="black" transform="rotate(-45 256 256)"/></mask></defs>
@@ -39,7 +38,7 @@ const HubHeader = () => {
   );
 };
 
-// === DADOS COMPLETOS (Maps & Agents Atualizados) ===
+// === DADOS ===
 const MAPS = [
   { id: "abyss", name: "Abyss", uuid: "224b0a95-48b9-f703-1bd8-67aca101a61f", image: "/maps/abyss.webp" },
   { id: "bind", name: "Bind", uuid: "2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba", image: "/maps/bind.webp" },
@@ -88,33 +87,33 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
   clove: { name: "Clove", role: "Controller", id: "1dbf2edd-4729-0984-3115-daa5eed44993", color: "#E66AB4" }
 };
 
-// DADOS DE PLAYER MOCKADOS (Exemplo)
+// DADOS MOCKADOS (Crosshairs & Stats)
 const PLAYER_STATS: Record<string, any> = {
-    default: { sens: "0.35", dpi: "800", res: "1920x1080", crosshair: "1422", color: "Yellow" },
+    default: { sens: "0.35", dpi: "800", res: "1920x1080", crosshair: "SOON", color: "Yellow" },
     aspas: { sens: "0.4", dpi: "800", res: "1280x960", crosshair: "0;P;c;5;h;0;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Yellow (Deut)" },
     less: { sens: "0.58", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;5;h;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
     demon1: { sens: "0.1", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Red" },
     boaster: { sens: "0.52", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
 };
 
-// COMPS ATUALIZADAS (NRG, MIBR, FNATIC)
+// COMPS ATUALIZADAS (SEM NICKNAMES)
 const META_COMPS = [
   {
-    id: 1, name: "NA Superteam", winRate: "62%", org: "NRG", color: "#54E627",
+    id: 1, org: "NRG", color: "#FF5900", winRate: "62%",
     agents: [
       { key: "jett", player: "Demon1" }, { key: "kayo", player: "Ethan" },
       { key: "omen", player: "Marved" }, { key: "sova", player: "crashies" }, { key: "raze", player: "Victor" },
     ],
   },
   {
-    id: 2, name: "Brazil Superteam", winRate: "68%", org: "MIBR", color: "#009944",
+    id: 2, org: "MIBR", color: "#009944", winRate: "68%",
     agents: [
       { key: "jett", player: "aspas" }, { key: "gekko", player: "cauanzin" },
       { key: "sova", player: "nzr" }, { key: "omen", player: "art" }, { key: "killjoy", player: "less" },
     ],
   },
   {
-    id: 3, name: "EMEA Dynasty", winRate: "71%", org: "FNATIC", color: "#FF5900",
+    id: 3, org: "FNATIC", color: "#FF5900", winRate: "71%",
     agents: [
       { key: "omen", player: "Boaster" }, { key: "jett", player: "Derke" },
       { key: "killjoy", player: "Alfajer" }, { key: "sova", player: "Leo" }, { key: "viper", player: "Chronicle" },
@@ -134,6 +133,7 @@ export default function ValorantHub() {
   const [selectedComp, setSelectedComp] = useState(META_COMPS[0]);
   const [selectedCompAgent, setSelectedCompAgent] = useState<string | null>(META_COMPS[0].agents[0].key);
   const [hostname, setHostname] = useState("");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
       if (typeof window !== "undefined") {
@@ -150,13 +150,20 @@ export default function ValorantHub() {
 
   const abilitySlots = ['Grenade', 'Ability1', 'Ability2', 'Ultimate'];
 
+  const handleCopyCrosshair = () => {
+      const code = playerStats.crosshair || "SOON";
+      navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="fixed inset-0 w-full h-full bg-[#0A0A0A] font-sans selection:bg-[#FF4654] selection:text-white overflow-y-auto overflow-x-hidden">
       
       <HubHeader />
 
       {/* === HERO: MAPAS === */}
-      <section id="maps" className="relative h-[80vh] overflow-hidden">
+      <section id="maps" className="relative h-[65vh] overflow-hidden">
         <AnimatePresence mode="popLayout">
           <motion.div
             key={selectedMap.id}
@@ -169,34 +176,25 @@ export default function ValorantHub() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="relative h-full flex flex-col justify-end px-8 lg:px-16 pb-16 z-10">
-            <motion.h1 
-                key={selectedMap.name}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="text-8xl font-black uppercase text-white italic tracking-tighter mb-8 drop-shadow-2xl"
-            >
-                {selectedMap.name}
-            </motion.h1>
-
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-6 px-6">
+        <div className="relative h-full flex flex-col justify-end px-4 lg:px-8 pb-8 z-10">
+            <div className="flex w-full gap-4 h-32 items-end">
                 {MAPS.map((map) => {
                     const isSelected = selectedMap.id === map.id;
                     return (
                         <button
                             key={map.id}
                             onClick={() => setSelectedMap(map)}
-                            className={`relative h-32 w-64 shrink-0 rounded-xl overflow-hidden transition-all duration-300 group ${
+                            className={`flex-1 h-full rounded-xl overflow-hidden transition-all duration-300 group relative ${
                                 isSelected 
-                                ? "ring-2 ring-[#FF4654] scale-105 shadow-[0_0_30px_rgba(255,70,84,0.4)] z-10" 
-                                : "grayscale hover:grayscale-0 opacity-60 hover:opacity-100 hover:scale-105"
+                                ? "ring-2 ring-[#FF4654] shadow-[0_0_30px_rgba(255,70,84,0.4)] z-10 scale-105" 
+                                : "grayscale hover:grayscale-0 opacity-50 hover:opacity-100 hover:scale-105"
                             }`}
                         >
                             <img src={map.image} className="absolute inset-0 w-full h-full object-cover" />
-                            <div className={`absolute inset-0 transition-colors ${isSelected ? 'bg-[#FF4654]/10' : 'bg-black/40 group-hover:bg-transparent'}`} />
+                            <div className={`absolute inset-0 transition-colors ${isSelected ? 'bg-[#FF4654]/10' : 'bg-black/60 group-hover:bg-transparent'}`} />
                             
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <span className={`text-2xl font-black uppercase italic tracking-tighter drop-shadow-lg transition-all ${isSelected ? 'text-white scale-110' : 'text-white/80'}`}>
+                                <span className={`text-2xl font-black uppercase italic tracking-tighter drop-shadow-lg transition-all ${isSelected ? 'text-white scale-110' : 'text-white/60'}`}>
                                     {map.name}
                                 </span>
                             </div>
@@ -215,7 +213,7 @@ export default function ValorantHub() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 h-full">
-            {/* COLUNA ESQUERDA: LISTA DE TIMES (EXPANDIDA PRA ACABAR COM O VÃO) */}
+            {/* COLUNA ESQUERDA: LISTA DE TIMES (SEM APELIDOS) */}
             <div className="xl:col-span-5 flex flex-col gap-4 h-full">
                 {META_COMPS.map((comp) => {
                     const isActive = selectedComp.id === comp.id;
@@ -231,24 +229,37 @@ export default function ValorantHub() {
                                 ? "bg-gradient-to-r from-white/10 to-[#111] border-[#FF4654] shadow-[0_0_30px_rgba(255,70,84,0.15)]" 
                                 : "bg-[#111] border-white/5 hover:bg-white/10 hover:border-white/20"
                             }`}
-                            style={{ minHeight: '180px' }} // Altura mínima pra preencher o vão
+                            style={{ minHeight: '180px' }}
                         >
-                            {/* HEADER DO CARD */}
-                            <div className="flex justify-between items-start relative z-10">
-                                <div>
-                                    <span className="text-sm font-black tracking-widest uppercase mb-1 block" style={{color: comp.color}}>{comp.org}</span>
-                                    <h3 className={`text-2xl font-black uppercase italic transition-colors ${isActive ? 'text-white' : 'text-white/60'}`}>{comp.name}</h3>
-                                </div>
+                            {/* NOME DA ORG COMO PRINCIPAL */}
+                            <div className="flex justify-between items-center relative z-10">
+                                <h3 className="text-4xl font-black uppercase italic tracking-tighter" style={{color: comp.color}}>
+                                    {comp.org}
+                                </h3>
                                 <span className="text-3xl font-black text-white/10 group-hover:text-white/30 transition-colors">{comp.winRate}</span>
                             </div>
 
-                            {/* AGENTES (MOVIDOS PARA CÁ) */}
+                            {/* AGENTES */}
                             <div className="flex gap-2 relative z-10 mt-auto">
-                                {comp.agents.map((a) => (
-                                    <div key={a.key} className={`w-10 h-10 rounded overflow-hidden border transition-all ${selectedCompAgent === a.key && isActive ? 'border-[#FF4654] scale-110' : 'border-white/10 opacity-60'}`}>
-                                        <img src={`https://media.valorant-api.com/agents/${AGENTS[a.key as keyof typeof AGENTS]?.id}/displayicon.png`} className="w-full h-full object-cover bg-black" />
-                                    </div>
-                                ))}
+                                {comp.agents.map((a) => {
+                                    const isAgentSelected = selectedCompAgent === a.key && isActive;
+                                    return (
+                                        <button 
+                                            key={a.key} 
+                                            onClick={(e) => { 
+                                                e.stopPropagation(); 
+                                                setSelectedComp(comp);
+                                                setSelectedCompAgent(a.key); 
+                                            }}
+                                            className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all relative group/agent ${isAgentSelected ? 'border-[#FF4654] scale-110 z-20 shadow-lg' : 'border-white/10 opacity-70 hover:opacity-100 hover:scale-105'}`}
+                                        >
+                                            <img src={`https://media.valorant-api.com/agents/${AGENTS[a.key as keyof typeof AGENTS]?.id}/displayicon.png`} className="w-full h-full object-cover bg-black" />
+                                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-black px-2 py-0.5 rounded text-[10px] font-bold text-white uppercase opacity-0 group-hover/agent:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-30">
+                                                {a.player}
+                                            </div>
+                                        </button>
+                                    );
+                                })}
                             </div>
 
                             {isActive && (
@@ -259,37 +270,24 @@ export default function ValorantHub() {
                 })}
             </div>
 
-            {/* COLUNA DIREITA: DETALHES DO PLAYER (FIXADA) */}
-            <div className="xl:col-span-7 bg-[#111] rounded-2xl border border-white/10 p-10 relative overflow-hidden flex flex-col justify-between min-h-[500px]">
+            {/* COLUNA DIREITA: DETALHES DO PLAYER */}
+            <div className="xl:col-span-7 bg-[#111] rounded-2xl border border-white/10 p-10 relative overflow-hidden flex flex-col justify-center min-h-[500px]">
                 <div className="absolute top-0 right-0 w-80 h-80 bg-[#FF4654] opacity-5 blur-[150px] rounded-full pointer-events-none" />
 
-                {/* Seleção de Player do Roster */}
-                <div>
-                    <h3 className="text-xl text-white/40 uppercase tracking-widest mb-6 border-b border-white/5 pb-4">Selected Roster</h3>
-                    <div className="flex flex-wrap gap-4">
-                        {selectedComp.agents.map((a) => {
-                            const isSelected = selectedCompAgent === a.key;
-                            return (
-                                <button
-                                    key={a.key}
-                                    onClick={(e) => { e.stopPropagation(); setSelectedCompAgent(a.key); }}
-                                    className={`relative group transition-all duration-300 ${isSelected ? '-translate-y-2' : 'hover:-translate-y-1'}`}
-                                >
-                                    <div className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${isSelected ? 'border-[#FF4654] shadow-[0_10px_30px_rgba(255,70,84,0.3)]' : 'border-white/10 grayscale hover:grayscale-0'}`}>
-                                        <img src={`https://media.valorant-api.com/agents/${AGENTS[a.key as keyof typeof AGENTS]?.id}/displayicon.png`} className="w-full h-full object-cover bg-[#1A1A1A]" />
-                                    </div>
-                                    <div className={`absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-colors bg-black/80 px-2 py-1 rounded ${isSelected ? 'text-[#FF4654]' : 'text-white/40'}`}>
-                                        {a.player}
-                                    </div>
-                                </button>
-                            )
-                        })}
-                    </div>
-                </div>
-
-                {/* Status do Player Selecionado */}
-                <div className="mt-12">
-                     <h3 className="text-4xl font-black uppercase text-white italic mb-8">{selectedAgentPlayer} <span className="text-white/20 not-italic text-lg ml-2">// SETTINGS</span></h3>
+                {/* HEADER DIREITO: NOME DA ORG AGORA */}
+                <div className="relative z-10">
+                     <div className="flex items-end justify-between border-b border-white/5 pb-6 mb-8">
+                         <div>
+                             <h4 className="text-white/40 font-bold uppercase tracking-widest text-sm mb-1" style={{color: selectedComp.color}}>
+                                {selectedComp.org} // ROSTER
+                             </h4>
+                             <h3 className="text-5xl font-black uppercase text-white italic tracking-tighter">{selectedAgentPlayer}</h3>
+                         </div>
+                         <div className="text-right">
+                            <span className="block text-xs text-[#FF4654] font-bold uppercase tracking-widest mb-1">Role</span>
+                            <span className="text-xl font-bold text-white">{AGENTS[selectedCompAgent as keyof typeof AGENTS]?.role}</span>
+                         </div>
+                     </div>
                      
                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                         {[
@@ -306,15 +304,23 @@ export default function ValorantHub() {
                         ))}
                      </div>
 
-                     <div className="p-5 rounded-lg bg-black/40 border border-white/5 flex items-center justify-between group hover:border-[#FF4654]/50 transition-colors">
+                     <button 
+                        onClick={handleCopyCrosshair}
+                        className="w-full p-5 rounded-lg bg-black/40 border border-white/5 flex items-center justify-between group hover:border-[#FF4654]/50 transition-all active:scale-[0.99]"
+                     >
                         <div className="flex items-center gap-4">
-                            <Crosshair className="text-[#FF4654] w-6 h-6" />
-                            <span className="text-sm font-bold text-white uppercase tracking-widest">Crosshair Code</span>
+                            <Crosshair className={`w-6 h-6 transition-colors ${copied ? 'text-green-500' : 'text-[#FF4654]'}`} />
+                            <span className="text-sm font-bold text-white uppercase tracking-widest">
+                                {copied ? "Copied to Clipboard!" : "Copy Crosshair Code"}
+                            </span>
                         </div>
-                        <code className="font-mono text-xs text-white/60 bg-white/5 px-4 py-2 rounded-md select-all cursor-text hover:text-white hover:bg-white/10 transition-colors">
-                            {playerStats.crosshair}
-                        </code>
-                     </div>
+                        <div className="flex items-center gap-3">
+                            <code className="font-mono text-xs text-white/60 bg-white/5 px-4 py-2 rounded-md group-hover:text-white group-hover:bg-white/10 transition-colors">
+                                {playerStats.crosshair}
+                            </code>
+                            {copied ? <Check className="text-green-500 w-5 h-5" /> : <Copy className="text-white/40 w-5 h-5 group-hover:text-white" />}
+                        </div>
+                     </button>
                 </div>
             </div>
         </div>
