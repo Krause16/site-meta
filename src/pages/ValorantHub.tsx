@@ -13,13 +13,17 @@ const HubHeader = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-8 py-6 flex items-center justify-between bg-gradient-to-b from-[#0A0A0A] via-[#0A0A0A]/90 to-transparent backdrop-blur-sm pointer-events-none transition-all duration-300">
         <div className="flex items-center gap-6 pointer-events-auto">
-            {/* LOGO ONSITE */}
+            {/* LOGO ONSITE CORRIGIDA: BRANCO FORA, ROSA DENTRO */}
             <Link to="/" className="group relative shrink-0">
                 <svg width="42" height="42" viewBox="0 0 512 512" className="transition-transform group-hover:scale-110 duration-300">
                     <defs><mask id="cut-header"><rect width="512" height="512" fill="white"/><rect x="-100" y="226" width="800" height="60" fill="black" transform="rotate(-45 256 256)"/></mask></defs>
+                    
+                    {/* Círculo Externo Branco */}
                     <g mask="url(#cut-header)">
                         <circle cx="256" cy="256" r="200" stroke="white" strokeWidth="64" fill="none" />
                     </g>
+                    
+                    {/* Cruz Interna Rosa Valorant */}
                     <rect x="236" y="156" width="40" height="200" fill="#FF4654" rx="6" />
                     <rect x="156" y="236" width="200" height="40" fill="#FF4654" rx="6" />
                 </svg>
@@ -113,7 +117,7 @@ const META_COMPS = [
   },
 ];
 
-// TOP 4 UNIFICADO - Sacy, TcK, TenZ, Tarik
+// LISTA UNIFICADA (BIG 4)
 const STREAMERS = [
     { name: "Sacy", team: "MIBR", channel: "sacy", avatar: "https://liquipedia.net/commons/images/thumb/0/07/Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png/600px-Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png" },
     { name: "TcK", team: "Cloud9", channel: "tck10", avatar: "https://pbs.twimg.com/profile_images/1676678229986500608/s3Xo78W3_400x400.jpg" },
@@ -160,6 +164,8 @@ export default function ValorantHub() {
         </AnimatePresence>
 
         <div className="relative h-full flex flex-col justify-end px-8 lg:px-16 pb-12 z-10">
+            {/* TÍTULO REMOVIDO PARA LIMPAR POLUIÇÃO */}
+            
             <div className="flex gap-4 overflow-x-auto pb-8 pt-8 scrollbar-hide px-6 -mx-6">
                 {MAPS.map((map) => (
                     <button
@@ -197,7 +203,7 @@ export default function ValorantHub() {
       <section id="comps" className="px-8 lg:px-16 py-20 bg-[#0A0A0A]">
         <div className="mb-12">
              <h2 className="text-4xl font-black uppercase text-white italic">Meta <span className="text-[#FF4654]">Comps</span></h2>
-             {/* TEXTO REMOVIDO COMO PEDIDO */}
+             {/* SUBTÍTULO REMOVIDO */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -311,10 +317,11 @@ export default function ValorantHub() {
       {/* === SEÇÃO 4: AGENT MASTERY === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16 px-4">
-              {/* Y RESOLVIDO: padding-right (pr-12) e padding-vertical (py-4) */}
-              <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 pr-12 inline-block">
-                  Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] to-white">Mastery</span>
+              {/* Y RESOLVIDO: padding-right (pr-12) e padding-vertical (py-4) para o itálico não vazar */}
+              <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 pr-12 inline-block overflow-visible">
+                  Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] to-white pb-2">Mastery</span>
               </h2>
+              {/* SUBTÍTULO REMOVIDO */}
           </div>
 
           <div className="flex justify-center gap-4 mb-12 flex-wrap">
@@ -421,10 +428,11 @@ export default function ValorantHub() {
           </div>
       </section>
 
-      {/* === STREAMS (FINAL) === */}
+      {/* === STREAMS === */}
       <section id="streams" className="px-8 lg:px-16 py-20 bg-black border-t border-white/10">
          <div className="flex items-end justify-between mb-12">
              <div>
+                {/* Roxo da Twitch: #9146FF */}
                 <h2 className="text-4xl font-black uppercase text-white italic">Live <span className="text-[#9146FF]">Hub</span></h2>
              </div>
          </div>
@@ -432,7 +440,7 @@ export default function ValorantHub() {
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
              {STREAMERS.map((streamer, idx) => (
                  <div key={idx} className="bg-[#18181B] rounded-xl overflow-hidden group border border-white/5 hover:border-[#9146FF] transition-all cursor-pointer relative aspect-video">
-                     {/* IFRAME SEMPRE PRESENTE (TWITCH CUIDA DO OFFLINE) */}
+                     {/* IFRAME: Sem lógica de Offline/Vídeo. Apenas a Twitch "Crua" */}
                      <div className="absolute inset-0 w-full h-full">
                          <iframe
                             src={`https://player.twitch.tv/?channel=${streamer.channel}&parent=${hostname}&muted=true`}
@@ -443,7 +451,7 @@ export default function ValorantHub() {
                          />
                      </div>
                      
-                     {/* Overlay de Info (Hover) */}
+                     {/* Overlay de Info (Só aparece com Hover pra ficar clean) */}
                      <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent flex items-center gap-3 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
                          <img src={streamer.avatar} className="w-10 h-10 rounded-full border-2 border-[#9146FF]" />
                          <div>
