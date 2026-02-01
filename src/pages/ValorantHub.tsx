@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sword, Shield, Settings, Map as MapIcon, Target, Timer, Anchor, RefreshCcw } from "lucide-react";
+import { Sword, Shield, Settings, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, PlayCircle } from "lucide-react";
 
 // === HEADER ===
 const HubHeader = () => {
@@ -36,18 +36,17 @@ const HubHeader = () => {
   );
 };
 
-// === DADOS DOS MAPAS (COM UUIDs PARA MINIMAPA) ===
+// === DADOS ===
 const MAPS = [
   { id: "abyss", name: "Abyss", uuid: "224b0a95-48b9-f703-1bd8-67aca101a61f", image: "/maps/abyss.webp" },
   { id: "bind", name: "Bind", uuid: "2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba", image: "/maps/bind.webp" },
   { id: "split", name: "Split", uuid: "d960549e-485c-e861-8d71-aa9d1aed12a2", image: "/maps/split.webp" },
   { id: "breeze", name: "Breeze", uuid: "2fb9a4fd-47b8-4e7d-a969-74b4046ebd53", image: "/maps/breeze.webp" },
-  { id: "corrode", name: "Corrode", uuid: "1c18ab1f-420d-0d8b-71d0-77ad3c439115", image: "/maps/corrode.webp" }, // Drift/TDM
+  { id: "corrode", name: "Corrode", uuid: "1c18ab1f-420d-0d8b-71d0-77ad3c439115", image: "/maps/corrode.webp" },
   { id: "pearl", name: "Pearl", uuid: "fd267378-4d1d-484f-ff52-77821ed10dc2", image: "/maps/pearl.webp" },
   { id: "haven", name: "Haven", uuid: "2bee0dc9-4ffe-519b-1cbd-7fbe763a6047", image: "/maps/haven.webp" },
 ];
 
-// ROLES (IDS CORRETOS PARA ÍCONES)
 const ROLES = [
     { name: "Duelist", id: "dbe8757e-9e92-4ed4-b39f-9dfc589691d4" },
     { name: "Initiator", id: "1b47567f-8f7b-444b-aae3-b0c634622d10" },
@@ -55,7 +54,6 @@ const ROLES = [
     { name: "Sentinel", id: "5fc02f99-4091-4486-a531-98459a3e95e9" },
 ];
 
-// LISTA DE AGENTES (KAY/O Corrigido + Todos)
 const AGENTS: Record<string, { name: string; role: string; id: string; color: string }> = {
   jett: { name: "Jett", role: "Duelist", id: "add6443a-41bd-e414-f6ad-e58d267f4e95", color: "#92E0EB" },
   sova: { name: "Sova", role: "Initiator", id: "320b2a48-4d9b-a075-30f1-1f93a9b638fa", color: "#3F4F8F" },
@@ -111,16 +109,21 @@ const META_COMPS = [
   },
 ];
 
+// LISTA ATUALIZADA DE STREAMERS
 const STREAMERS = {
     pros: [
-        { name: "TenZ", team: "Sentinels", viewers: "42.1K", live: true, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/6/61/TenZ_at_VCT_2024_Masters_Madrid.png" },
-        { name: "aspas", team: "MIBR", viewers: "28.5K", live: true, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/2/22/Leviat%C3%A1n_aspas_at_VCT_Americas_2024_Stage_1.png" },
-        { name: "Demon1", team: "NRG", viewers: "15K", live: false, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/4/40/NRG_Demon1_at_VCT_Americas_2024_Kickoff.png" },
-        { name: "Boaster", team: "Fnatic", viewers: "12K", live: true, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/3/30/Fnatic_Boaster_at_VCT_2024_Masters_Shanghai.png" },
+        { name: "aspas", team: "MIBR", channel: "aspaszin", live: true, avatar: "https://liquipedia.net/commons/images/thumb/5/53/Leviat%C3%A1n_aspas_at_VCT_Americas_2024_Stage_1.png/600px-Leviat%C3%A1n_aspas_at_VCT_Americas_2024_Stage_1.png" },
+        { name: "Primmie", team: "Talon", channel: "primmie", live: true, avatar: "https://liquipedia.net/commons/images/thumb/3/3d/Talon_Esports_primmie_at_VALORANT_Champions_2024.png/600px-Talon_Esports_primmie_at_VALORANT_Champions_2024.png" },
+        { name: "Wo0t", team: "Heretics", channel: "woot", live: false, avatar: "https://liquipedia.net/commons/images/thumb/8/87/Team_Heretics_Wo0t_at_VCT_EMEA_2024_Stage_1.png/600px-Team_Heretics_Wo0t_at_VCT_EMEA_2024_Stage_1.png" },
+        { name: "ZmjjKK", team: "EDG", channel: "zmjjkk", live: true, avatar: "https://liquipedia.net/commons/images/thumb/e/e9/EDward_Gaming_ZmjjKK_at_VCT_China_2024_Stage_1.png/600px-EDward_Gaming_ZmjjKK_at_VCT_China_2024_Stage_1.png" },
+        { name: "johnqt", team: "Sentinels", channel: "johnqt", live: false, avatar: "https://liquipedia.net/commons/images/thumb/7/7b/Sentinels_johnqt_at_VCT_Americas_2024_Stage_1.png/600px-Sentinels_johnqt_at_VCT_Americas_2024_Stage_1.png" },
     ],
     creators: [
-        { name: "Tarik", team: "Content", viewers: "85K", live: true, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/c/ca/Sentinels_tarik_at_VCT_2023_Lock_In.png" },
-        { name: "Kyedae", team: "Content", viewers: "22K", live: false, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/9/98/100_Thieves_Kyedae_at_VCT_2023_Lock_In.png" },
+        { name: "TcK", team: "Cloud9", channel: "tck10", live: true, avatar: "https://pbs.twimg.com/profile_images/1676678229986500608/s3Xo78W3_400x400.jpg" },
+        { name: "Tarik", team: "Sentinels", channel: "tarik", live: true, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/c/ca/Sentinels_tarik_at_VCT_2023_Lock_In.png" },
+        { name: "Kyedae", team: "Content", channel: "kyedae", live: false, avatar: "https://static.wikia.nocookie.net/valorant_esports_gamepedia_en/images/9/98/100_Thieves_Kyedae_at_VCT_2023_Lock_In.png" },
+        { name: "FNS", team: "G2", channel: "gofns", live: true, avatar: "https://liquipedia.net/commons/images/thumb/7/73/NRG_FNS_at_VCT_Americas_2023.png/600px-NRG_FNS_at_VCT_Americas_2023.png" },
+        { name: "Sacy", team: "MIBR", channel: "sacy", live: false, avatar: "https://liquipedia.net/commons/images/thumb/0/07/Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png/600px-Sentinels_Sacy_at_VCT_2024_Masters_Madrid.png" },
     ]
 }
 
@@ -162,13 +165,11 @@ export default function ValorantHub() {
               {selectedMap.name}
             </h1>
             
-            {/* BUTTON FIX: Padding adicionado (p-2 no container) para sombra não cortar */}
             <div className="flex gap-4 overflow-x-auto pb-8 pt-8 scrollbar-hide px-6 -mx-6">
                 {MAPS.map((map) => (
                     <button
                         key={map.id}
                         onClick={() => setSelectedMap(map)}
-                        // Adicionei overflow-visible no container se precisar, mas o padding resolve
                         className={`relative w-48 h-24 shrink-0 rounded-lg transition-all duration-300 group overflow-hidden ${
                             selectedMap.id === map.id 
                             ? "border-2 border-[#FF4654] shadow-[0_0_25px_rgba(255,70,84,0.5)] scale-105" 
@@ -182,7 +183,6 @@ export default function ValorantHub() {
                         ) : (
                             <>
                                 <img src={map.image} className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
-                                {/* FADE LISO: Usando mask-image ao invés de overlay de cor */}
                                 <div 
                                     className="absolute inset-0" 
                                     style={{
@@ -262,7 +262,6 @@ export default function ValorantHub() {
              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                  
                  <div className="lg:col-span-5 relative h-[500px] flex items-end justify-center group">
-                      {/* FADE LISO: Usando mask-image para fundir com o fundo sem degrau */}
                       <img 
                            key={currentCompAgentData.id}
                            src={`https://media.valorant-api.com/agents/${currentCompAgentData.id}/fullportrait.png`}
@@ -294,19 +293,13 @@ export default function ValorantHub() {
                           <h3 className="text-2xl font-black text-white uppercase">Operator GPS <span className="text-white/20">// {selectedMap.name}</span></h3>
                       </div>
                       
-                      {/* MINIMAPA TÁTICO PUXANDO DA API */}
                       <div className="aspect-video w-full bg-[#151515] rounded-xl border border-white/10 relative overflow-hidden group">
-                          {/* Grid fundo */}
                           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] z-0" />
-                          
-                          {/* IMAGEM DO MINIMAPA DA API */}
                           <img 
                             src={`https://media.valorant-api.com/maps/${selectedMap.uuid}/displayicon.png`} 
                             className="absolute inset-0 w-full h-full object-contain opacity-40 grayscale"
                             alt="Minimap"
                           />
-                          
-                          {/* Pontos GPS */}
                           <div className="absolute top-1/3 left-1/4 z-10">
                               <div className="w-4 h-4 bg-[#FF4654] rounded-full animate-ping absolute" />
                               <div className="w-4 h-4 bg-[#FF4654] rounded-full relative border-2 border-white shadow-[0_0_20px_#FF4654]" />
@@ -322,12 +315,14 @@ export default function ValorantHub() {
 
       {/* === SEÇÃO 4: AGENT MASTERY === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
-          <div className="text-center mb-16">
-              <h2 className="text-5xl font-black uppercase text-white italic mb-4">Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] to-purple-500">Mastery</span></h2>
+          <div className="text-center mb-16 px-4">
+              {/* CORREÇÃO DO Y CORTADO: Adicionei padding-right (pr-4) e leading-relaxed */}
+              <h2 className="text-5xl font-black uppercase text-white italic mb-4 leading-relaxed pr-4 inline-block">
+                  Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] to-white">Mastery</span>
+              </h2>
               <p className="text-white/40 max-w-2xl mx-auto">Select any agent to view specific setups.</p>
           </div>
 
-          {/* FILTRO COM ÍCONES (ID da API) */}
           <div className="flex justify-center gap-4 mb-12 flex-wrap">
               {ROLES.map(role => (
                   <button 
@@ -363,10 +358,7 @@ export default function ValorantHub() {
           </div>
 
           <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[600px] flex flex-col md:flex-row">
-              {/* LADO ESQUERDO COM MÁSCARA DE FADE PERFEITA */}
               <div className="w-full md:w-1/3 bg-[#161616] p-8 flex flex-col items-center border-r border-white/5 relative overflow-hidden">
-                  
-                  {/* FADE REAL: A máscara faz a imagem desaparecer suavemente, sem linha de corte */}
                   <img 
                       src={`https://media.valorant-api.com/agents/${masteryAgent.id}/fullportrait.png`} 
                       className="h-80 object-cover relative z-10 drop-shadow-2xl mb-4"
@@ -375,10 +367,7 @@ export default function ValorantHub() {
                           WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)'
                       }}
                   />
-                  
-                  {/* Cor de fundo sutil baseada no boneco */}
                   <div className="absolute inset-0 opacity-10" style={{ background: `radial-gradient(circle at top, ${masteryAgent.color}, transparent 70%)` }} />
-
                   <h3 className="text-4xl font-black text-white uppercase italic mt-[-2rem] relative z-20">{masteryAgent.name}</h3>
                   <p className="text-white/40 text-sm tracking-widest uppercase mb-8 relative z-20">{masteryAgent.role}</p>
 
@@ -442,32 +431,53 @@ export default function ValorantHub() {
       <section id="streams" className="px-8 lg:px-16 py-20 bg-black border-t border-white/10">
          <div className="flex items-end justify-between mb-12">
              <div>
-                <h2 className="text-4xl font-black uppercase text-white italic">Live <span className="text-[#9146FF]">Hub</span></h2>
+                {/* CORREÇÃO DO ROXO: Agora é RED */}
+                <h2 className="text-4xl font-black uppercase text-white italic">Live <span className="text-[#FF4654]">Hub</span></h2>
              </div>
              <div className="flex bg-white/5 rounded-lg p-1">
-                 <button onClick={() => setStreamTab('pros')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'pros' ? 'bg-[#9146FF] text-white' : 'text-white/40 hover:text-white'}`}>Pro Players</button>
-                 <button onClick={() => setStreamTab('creators')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'creators' ? 'bg-[#9146FF] text-white' : 'text-white/40 hover:text-white'}`}>Creators</button>
+                 <button onClick={() => setStreamTab('pros')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'pros' ? 'bg-[#FF4654] text-white' : 'text-white/40 hover:text-white'}`}>Pro Players</button>
+                 <button onClick={() => setStreamTab('creators')} className={`px-6 py-2 rounded font-bold uppercase text-sm transition-all ${streamTab === 'creators' ? 'bg-[#FF4654] text-white' : 'text-white/40 hover:text-white'}`}>Creators</button>
              </div>
          </div>
 
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
              {STREAMERS[streamTab].map((streamer, idx) => (
-                 <div key={idx} className="bg-[#18181B] rounded-xl overflow-hidden group border border-white/5 hover:border-[#9146FF] transition-all cursor-pointer">
-                     <div className="relative aspect-video bg-[#222]">
-                         {streamer.live ? (
-                             <div className="absolute top-2 left-2 bg-[#EF4444] text-white text-[10px] font-bold px-2 py-0.5 rounded animate-pulse">LIVE</div>
-                         ) : (
-                             <div className="absolute top-2 left-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded">OFFLINE</div>
-                         )}
-                         <div className="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1">
-                             <div className="w-1.5 h-1.5 rounded-full bg-[#EF4444]" /> {streamer.viewers}
+                 <div key={idx} className="bg-[#18181B] rounded-xl overflow-hidden group border border-white/5 hover:border-[#FF4654] transition-all cursor-pointer relative aspect-video">
+                     {/* IFRAME LÓGICA: Se live, mostra Twitch. Se off, mostra Video */}
+                     {streamer.live ? (
+                         <div className="absolute inset-0 w-full h-full">
+                             <iframe
+                                src={`https://player.twitch.tv/?channel=${streamer.channel}&parent=localhost&parent=site-meta.vercel.app&muted=true`}
+                                height="100%"
+                                width="100%"
+                                allowFullScreen
+                                className="w-full h-full object-cover"
+                             />
+                             <div className="absolute top-3 left-3 bg-[#FF4654] text-white text-[10px] font-bold px-2 py-0.5 rounded animate-pulse pointer-events-none">LIVE</div>
                          </div>
-                     </div>
-                     <div className="p-4 flex gap-3">
-                         <img src={streamer.avatar} className="w-10 h-10 rounded-full border-2 border-[#9146FF]" />
+                     ) : (
+                         <div className="absolute inset-0 w-full h-full">
+                             {/* VIDEO PLACEHOLDER PARA OFFLINE */}
+                             <video 
+                                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" 
+                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
+                                autoPlay loop muted playsInline
+                             />
+                             <div className="absolute top-3 left-3 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-2">
+                                <span className="w-2 h-2 bg-gray-500 rounded-full"></span> OFFLINE
+                             </div>
+                             <div className="absolute inset-0 flex items-center justify-center">
+                                 <PlayCircle className="w-12 h-12 text-white/50 group-hover:text-[#FF4654] transition-colors" />
+                             </div>
+                         </div>
+                     )}
+                     
+                     {/* Overlay de Info (Só aparece se hover ou offline) */}
+                     <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent flex items-center gap-3 pointer-events-none">
+                         <img src={streamer.avatar} className="w-10 h-10 rounded-full border-2 border-[#FF4654]" />
                          <div>
-                             <h4 className="text-white font-bold leading-none">{streamer.name}</h4>
-                             <p className="text-white/40 text-xs mt-1">{streamer.team}</p>
+                             <h4 className="text-white font-bold leading-none shadow-black drop-shadow-md">{streamer.name}</h4>
+                             <p className="text-white/60 text-xs mt-1">{streamer.team}</p>
                          </div>
                      </div>
                  </div>
