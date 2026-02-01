@@ -63,6 +63,8 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
   gekko: { name: "Gekko", role: "Initiator", id: "e370fa57-4757-3604-3648-499e1f642d3f", color: "#C7F458" },
   viper: { name: "Viper", role: "Controller", id: "707eab51-4836-f488-046a-cda6bf494859", color: "#4FB363" },
   neon: { name: "Neon", role: "Duelist", id: "bb2a4828-46eb-8cd1-e765-15848195d751", color: "#F5F93F" },
+  kayo: { name: "KAY/O", role: "Initiator", id: "601dbbe7-43ce-be57-2a40-4abd24953621", color: "#41B1C4" },
+  fade: { name: "Fade", role: "Initiator", id: "dade69b4-4f5a-8528-247b-219e5a1facd6", color: "#5C5C5C" },
 };
 
 const META_COMPS = [
@@ -86,7 +88,11 @@ const STREAMERS = [
 export default function ValorantHub() {
   const [selectedMap, setSelectedMap] = useState(MAPS[0]);
   const [selectedComp, setSelectedComp] = useState(META_COMPS[0]);
-  const [selectedCompAgent, setSelectedCompAgent] = useState<string | null>(META_COMPS[0].agents[0].key);
+  const [activeCompSelections, setActiveCompSelections] = useState<Record<number, string>>({
+    1: "jett",
+    2: "raze"
+  });
+  
   const [hostname, setHostname] = useState("");
   const [masteryRole, setMasteryRole] = useState("Duelist");
   const [masteryAgent, setMasteryAgent] = useState(AGENTS["jett"]);
@@ -94,8 +100,9 @@ export default function ValorantHub() {
 
   useEffect(() => { if (typeof window !== "undefined") setHostname(window.location.hostname); }, []);
 
-  const selectedAgentPlayer = selectedComp.agents.find(a => a.key === selectedCompAgent)?.player;
-  const currentCompAgentData = AGENTS[selectedCompAgent as keyof typeof AGENTS];
+  const currentSelectionKey = activeCompSelections[selectedComp.id];
+  const selectedAgentPlayer = selectedComp.agents.find(a => a.key === currentSelectionKey)?.player;
+  const currentCompAgentData = AGENTS[currentSelectionKey as keyof typeof AGENTS];
 
   return (
     <div className="fixed inset-0 w-full h-full bg-[#0A0A0A] font-sans selection:bg-[#FF4654] selection:text-white overflow-y-auto overflow-x-hidden">
@@ -112,29 +119,60 @@ export default function ValorantHub() {
         <div className="relative h-full flex flex-col justify-end px-8 lg:px-16 pb-12">
             <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
                 {MAPS.map((map) => (
-                    <button key={map.id} onClick={() => setSelectedMap(map)} className={`relative w-48 h-24 shrink-0 rounded-lg border-2 transition-all ${selectedMap.id === map.id ? "border-[#FF4654] scale-105" : "border-white/10 opacity-60"}`}>
-                        <img src={map.image} className="absolute inset-0 w-full h-full object-cover rounded-md" />
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center font-bold uppercase">{map.name}</div>
+                    <button 
+                        key={map.id} 
+                        onClick={() => setSelectedMap(map)} 
+                        className={`relative w-48 h-24 shrink-0 rounded-lg border-2 transition-all group overflow-hidden ${
+                            selectedMap.id === map.id ? "border-[#FF4654] scale-105" : "border-white/10 opacity-60"
+                        }`}
+                    >
+                        {selectedMap.id === map.id ? (
+                            <div className="absolute inset-0 bg-[#FF4654] flex items-center justify-center z-10">
+                                <span className="text-xl font-black italic uppercase text-white">{map.name}</span>
+                            </div>
+                        ) : (
+                            <>
+                                <img src={map.image} className="absolute inset-0 w-full h-full object-cover grayscale" />
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center font-bold uppercase text-white">{map.name}</div>
+                            </>
+                        )}
                     </button>
                 ))}
             </div>
         </div>
       </section>
 
-      {/* === SEÇÃO 2: META COMPS & PRO SETTINGS (AMPLIADA) === */}
-      <section id="comps" className="px-8 lg:px-16 py-10 bg-[#0A0A0A]">
+      {/* === SEÇÃO 2: META COMPS & PRO SETTINGS (ALINHADO) === */}
+      <section id="comps" className="px-8 lg:px-16 py-12 bg-[#0A0A0A]">
         <h2 className="text-4xl font-black uppercase text-white italic mb-10">Meta <span className="text-[#FF4654]">Comps</span></h2>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Lista de Comps */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             <div className="lg:col-span-4 space-y-4">
                 {META_COMPS.map((comp) => (
-                    <div key={comp.id} onClick={() => setSelectedComp(comp)} className={`p-4 rounded-xl border cursor-pointer transition-all ${selectedComp.id === comp.id ? "bg-white/5 border-[#FF4654]" : "border-white/5 bg-white/5"}`}>
-                        <span className="text-xs font-bold" style={{color: comp.color}}>{comp.org}</span>
-                        <h3 className="text-lg font-black text-white uppercase italic">{comp.name}</h3>
-                        <div className="flex gap-2 mt-3">
+                    <div 
+                        key={comp.id} 
+                        onClick={() => setSelectedComp(comp)} 
+                        className={`p-5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between h-[155px] ${
+                            selectedComp.id === comp.id ? "bg-white/5 border-[#FF4654] shadow-[0_0_20px_rgba(255,70,84,0.1)]" : "border-white/5 bg-white/5"
+                        }`}
+                    >
+                        <div>
+                            <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{color: comp.color}}>{comp.org}</span>
+                            <h3 className="text-xl font-black text-white uppercase italic">{comp.name}</h3>
+                        </div>
+                        <div className="flex gap-2">
                             {comp.agents.map((a) => (
-                                <button key={a.key} onClick={(e) => { e.stopPropagation(); setSelectedComp(comp); setSelectedCompAgent(a.key); }} className={`w-10 h-10 rounded border ${selectedCompAgent === a.key ? "border-[#FF4654] bg-[#FF4654]" : "border-white/10"}`}>
-                                    <img src={`https://media.valorant-api.com/agents/${AGENTS[a.key as keyof typeof AGENTS]?.id}/displayicon.png`} />
+                                <button 
+                                    key={a.key} 
+                                    onClick={(e) => { 
+                                        e.stopPropagation(); 
+                                        setSelectedComp(comp); 
+                                        setActiveCompSelections(prev => ({...prev, [comp.id]: a.key}));
+                                    }} 
+                                    className={`w-10 h-10 rounded border transition-all ${
+                                        activeCompSelections[comp.id] === a.key ? "border-[#FF4654] bg-[#FF4654] scale-110 z-10" : "border-white/10 hover:border-white/30"
+                                    }`}
+                                >
+                                    <img src={`https://media.valorant-api.com/agents/${AGENTS[a.key as keyof typeof AGENTS]?.id}/displayicon.png`} className="w-full h-full object-contain" />
                                 </button>
                             ))}
                         </div>
@@ -142,79 +180,84 @@ export default function ValorantHub() {
                 ))}
             </div>
 
-            {/* PRO SETTINGS AMPLIADA (SEM MINIMAPA) */}
-            <div className="lg:col-span-8 bg-[#111] rounded-2xl border border-white/10 p-8 flex flex-col md:flex-row gap-8 items-center">
-                <div className="text-center md:text-left">
-                    <span className="text-[#FF4654] font-bold tracking-tighter text-sm uppercase">Professional Setup</span>
-                    <h3 className="text-6xl font-black text-white italic uppercase leading-none mb-4">{selectedAgentPlayer}</h3>
-                    <div className="flex flex-wrap gap-4">
+            <div className="lg:col-span-8 bg-[#111] rounded-2xl border border-white/10 p-8 flex flex-col md:flex-row gap-8 items-center h-full min-h-[330px]">
+                <div className="flex-1 text-center md:text-left">
+                    <span className="text-[#FF4654] font-black tracking-widest text-[11px] uppercase border-b-2 border-[#FF4654] pb-1">Professional Setup</span>
+                    <h3 className="text-7xl font-black text-white italic uppercase leading-[1.1] my-4 tracking-tighter">{selectedAgentPlayer}</h3>
+                    <div className="grid grid-cols-2 gap-3 max-w-md">
                         <div className="bg-white/5 p-4 rounded-lg border border-white/10 flex items-center gap-3">
-                            <MousePointer2 className="text-[#FF4654]" />
-                            <div><p className="text-[10px] text-white/40 uppercase">eDPI / Sens</p><p className="font-mono text-xl text-white">280.5 / 0.35</p></div>
+                            <MousePointer2 size={18} className="text-[#FF4654]" />
+                            <div><p className="text-[9px] text-white/40 uppercase font-bold">eDPI / Sens</p><p className="font-mono text-lg text-white">280.5 / 0.35</p></div>
                         </div>
                         <div className="bg-white/5 p-4 rounded-lg border border-white/10 flex items-center gap-3">
-                            <Monitor className="text-[#FF4654]" />
-                            <div><p className="text-[10px] text-white/40 uppercase">Res / Hz</p><p className="font-mono text-xl text-white">1280x960 / 360Hz</p></div>
+                            <Monitor size={18} className="text-[#FF4654]" />
+                            <div><p className="text-[9px] text-white/40 uppercase font-bold">Res / Hz</p><p className="font-mono text-lg text-white">1280x960</p></div>
                         </div>
-                        <div className="bg-white/5 p-4 rounded-lg border border-white/10 flex items-center gap-3">
-                            <Keyboard className="text-[#FF4654]" />
-                            <div><p className="text-[10px] text-white/40 uppercase">Crosshair</p><p className="font-mono text-sm text-white">0;P;c;5;o;1;f;0;0t;1;0l;2;0o;2;0a;1;0f;0;1b;0</p></div>
+                        <div className="col-span-2 bg-white/5 p-4 rounded-lg border border-white/10 flex items-center gap-3">
+                            <Keyboard size={18} className="text-[#FF4654]" />
+                            <div className="truncate"><p className="text-[9px] text-white/40 uppercase font-bold">Crosshair Code</p><p className="font-mono text-xs text-white truncate">0;P;c;5;o;1;f;0;0t;1;0l;2;0o;2;0a;1;0f;0;1b;0</p></div>
                         </div>
                     </div>
                 </div>
-                <img src={`https://media.valorant-api.com/agents/${currentCompAgentData?.id}/fullportrait.png`} className="h-64 object-contain drop-shadow-2xl" />
+                <div className="relative h-full flex items-end">
+                    <img src={`https://media.valorant-api.com/agents/${currentCompAgentData?.id}/fullportrait.png`} className="h-[300px] object-contain drop-shadow-[0_0_30px_rgba(0,0,0,0.5)] z-10" />
+                </div>
             </div>
         </div>
       </section>
 
-      {/* === SEÇÃO 3: AGENT MASTERY (Y CORRIGIDO & MINIMAPA AQUI) === */}
-      <section id="mastery" className="px-8 lg:px-16 py-20 bg-[#0A0A0A] border-t border-white/5">
-          <div className="text-center mb-12">
-              {/* CORREÇÃO DO Y: pr-10 e overflow-visible */}
-              <h2 className="text-6xl font-black uppercase text-white italic pr-10 inline-block overflow-visible leading-tight">
-                  Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] to-white">Mastery</span>
+      {/* === SEÇÃO 3: AGENT MASTERY (RESGATE DOS AGENTES & FIX DO Y) === */}
+      <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
+          <div className="text-center mb-16">
+              {/* O Y NÃO CORTA MAIS: respiro lateral garantido */}
+              <h2 className="text-6xl font-black uppercase text-white italic pr-12 inline-block overflow-visible leading-[1.2]">
+                  Agent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] to-white pb-2">Mastery</span>
               </h2>
           </div>
 
           <div className="flex justify-center gap-4 mb-8">
               {ROLES.map(role => (
-                  <button key={role.name} onClick={() => setMasteryRole(role.name)} className={`w-12 h-12 rounded-lg border flex items-center justify-center transition-all ${masteryRole === role.name ? "bg-white" : "bg-white/5 border-white/10"}`}>
-                      <img src={`https://media.valorant-api.com/agents/roles/${role.id}/displayicon.png`} className={`w-6 h-6 ${masteryRole === role.name ? 'invert' : 'opacity-40'}`} />
+                  <button key={role.name} onClick={() => setMasteryRole(role.name)} className={`w-14 h-14 rounded-xl border flex items-center justify-center transition-all ${masteryRole === role.name ? "bg-white border-white scale-110 shadow-lg" : "bg-white/5 border-white/10 hover:border-white/30"}`}>
+                      <img src={`https://media.valorant-api.com/agents/roles/${role.id}/displayicon.png`} className={`w-8 h-8 ${masteryRole === role.name ? 'invert' : 'opacity-40'}`} />
                   </button>
               ))}
           </div>
 
-          <div className="bg-[#111] rounded-3xl border border-white/10 overflow-hidden flex flex-col lg:flex-row">
-              {/* Sidebar de Ações */}
-              <div className="w-full lg:w-80 bg-[#161616] p-8 border-r border-white/5">
-                  <h3 className="text-3xl font-black text-white uppercase italic mb-6">{masteryAgent.name}</h3>
-                  <div className="space-y-3">
-                      <button onClick={() => setMasteryPhase('attack')} className={`w-full py-4 rounded font-bold uppercase flex items-center justify-center gap-3 ${masteryPhase === 'attack' ? 'bg-[#FF4654] text-white' : 'bg-white/5 text-white/40'}`}>
-                          <Sword size={18} /> Attack
+          {/* LISTA DE AGENTES DE VOLTA (ESSENCIAL) */}
+          <div className="flex flex-wrap justify-center gap-3 mb-16 max-w-4xl mx-auto">
+              {Object.values(AGENTS).filter(a => a.role === masteryRole).map(agent => (
+                  <button key={agent.id} onClick={() => setMasteryAgent(agent)} className={`w-16 h-16 rounded-xl border-2 transition-all relative group overflow-hidden ${masteryAgent.id === agent.id ? "border-[#FF4654] scale-110 shadow-[0_0_15px_rgba(255,70,84,0.3)]" : "border-white/5 grayscale opacity-60 hover:opacity-100 hover:grayscale-0"}`}>
+                      <img src={`https://media.valorant-api.com/agents/${agent.id}/displayicon.png`} className="w-full h-full object-cover" />
+                  </button>
+              ))}
+          </div>
+
+          <div className="bg-[#111] rounded-3xl border border-white/10 overflow-hidden flex flex-col lg:flex-row min-h-[550px]">
+              <div className="w-full lg:w-80 bg-[#161616] p-10 border-r border-white/5 flex flex-col">
+                  <h3 className="text-4xl font-black text-white uppercase italic mb-1 leading-none">{masteryAgent.name}</h3>
+                  <span className="text-[#FF4654] text-[10px] font-bold uppercase tracking-[0.3em] mb-10">{masteryAgent.role}</span>
+                  <div className="space-y-4">
+                      <button onClick={() => setMasteryPhase('attack')} className={`w-full py-5 rounded-lg font-black uppercase flex items-center justify-center gap-3 transition-all ${masteryPhase === 'attack' ? 'bg-[#FF4654] text-white' : 'bg-white/5 text-white/20 hover:text-white/50'}`}>
+                          <Sword size={20} /> Attack
                       </button>
-                      <button onClick={() => setMasteryPhase('defense')} className={`w-full py-4 rounded font-bold uppercase flex items-center justify-center gap-3 ${masteryPhase === 'defense' ? 'bg-white text-black' : 'bg-white/5 text-white/40'}`}>
-                          <Shield size={18} /> Defense
+                      <button onClick={() => setMasteryPhase('defense')} className={`w-full py-5 rounded-lg font-black uppercase flex items-center justify-center gap-3 transition-all ${masteryPhase === 'defense' ? 'bg-white text-black' : 'bg-white/5 text-white/20 hover:text-white/50'}`}>
+                          <Shield size={20} /> Defense
                       </button>
                   </div>
               </div>
 
-              {/* Grid de Vídeos com MINIMAPA INTERATIVO */}
-              <div className="flex-1 p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex-1 p-10 grid grid-cols-1 md:grid-cols-2 gap-8">
                   {[1, 2].map((i) => (
-                      <div key={i} className="bg-[#0A0A0A] rounded-2xl border border-white/5 p-4 group">
-                          <div className="aspect-video bg-[#151515] rounded-xl mb-4 relative overflow-hidden flex items-center justify-center">
-                              {/* MINIMAPA SUBSTITUINDO A FOTO DO AGENTE */}
-                              <img 
-                                src={`https://media.valorant-api.com/maps/${selectedMap.uuid}/displayicon.png`} 
-                                className="absolute inset-0 w-full h-full object-contain opacity-20 grayscale group-hover:opacity-40 transition-opacity"
-                              />
+                      <div key={i} className="bg-[#0A0A0A] rounded-2xl border border-white/5 p-6 group hover:border-white/20 transition-all">
+                          <div className="aspect-video bg-[#151515] rounded-xl mb-6 relative overflow-hidden flex items-center justify-center border border-white/5">
+                              <img src={`https://media.valorant-api.com/maps/${selectedMap.uuid}/displayicon.png`} className="absolute inset-0 w-full h-full object-contain opacity-10 grayscale group-hover:opacity-30 transition-all duration-500 scale-90 group-hover:scale-100" />
                               <div className="z-10 text-center">
-                                  <div className="w-3 h-3 bg-[#FF4654] rounded-full animate-ping mx-auto mb-2" />
-                                  <span className="text-[10px] font-mono text-white/40 tracking-tighter uppercase">Positioning Setup {i}</span>
+                                  <div className="w-4 h-4 bg-[#FF4654] rounded-full animate-ping mx-auto mb-3 shadow-[0_0_15px_#FF4654]" />
+                                  <span className="text-[10px] font-black font-mono text-white/40 tracking-widest uppercase">Tactical Setup // {selectedMap.name}</span>
                               </div>
                           </div>
-                          <h4 className="font-bold text-white uppercase text-sm mb-1">{masteryPhase === 'attack' ? 'Execution Spot' : 'Default Hold'}</h4>
-                          <p className="text-xs text-white/50">Detailed lineup for {selectedMap.name} site control.</p>
+                          <h4 className="font-black text-white uppercase text-lg mb-2">{masteryPhase === 'attack' ? 'Aggressive Entry' : 'Passive Hold'}</h4>
+                          <p className="text-sm text-white/40 leading-relaxed font-medium">Detailed positioning for high rank {masteryAgent.name} utility usage.</p>
                       </div>
                   ))}
               </div>
@@ -222,15 +265,18 @@ export default function ValorantHub() {
       </section>
 
       {/* === STREAMS === */}
-      <section id="streams" className="px-8 lg:px-16 py-20 bg-black border-t border-white/10">
-          <h2 className="text-4xl font-black uppercase text-white italic mb-10">Live <span className="text-[#9146FF]">Hub</span></h2>
+      <section id="streams" className="px-8 lg:px-16 py-24 bg-black border-t border-white/10">
+          <h2 className="text-4xl font-black uppercase text-white italic mb-12">Live <span className="text-[#9146FF]">Hub</span></h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {STREAMERS.map((s, idx) => (
-                  <div key={idx} className="bg-[#18181B] rounded-xl overflow-hidden border border-white/5 hover:border-[#9146FF] transition-all aspect-video relative group">
-                      <iframe src={`https://player.twitch.tv/?channel=${s.channel}&parent=${hostname}&muted=true`} height="100%" width="100%" allowFullScreen className="w-full h-full" />
-                      <div className="absolute bottom-0 p-3 bg-black/80 w-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
-                          <img src={s.avatar} className="w-8 h-8 rounded-full border border-[#9146FF]" />
-                          <span className="text-xs font-bold text-white">{s.name}</span>
+                  <div key={idx} className="bg-[#18181B] rounded-2xl overflow-hidden border border-white/5 hover:border-[#9146FF] transition-all aspect-video relative group cursor-none">
+                      <iframe src={`https://player.twitch.tv/?channel=${s.channel}&parent=${hostname}&muted=true`} height="100%" width="100%" allowFullScreen className="w-full h-full pointer-events-auto" />
+                      <div className="absolute bottom-0 p-4 bg-gradient-to-t from-black to-transparent w-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-3">
+                          <img src={s.avatar} className="w-10 h-10 rounded-full border-2 border-[#9146FF] shadow-lg" />
+                          <div className="leading-none">
+                              <p className="text-xs font-black text-white uppercase italic">{s.name}</p>
+                              <p className="text-[9px] font-bold text-white/50 uppercase tracking-widest">{s.team}</p>
+                          </div>
                       </div>
                   </div>
               ))}
