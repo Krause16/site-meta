@@ -97,10 +97,10 @@ const PLAYER_STATS: Record<string, any> = {
     boaster: { sens: "0.52", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
 };
 
-// COMPS
+// COMPS (Sem Winrates)
 const META_COMPS = [
   {
-    id: 1, org: "NRG", color: "#FF6B00", winRate: "NEW",
+    id: 1, org: "NRG", color: "#FF6B00",
     agents: [
       { key: "kayo", player: "Ethan" }, 
       { key: "raze", player: "mada" }, 
@@ -110,7 +110,7 @@ const META_COMPS = [
     ],
   },
   {
-    id: 2, org: "MIBR", color: "#002758", winRate: "NEW",
+    id: 2, org: "MIBR", color: "#002758",
     agents: [
       { key: "jett", player: "aspas" }, 
       { key: "sova", player: "Verno" }, 
@@ -120,7 +120,7 @@ const META_COMPS = [
     ],
   },
   {
-    id: 3, org: "FNATIC", color: "#FF5900", winRate: "71%",
+    id: 3, org: "FNATIC", color: "#FF5900",
     agents: [
       { key: "omen", player: "Boaster" }, 
       { key: "killjoy", player: "Alfajer" }, 
@@ -130,7 +130,7 @@ const META_COMPS = [
     ],
   },
   {
-    id: 4, org: "Paper Rex", color: "#BF216B", winRate: "NEW",
+    id: 4, org: "Paper Rex", color: "#BF216B",
     agents: [
       { key: "skye", player: "d4v41" }, 
       { key: "yoru", player: "f0rsakeN" }, 
@@ -163,7 +163,6 @@ export default function ValorantHub() {
  
   const [masteryRole, setMasteryRole] = useState("Duelist");
   const [masteryAgent, setMasteryAgent] = useState(AGENTS["jett"]);
-  // REMOVIDO: Estado masteryPhase
 
   const selectedAgentPlayer = selectedComp.agents.find(a => a.key === selectedCompAgent)?.player || "Player";
   const playerStats = PLAYER_STATS[selectedAgentPlayer.toLowerCase()] || PLAYER_STATS["default"];
@@ -233,8 +232,8 @@ export default function ValorantHub() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 h-full">
-            {/* COLUNA ESQUERDA: LISTA DE TIMES */}
-            <div className="xl:col-span-5 flex flex-col gap-4 h-full">
+            {/* COLUNA ESQUERDA: LISTA DE TIMES (AGORA 4 COLUNAS - SEM WINRATES) */}
+            <div className="xl:col-span-4 flex flex-col gap-4 h-full">
                 {META_COMPS.map((comp) => {
                     const isActive = selectedComp.id === comp.id;
                     return (
@@ -250,7 +249,7 @@ export default function ValorantHub() {
                                 : "bg-[#111] border-white/5 hover:bg-white/10 hover:border-white/20"
                             }`}
                             style={{ 
-                                minHeight: '180px',
+                                minHeight: '160px', // Altura ligeiramente ajustada
                                 borderColor: isActive ? comp.color : 'rgba(255,255,255,0.05)'
                             }}
                         >
@@ -258,7 +257,7 @@ export default function ValorantHub() {
                                 <h3 className="text-4xl font-black uppercase italic tracking-tighter" style={{color: comp.color}}>
                                     {comp.org}
                                 </h3>
-                                <span className="text-3xl font-black text-white/10 group-hover:text-white/30 transition-colors">{comp.winRate}</span>
+                                {/* REMOVIDO: Winrate/New */}
                             </div>
 
                             <div className="flex gap-2 relative z-10 mt-auto">
@@ -300,8 +299,8 @@ export default function ValorantHub() {
                 })}
             </div>
 
-            {/* COLUNA DIREITA: DETALHES DO PLAYER (HARMONIZADA) */}
-            <div className="xl:col-span-7 bg-[#111] rounded-2xl border border-white/10 p-10 relative overflow-hidden flex flex-col justify-center min-h-[600px]">
+            {/* COLUNA DIREITA: DETALHES DO PLAYER (AGORA 8 COLUNAS - MAIS ESPAÇO) */}
+            <div className="xl:col-span-8 bg-[#111] rounded-2xl border border-white/10 p-12 relative overflow-hidden flex flex-col justify-center min-h-[600px]">
                 <div 
                     className="absolute top-0 right-0 w-96 h-96 opacity-5 blur-[180px] rounded-full pointer-events-none transition-colors duration-500"
                     style={{ backgroundColor: selectedComp.color }}
@@ -321,7 +320,6 @@ export default function ValorantHub() {
                          </div>
                      </div>
                      
-                     {/* GRID DE STATS MAIS ESPAÇADA E ALTA */}
                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                         {[
                             { label: "Sensitivity", val: playerStats.sens, icon: MousePointer2 },
@@ -362,10 +360,9 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 4: AGENT MASTERY (SEM FADE E SEM BOTÕES) === */}
+      {/* === SEÇÃO 4: AGENT MASTERY === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16 px-4">
-              {/* TÍTULO CORRIGIDO: SEM FADE, COR SÓLIDA */}
               <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 inline-block">
                   Agent <span className="not-italic text-[#FF4654] ml-2">MASTERY</span>
               </h2>
@@ -405,7 +402,6 @@ export default function ValorantHub() {
           </div>
 
           <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[500px] flex flex-col md:flex-row">
-              {/* LADO ESQUERDO: INFOS DO AGENTE (LIMPO, SEM BOTÕES) */}
               <div className="w-full md:w-1/3 bg-[#161616] p-10 flex flex-col justify-center border-r border-white/5 relative overflow-hidden">
                   <div className="relative z-20 text-center md:text-left">
                     <h3 className="text-6xl font-black text-white uppercase italic tracking-tighter mb-4">{masteryAgent.name}</h3>
@@ -427,45 +423,23 @@ export default function ValorantHub() {
                   </div>
               </div>
 
-              {/* LADO DIREITO: SETUPS (EXPANDIDO) */}
+              {/* LADO DIREITO: APENAS VÍDEOS (SEM TÍTULOS/DESCRIÇÕES) */}
               <div className="w-full md:w-2/3 p-8 md:p-12 bg-[#0A0A0A]/50">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-                      {/* CARD 1 */}
-                      <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-8 hover:border-white/30 transition-all group flex flex-col h-full shadow-2xl">
-                          <div className="flex items-center gap-3 mb-6">
-                              <div className="p-2 rounded bg-[#FF4654]/20 text-[#FF4654]">
-                                  <Zap size={24} />
-                              </div>
-                              <h4 className="font-bold text-white uppercase tracking-widest text-lg">
-                                  Signature Setup
-                              </h4>
+                      {/* VIDEO 1 */}
+                      <div className="bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden hover:border-white/30 transition-all group shadow-2xl relative h-full">
+                          <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10 pointer-events-none" />
+                          <div className="w-full h-full flex items-center justify-center bg-[#1A1A1A]">
+                              <span className="text-white/20 text-xs font-mono tracking-widest">VIDEO PLACEHOLDER 1</span>
                           </div>
-                          <div className="aspect-video bg-[#1A1A1A] rounded-lg border border-white/5 mb-6 flex items-center justify-center relative overflow-hidden group-hover:border-white/20 transition-colors">
-                              <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10" />
-                              <span className="text-white/20 text-xs font-mono">VIDEO PLACEHOLDER</span>
-                          </div>
-                          <p className="text-white/60 text-base leading-relaxed mt-auto">
-                              Essential early-round positioning and utility usage to gain map control with {masteryAgent.name}.
-                          </p>
                       </div>
 
-                      {/* CARD 2 */}
-                      <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-8 hover:border-white/30 transition-all group flex flex-col h-full shadow-2xl">
-                          <div className="flex items-center gap-3 mb-6">
-                              <div className="p-2 rounded bg-white/20 text-white">
-                                  <Layers size={24} />
-                              </div>
-                              <h4 className="font-bold text-white uppercase tracking-widest text-lg">
-                                  Utility Combo
-                              </h4>
+                      {/* VIDEO 2 */}
+                      <div className="bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden hover:border-white/30 transition-all group shadow-2xl relative h-full">
+                          <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10 pointer-events-none" />
+                          <div className="w-full h-full flex items-center justify-center bg-[#1A1A1A]">
+                              <span className="text-white/20 text-xs font-mono tracking-widest">VIDEO PLACEHOLDER 2</span>
                           </div>
-                          <div className="aspect-video bg-[#1A1A1A] rounded-lg border border-white/5 mb-6 flex items-center justify-center relative overflow-hidden group-hover:border-white/20 transition-colors">
-                              <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10" />
-                              <span className="text-white/20 text-xs font-mono">VIDEO PLACEHOLDER</span>
-                          </div>
-                          <p className="text-white/60 text-base leading-relaxed mt-auto">
-                              High-impact utility combination to execute onto sites or retake defensive positions.
-                          </p>
                       </div>
                   </div>
               </div>
