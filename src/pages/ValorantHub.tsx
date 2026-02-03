@@ -95,48 +95,69 @@ const PLAYER_STATS: Record<string, any> = {
     zekken: { sens: "0.175", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Yellow" },
     jinggg: { sens: "0.25", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
     boaster: { sens: "0.52", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
+    demon1: { sens: "0.1", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Red" },
+    ethan: { sens: "0.34", dpi: "800", res: "1920x1080", crosshair: "1;s;1;P;c;5;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
 };
 
-// COMPS (Sem Winrates)
+// COMPS DINÂMICAS
 const META_COMPS = [
   {
     id: 1, org: "NRG", color: "#FF6B00",
+    rosters: {
+        haven: [
+            { key: "sova", player: "brawk" }, { key: "viper", player: "keiko" },
+            { key: "neon", player: "mada" }, { key: "killjoy", player: "skuba" }, { key: "omen", player: "Ethan" }
+        ],
+        corrode: [
+            { key: "sova", player: "brawk" }, { key: "omen", player: "keiko" },
+            { key: "astra", player: "mada" }, { key: "viper", player: "skuba" }, { key: "kayo", player: "Ethan" }
+        ],
+        abyss: [
+            { key: "iso", player: "mada" }, { key: "viper", player: "skuba" },
+            { key: "sova", player: "brawk" }, { key: "breach", player: "Ethan" }, { key: "omen", player: "keiko" }
+        ],
+        split: [
+            { key: "iso", player: "mada" }, { key: "viper", player: "skuba" },
+            { key: "breach", player: "brawk" }, { key: "skye", player: "Ethan" }, { key: "astra", player: "keiko" }
+        ],
+        breeze: [
+            { key: "yoru", player: "mada" }, { key: "viper", player: "skuba" },
+            { key: "sova", player: "brawk" }, { key: "astra", player: "Ethan" }, { key: "neon", player: "keiko" }
+        ],
+        pearl: [
+            { key: "killjoy", player: "keiko" }, { key: "sova", player: "brawk" },
+            { key: "jett", player: "mada" }, { key: "breach", player: "Ethan" }, { key: "astra", player: "skuba" }
+        ],
+        bind: [
+            { key: "brimstone", player: "keiko" }, { key: "raze", player: "mada" },
+            { key: "viper", player: "skuba" }, { key: "kayo", player: "Ethan" }, { key: "fade", player: "brawk" }
+        ]
+    },
+    // Fallback padrão se não tiver mapa selecionado (usa a do Bind por exemplo)
     agents: [
-      { key: "kayo", player: "Ethan" }, 
-      { key: "raze", player: "mada" }, 
-      { key: "sova", player: "brawk" }, 
-      { key: "omen", player: "skuba" }, 
-      { key: "jett", player: "keiko" },
+        { key: "kayo", player: "Ethan" }, { key: "raze", player: "mada" }, 
+        { key: "sova", player: "brawk" }, { key: "omen", player: "skuba" }, { key: "jett", player: "keiko" }
     ],
   },
   {
     id: 2, org: "MIBR", color: "#002758",
     agents: [
-      { key: "jett", player: "aspas" }, 
-      { key: "sova", player: "Verno" }, 
-      { key: "omen", player: "Mazino" }, 
-      { key: "chamber", player: "tex" }, 
-      { key: "raze", player: "zekken" }, 
+      { key: "jett", player: "aspas" }, { key: "sova", player: "Verno" }, 
+      { key: "omen", player: "Mazino" }, { key: "chamber", player: "tex" }, { key: "raze", player: "zekken" }, 
     ],
   },
   {
     id: 3, org: "FNATIC", color: "#FF5900",
     agents: [
-      { key: "omen", player: "Boaster" }, 
-      { key: "killjoy", player: "Alfajer" }, 
-      { key: "jett", player: "kaajak" }, 
-      { key: "sova", player: "crashies" }, 
-      { key: "breach", player: "Veqaj" }, 
+      { key: "omen", player: "Boaster" }, { key: "killjoy", player: "Alfajer" }, 
+      { key: "jett", player: "kaajak" }, { key: "sova", player: "crashies" }, { key: "breach", player: "Veqaj" }, 
     ],
   },
   {
     id: 4, org: "Paper Rex", color: "#BF216B",
     agents: [
-      { key: "skye", player: "d4v41" }, 
-      { key: "yoru", player: "f0rsakeN" }, 
-      { key: "jett", player: "something" }, 
-      { key: "raze", player: "Jinggg" }, 
-      { key: "breach", player: "invy" }, 
+      { key: "skye", player: "d4v41" }, { key: "yoru", player: "f0rsakeN" }, 
+      { key: "jett", player: "something" }, { key: "raze", player: "Jinggg" }, { key: "breach", player: "invy" }, 
     ],
   },
 ];
@@ -151,7 +172,7 @@ const STREAMERS = [
 export default function ValorantHub() {
   const [selectedMap, setSelectedMap] = useState(MAPS[0]);
   const [selectedComp, setSelectedComp] = useState(META_COMPS[0]);
-  const [selectedCompAgent, setSelectedCompAgent] = useState<string | null>(META_COMPS[0].agents[0].key);
+  const [selectedCompAgent, setSelectedCompAgent] = useState<string | null>(null); // Null inicialmente para forçar atualização
   const [hostname, setHostname] = useState("");
   const [copied, setCopied] = useState(false);
 
@@ -160,11 +181,29 @@ export default function ValorantHub() {
           setHostname(window.location.hostname);
       }
   }, []);
+
+  // EFEITO: Atualiza a lineup quando o Mapa ou a Comp muda
+  useEffect(() => {
+      const currentRoster = (selectedComp.rosters && selectedComp.rosters[selectedMap.id]) 
+                            ? selectedComp.rosters[selectedMap.id] 
+                            : selectedComp.agents;
+      
+      // Se o agente selecionado não estiver na nova roster, seleciona o primeiro
+      if (!currentRoster.some(a => a.key === selectedCompAgent)) {
+          setSelectedCompAgent(currentRoster[0].key);
+      }
+  }, [selectedMap, selectedComp, selectedCompAgent]);
  
   const [masteryRole, setMasteryRole] = useState("Duelist");
   const [masteryAgent, setMasteryAgent] = useState(AGENTS["jett"]);
 
-  const selectedAgentPlayer = selectedComp.agents.find(a => a.key === selectedCompAgent)?.player || "Player";
+  // Lógica para pegar os agentes corretos (Dinâmico ou Padrão)
+  const activeAgents = (selectedComp.rosters && selectedComp.rosters[selectedMap.id]) 
+                       ? selectedComp.rosters[selectedMap.id] 
+                       : selectedComp.agents;
+
+  const selectedAgentObj = activeAgents.find(a => a.key === selectedCompAgent);
+  const selectedAgentPlayer = selectedAgentObj?.player || "Player";
   const playerStats = PLAYER_STATS[selectedAgentPlayer.toLowerCase()] || PLAYER_STATS["default"];
 
   const abilitySlots = ['Grenade', 'Ability1', 'Ability2', 'Ultimate'];
@@ -232,16 +271,23 @@ export default function ValorantHub() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 h-full">
-            {/* COLUNA ESQUERDA: LISTA DE TIMES (AGORA 4 COLUNAS - SEM WINRATES) */}
+            {/* COLUNA ESQUERDA: LISTA DE TIMES */}
             <div className="xl:col-span-4 flex flex-col gap-4 h-full">
                 {META_COMPS.map((comp) => {
                     const isActive = selectedComp.id === comp.id;
+                    
+                    // Lógica para pegar os agentes do card (Dinâmico vs Estático)
+                    const rosterToDisplay = (comp.rosters && comp.rosters[selectedMap.id]) 
+                                            ? comp.rosters[selectedMap.id] 
+                                            : comp.agents;
+
                     return (
                         <div
                             key={comp.id}
                             onClick={() => {
                                 setSelectedComp(comp);
-                                if (!comp.agents.some(a => a.key === selectedCompAgent)) setSelectedCompAgent(comp.agents[0].key);
+                                // Seleciona o primeiro agente da nova comp
+                                if (rosterToDisplay.length > 0) setSelectedCompAgent(rosterToDisplay[0].key);
                             }}
                             className={`flex-1 p-6 rounded-xl border cursor-pointer transition-all relative overflow-hidden group flex flex-col justify-center gap-4 ${
                                 isActive 
@@ -249,7 +295,7 @@ export default function ValorantHub() {
                                 : "bg-[#111] border-white/5 hover:bg-white/10 hover:border-white/20"
                             }`}
                             style={{ 
-                                minHeight: '160px', // Altura ligeiramente ajustada
+                                minHeight: '160px',
                                 borderColor: isActive ? comp.color : 'rgba(255,255,255,0.05)'
                             }}
                         >
@@ -257,11 +303,10 @@ export default function ValorantHub() {
                                 <h3 className="text-4xl font-black uppercase italic tracking-tighter" style={{color: comp.color}}>
                                     {comp.org}
                                 </h3>
-                                {/* REMOVIDO: Winrate/New */}
                             </div>
 
                             <div className="flex gap-2 relative z-10 mt-auto">
-                                {comp.agents.map((a) => {
+                                {rosterToDisplay.map((a) => {
                                     const isAgentSelected = selectedCompAgent === a.key && isActive;
                                     return (
                                         <button 
@@ -299,7 +344,7 @@ export default function ValorantHub() {
                 })}
             </div>
 
-            {/* COLUNA DIREITA: DETALHES DO PLAYER (AGORA 8 COLUNAS - MAIS ESPAÇO) */}
+            {/* COLUNA DIREITA: DETALHES DO PLAYER */}
             <div className="xl:col-span-8 bg-[#111] rounded-2xl border border-white/10 p-12 relative overflow-hidden flex flex-col justify-center min-h-[600px]">
                 <div 
                     className="absolute top-0 right-0 w-96 h-96 opacity-5 blur-[180px] rounded-full pointer-events-none transition-colors duration-500"
@@ -423,10 +468,8 @@ export default function ValorantHub() {
                   </div>
               </div>
 
-              {/* LADO DIREITO: APENAS VÍDEOS (SEM TÍTULOS/DESCRIÇÕES) */}
               <div className="w-full md:w-2/3 p-8 md:p-12 bg-[#0A0A0A]/50">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-                      {/* VIDEO 1 */}
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden hover:border-white/30 transition-all group shadow-2xl relative h-full">
                           <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10 pointer-events-none" />
                           <div className="w-full h-full flex items-center justify-center bg-[#1A1A1A]">
@@ -434,7 +477,6 @@ export default function ValorantHub() {
                           </div>
                       </div>
 
-                      {/* VIDEO 2 */}
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden hover:border-white/30 transition-all group shadow-2xl relative h-full">
                           <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10 pointer-events-none" />
                           <div className="w-full h-full flex items-center justify-center bg-[#1A1A1A]">
