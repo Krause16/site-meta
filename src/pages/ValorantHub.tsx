@@ -87,36 +87,56 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
   clove: { name: "Clove", role: "Controller", id: "1dbf2edd-4729-0984-3115-daa5eed44993", color: "#E66AB4" }
 };
 
-// DADOS MOCKADOS (Crosshairs & Stats)
+// DADOS DE PLAYER (MOCK para demonstração - Idealmente viria de uma API)
 const PLAYER_STATS: Record<string, any> = {
     default: { sens: "0.35", dpi: "800", res: "1920x1080", crosshair: "SOON", color: "Yellow" },
     aspas: { sens: "0.4", dpi: "800", res: "1280x960", crosshair: "0;P;c;5;h;0;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Yellow (Deut)" },
     less: { sens: "0.58", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;5;h;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
-    demon1: { sens: "0.1", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Red" },
+    zekken: { sens: "0.175", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Yellow" },
+    jinggg: { sens: "0.25", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
     boaster: { sens: "0.52", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
 };
 
-// COMPS ATUALIZADAS (SEM NICKNAMES)
+// COMPS ATUALIZADAS (CORES E ROSTERS DAS FOTOS)
 const META_COMPS = [
   {
-    id: 1, org: "NRG", color: "#FF5900", winRate: "62%",
+    id: 1, org: "NRG", color: "#FF6B00", winRate: "NEW", // Laranja Energizado
     agents: [
-      { key: "jett", player: "Demon1" }, { key: "kayo", player: "Ethan" },
-      { key: "omen", player: "Marved" }, { key: "sova", player: "crashies" }, { key: "raze", player: "Victor" },
+      { key: "kayo", player: "Ethan" }, 
+      { key: "raze", player: "mada" }, 
+      { key: "sova", player: "brawk" }, 
+      { key: "omen", player: "skuba" }, 
+      { key: "jett", player: "keiko" }, // Keiko geralmente Duelist
     ],
   },
   {
-    id: 2, org: "MIBR", color: "#009944", winRate: "68%",
+    id: 2, org: "MIBR", color: "#002758", winRate: "NEW", // Azul Marinho
     agents: [
-      { key: "jett", player: "aspas" }, { key: "gekko", player: "cauanzin" },
-      { key: "sova", player: "nzr" }, { key: "omen", player: "art" }, { key: "killjoy", player: "less" },
+      { key: "jett", player: "aspas" }, 
+      { key: "sova", player: "Verno" }, 
+      { key: "omen", player: "Mazino" }, 
+      { key: "chamber", player: "tex" }, 
+      { key: "raze", player: "zekken" }, // Zekken Flex/Duelist
     ],
   },
   {
-    id: 3, org: "FNATIC", color: "#FF5900", winRate: "71%",
+    id: 3, org: "FNATIC", color: "#FF5900", winRate: "71%", // Laranja Fnatic
     agents: [
-      { key: "omen", player: "Boaster" }, { key: "jett", player: "Derke" },
-      { key: "killjoy", player: "Alfajer" }, { key: "sova", player: "Leo" }, { key: "viper", player: "Chronicle" },
+      { key: "omen", player: "Boaster" }, 
+      { key: "killjoy", player: "Alfajer" }, 
+      { key: "jett", player: "kaajak" }, 
+      { key: "sova", player: "crashies" }, 
+      { key: "breach", player: "Veqaj" }, 
+    ],
+  },
+  {
+    id: 4, org: "Paper Rex", color: "#BF216B", winRate: "NEW", // Magenta PRX
+    agents: [
+      { key: "skye", player: "d4v41" }, 
+      { key: "yoru", player: "f0rsakeN" }, 
+      { key: "jett", player: "something" }, 
+      { key: "raze", player: "Jinggg" }, 
+      { key: "breach", player: "invy" }, 
     ],
   },
 ];
@@ -213,7 +233,7 @@ export default function ValorantHub() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 h-full">
-            {/* COLUNA ESQUERDA: LISTA DE TIMES (SEM APELIDOS) */}
+            {/* COLUNA ESQUERDA: LISTA DE TIMES (ATUALIZADA) */}
             <div className="xl:col-span-5 flex flex-col gap-4 h-full">
                 {META_COMPS.map((comp) => {
                     const isActive = selectedComp.id === comp.id;
@@ -226,12 +246,15 @@ export default function ValorantHub() {
                             }}
                             className={`flex-1 p-6 rounded-xl border cursor-pointer transition-all relative overflow-hidden group flex flex-col justify-center gap-4 ${
                                 isActive 
-                                ? "bg-gradient-to-r from-white/10 to-[#111] border-[#FF4654] shadow-[0_0_30px_rgba(255,70,84,0.15)]" 
+                                ? "bg-gradient-to-r from-white/10 to-[#111] shadow-[0_0_30px_rgba(255,255,255,0.05)]" 
                                 : "bg-[#111] border-white/5 hover:bg-white/10 hover:border-white/20"
                             }`}
-                            style={{ minHeight: '180px' }}
+                            style={{ 
+                                minHeight: '180px',
+                                borderColor: isActive ? comp.color : 'rgba(255,255,255,0.05)'
+                            }}
                         >
-                            {/* NOME DA ORG COMO PRINCIPAL */}
+                            {/* NOME DA ORG */}
                             <div className="flex justify-between items-center relative z-10">
                                 <h3 className="text-4xl font-black uppercase italic tracking-tighter" style={{color: comp.color}}>
                                     {comp.org}
@@ -239,7 +262,7 @@ export default function ValorantHub() {
                                 <span className="text-3xl font-black text-white/10 group-hover:text-white/30 transition-colors">{comp.winRate}</span>
                             </div>
 
-                            {/* AGENTES */}
+                            {/* ROSTER ICONS */}
                             <div className="flex gap-2 relative z-10 mt-auto">
                                 {comp.agents.map((a) => {
                                     const isAgentSelected = selectedCompAgent === a.key && isActive;
@@ -251,7 +274,12 @@ export default function ValorantHub() {
                                                 setSelectedComp(comp);
                                                 setSelectedCompAgent(a.key); 
                                             }}
-                                            className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all relative group/agent ${isAgentSelected ? 'border-[#FF4654] scale-110 z-20 shadow-lg' : 'border-white/10 opacity-70 hover:opacity-100 hover:scale-105'}`}
+                                            className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all relative group/agent ${
+                                                isAgentSelected 
+                                                ? 'scale-110 z-20 shadow-lg' 
+                                                : 'border-white/10 opacity-70 hover:opacity-100 hover:scale-105'
+                                            }`}
+                                            style={{ borderColor: isAgentSelected ? comp.color : 'rgba(255,255,255,0.1)' }}
                                         >
                                             <img src={`https://media.valorant-api.com/agents/${AGENTS[a.key as keyof typeof AGENTS]?.id}/displayicon.png`} className="w-full h-full object-cover bg-black" />
                                             <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-black px-2 py-0.5 rounded text-[10px] font-bold text-white uppercase opacity-0 group-hover/agent:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-30">
@@ -263,7 +291,11 @@ export default function ValorantHub() {
                             </div>
 
                             {isActive && (
-                                <motion.div layoutId="activeGlow" className="absolute inset-0 bg-gradient-to-r from-[#FF4654]/5 to-transparent pointer-events-none" />
+                                <motion.div 
+                                    layoutId="activeGlow" 
+                                    className="absolute inset-0 pointer-events-none"
+                                    style={{ background: `linear-gradient(to right, ${comp.color}15, transparent)` }} 
+                                />
                             )}
                         </div>
                     );
@@ -272,19 +304,22 @@ export default function ValorantHub() {
 
             {/* COLUNA DIREITA: DETALHES DO PLAYER */}
             <div className="xl:col-span-7 bg-[#111] rounded-2xl border border-white/10 p-10 relative overflow-hidden flex flex-col justify-center min-h-[500px]">
-                <div className="absolute top-0 right-0 w-80 h-80 bg-[#FF4654] opacity-5 blur-[150px] rounded-full pointer-events-none" />
+                {/* Glow Dinâmico com a cor do time */}
+                <div 
+                    className="absolute top-0 right-0 w-80 h-80 opacity-10 blur-[150px] rounded-full pointer-events-none transition-colors duration-500"
+                    style={{ backgroundColor: selectedComp.color }}
+                />
 
-                {/* HEADER DIREITO: NOME DA ORG AGORA */}
                 <div className="relative z-10">
                      <div className="flex items-end justify-between border-b border-white/5 pb-6 mb-8">
                          <div>
-                             <h4 className="text-white/40 font-bold uppercase tracking-widest text-sm mb-1" style={{color: selectedComp.color}}>
+                             <h4 className="font-bold uppercase tracking-widest text-sm mb-1" style={{color: selectedComp.color}}>
                                 {selectedComp.org} // ROSTER
                              </h4>
                              <h3 className="text-5xl font-black uppercase text-white italic tracking-tighter">{selectedAgentPlayer}</h3>
                          </div>
                          <div className="text-right">
-                            <span className="block text-xs text-[#FF4654] font-bold uppercase tracking-widest mb-1">Role</span>
+                            <span className="block text-xs font-bold uppercase tracking-widest mb-1" style={{color: selectedComp.color}}>Role</span>
                             <span className="text-xl font-bold text-white">{AGENTS[selectedCompAgent as keyof typeof AGENTS]?.role}</span>
                          </div>
                      </div>
@@ -297,7 +332,7 @@ export default function ValorantHub() {
                             { label: "Enemy Color", val: playerStats.color, icon: Eye }
                         ].map((stat, idx) => (
                             <div key={idx} className="p-4 rounded-lg bg-black/40 border border-white/5 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors">
-                                <stat.icon className="text-[#FF4654] mb-2 w-5 h-5" />
+                                <stat.icon className="mb-2 w-5 h-5" style={{color: selectedComp.color}} />
                                 <span className="text-[10px] text-white/40 uppercase tracking-widest mb-1">{stat.label}</span>
                                 <span className="text-lg font-mono font-bold text-white">{stat.val}</span>
                             </div>
@@ -306,10 +341,11 @@ export default function ValorantHub() {
 
                      <button 
                         onClick={handleCopyCrosshair}
-                        className="w-full p-5 rounded-lg bg-black/40 border border-white/5 flex items-center justify-between group hover:border-[#FF4654]/50 transition-all active:scale-[0.99]"
+                        className="w-full p-5 rounded-lg bg-black/40 border border-white/5 flex items-center justify-between group hover:border-opacity-50 transition-all active:scale-[0.99]"
+                        style={{ borderColor: copied ? '#22c55e' : 'rgba(255,255,255,0.1)' }}
                      >
                         <div className="flex items-center gap-4">
-                            <Crosshair className={`w-6 h-6 transition-colors ${copied ? 'text-green-500' : 'text-[#FF4654]'}`} />
+                            <Crosshair className={`w-6 h-6 transition-colors ${copied ? 'text-green-500' : ''}`} style={{ color: copied ? undefined : selectedComp.color }} />
                             <span className="text-sm font-bold text-white uppercase tracking-widest">
                                 {copied ? "Copied to Clipboard!" : "Copy Crosshair Code"}
                             </span>
