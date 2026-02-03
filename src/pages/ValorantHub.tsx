@@ -99,7 +99,7 @@ const PLAYER_STATS: Record<string, any> = {
     ethan: { sens: "0.34", dpi: "800", res: "1920x1080", crosshair: "1;s;1;P;c;5;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
 };
 
-// COMPS DINÂMICAS
+// COMPS DINÂMICAS (ATUALIZADA MIBR)
 const META_COMPS = [
   {
     id: 1, org: "NRG", color: "#FF6B00",
@@ -133,7 +133,6 @@ const META_COMPS = [
             { key: "viper", player: "skuba" }, { key: "kayo", player: "Ethan" }, { key: "fade", player: "brawk" }
         ]
     },
-    // Fallback padrão se não tiver mapa selecionado (usa a do Bind por exemplo)
     agents: [
         { key: "kayo", player: "Ethan" }, { key: "raze", player: "mada" }, 
         { key: "sova", player: "brawk" }, { key: "omen", player: "skuba" }, { key: "jett", player: "keiko" }
@@ -141,6 +140,36 @@ const META_COMPS = [
   },
   {
     id: 2, org: "MIBR", color: "#002758",
+    rosters: {
+        haven: [
+            { key: "neon", player: "aspas" }, { key: "sova", player: "Verno" }, 
+            { key: "killjoy", player: "tex" }, { key: "viper", player: "Mazino" }, { key: "omen", player: "zekken" }
+        ],
+        corrode: [
+            { key: "phoenix", player: "aspas" }, { key: "sova", player: "Verno" }, 
+            { key: "kayo", player: "Mazino" }, { key: "viper", player: "tex" }, { key: "omen", player: "zekken" }
+        ],
+        abyss: [
+            { key: "yoru", player: "zekken" }, { key: "fade", player: "Verno" }, 
+            { key: "omen", player: "Mazino" }, { key: "raze", player: "aspas" }, { key: "viper", player: "tex" }
+        ],
+        split: [
+            { key: "raze", player: "zekken" }, { key: "sova", player: "Verno" }, 
+            { key: "kayo", player: "Mazino" }, { key: "jett", player: "aspas" }, { key: "cypher", player: "tex" }
+        ],
+        breeze: [
+            { key: "yoru", player: "zekken" }, { key: "sova", player: "Verno" }, 
+            { key: "astra", player: "Mazino" }, { key: "jett", player: "aspas" }, { key: "viper", player: "tex" }
+        ],
+        pearl: [
+            { key: "killjoy", player: "tex" }, { key: "sova", player: "Verno" }, 
+            { key: "jett", player: "aspas" }, { key: "phoenix", player: "zekken" }, { key: "astra", player: "Mazino" }
+        ],
+        bind: [
+            { key: "raze", player: "aspas" }, { key: "viper", player: "tex" }, 
+            { key: "fade", player: "Verno" }, { key: "brimstone", player: "Mazino" }, { key: "yoru", player: "zekken" }
+        ]
+    },
     agents: [
       { key: "jett", player: "aspas" }, { key: "sova", player: "Verno" }, 
       { key: "omen", player: "Mazino" }, { key: "chamber", player: "tex" }, { key: "raze", player: "zekken" }, 
@@ -172,7 +201,7 @@ const STREAMERS = [
 export default function ValorantHub() {
   const [selectedMap, setSelectedMap] = useState(MAPS[0]);
   const [selectedComp, setSelectedComp] = useState(META_COMPS[0]);
-  const [selectedCompAgent, setSelectedCompAgent] = useState<string | null>(null); // Null inicialmente para forçar atualização
+  const [selectedCompAgent, setSelectedCompAgent] = useState<string | null>(null); 
   const [hostname, setHostname] = useState("");
   const [copied, setCopied] = useState(false);
 
@@ -182,13 +211,11 @@ export default function ValorantHub() {
       }
   }, []);
 
-  // EFEITO: Atualiza a lineup quando o Mapa ou a Comp muda
   useEffect(() => {
       const currentRoster = (selectedComp.rosters && selectedComp.rosters[selectedMap.id]) 
                             ? selectedComp.rosters[selectedMap.id] 
                             : selectedComp.agents;
       
-      // Se o agente selecionado não estiver na nova roster, seleciona o primeiro
       if (!currentRoster.some(a => a.key === selectedCompAgent)) {
           setSelectedCompAgent(currentRoster[0].key);
       }
@@ -197,7 +224,6 @@ export default function ValorantHub() {
   const [masteryRole, setMasteryRole] = useState("Duelist");
   const [masteryAgent, setMasteryAgent] = useState(AGENTS["jett"]);
 
-  // Lógica para pegar os agentes corretos (Dinâmico ou Padrão)
   const activeAgents = (selectedComp.rosters && selectedComp.rosters[selectedMap.id]) 
                        ? selectedComp.rosters[selectedMap.id] 
                        : selectedComp.agents;
@@ -275,8 +301,6 @@ export default function ValorantHub() {
             <div className="xl:col-span-4 flex flex-col gap-4 h-full">
                 {META_COMPS.map((comp) => {
                     const isActive = selectedComp.id === comp.id;
-                    
-                    // Lógica para pegar os agentes do card (Dinâmico vs Estático)
                     const rosterToDisplay = (comp.rosters && comp.rosters[selectedMap.id]) 
                                             ? comp.rosters[selectedMap.id] 
                                             : comp.agents;
@@ -286,7 +310,6 @@ export default function ValorantHub() {
                             key={comp.id}
                             onClick={() => {
                                 setSelectedComp(comp);
-                                // Seleciona o primeiro agente da nova comp
                                 if (rosterToDisplay.length > 0) setSelectedCompAgent(rosterToDisplay[0].key);
                             }}
                             className={`flex-1 p-6 rounded-xl border cursor-pointer transition-all relative overflow-hidden group flex flex-col justify-center gap-4 ${
