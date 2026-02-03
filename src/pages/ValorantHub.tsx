@@ -98,9 +98,10 @@ const PLAYER_STATS: Record<string, any> = {
     demon1: { sens: "0.1", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Red" },
     ethan: { sens: "0.34", dpi: "800", res: "1920x1080", crosshair: "1;s;1;P;c;5;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
     kaajak: { sens: "0.45", dpi: "800", res: "1920x1080", crosshair: "SOON", color: "Purple" },
+    something: { sens: "0.7", dpi: "800", res: "1920x1080", crosshair: "1;P;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
 };
 
-// COMPS DINÂMICAS (NRG, MIBR, FNATIC ATUALIZADAS)
+// COMPS DINÂMICAS (TODAS ATUALIZADAS)
 const META_COMPS = [
   {
     id: 1, org: "NRG", color: "#FF6B00",
@@ -215,6 +216,36 @@ const META_COMPS = [
   },
   {
     id: 4, org: "Paper Rex", color: "#BF216B",
+    rosters: {
+        breeze: [
+            { key: "brimstone", player: "f0rsakeN" }, { key: "jett", player: "Jinggg" },
+            { key: "yoru", player: "something" }, { key: "sova", player: "invy" }, { key: "viper", player: "d4v41" }
+        ],
+        split: [
+            { key: "omen", player: "f0rsakeN" }, { key: "raze", player: "Jinggg" },
+            { key: "yoru", player: "something" }, { key: "fade", player: "invy" }, { key: "viper", player: "d4v41" }
+        ],
+        bind: [
+            { key: "brimstone", player: "f0rsakeN" }, { key: "raze", player: "Jinggg" },
+            { key: "yoru", player: "something" }, { key: "fade", player: "invy" }, { key: "viper", player: "d4v41" }
+        ],
+        corrode: [
+            { key: "yoru", player: "something" }, { key: "omen", player: "f0rsakeN" },
+            { key: "raze", player: "Jinggg" }, { key: "kayo", player: "d4v41" }, { key: "fade", player: "invy" }
+        ],
+        haven: [
+            { key: "yoru", player: "something" }, { key: "iso", player: "f0rsakeN" },
+            { key: "omen", player: "Jinggg" }, { key: "kayo", player: "d4v41" }, { key: "fade", player: "invy" }
+        ],
+        pearl: [
+            { key: "yoru", player: "something" }, { key: "waylay", player: "Jinggg" },
+            { key: "fade", player: "invy" }, { key: "veto", player: "f0rsakeN" }, { key: "astra", player: "d4v41" }
+        ],
+        abyss: [
+            { key: "yoru", player: "something" }, { key: "waylay", player: "Jinggg" },
+            { key: "fade", player: "invy" }, { key: "veto", player: "f0rsakeN" }, { key: "astra", player: "d4v41" }
+        ]
+    },
     agents: [
       { key: "skye", player: "d4v41" }, { key: "yoru", player: "f0rsakeN" }, 
       { key: "jett", player: "something" }, { key: "raze", player: "Jinggg" }, { key: "breach", player: "invy" }, 
