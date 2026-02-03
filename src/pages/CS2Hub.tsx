@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { 
   Target, MousePointer2, Monitor, Crosshair, Copy, Check, 
-  Wind, Zap, Flame, Play 
+  Wind, Zap, Flame, Play, Crown, Swords, Shield, Ghost 
 } from "lucide-react";
 
-// === HEADER PADRONIZADO (Estilo Valorant, Visual CS) ===
+// === HEADER ===
 const CS2Header = () => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -27,13 +27,11 @@ const CS2Header = () => {
                     <g mask="url(#cut-header-cs)">
                         <circle cx="256" cy="256" r="200" stroke="white" strokeWidth="64" fill="none" />
                     </g>
-                    {/* Cruz Interna Amarela (CS Style) */}
                     <rect x="236" y="156" width="40" height="200" fill="#DE9B35" rx="6" />
                     <rect x="156" y="236" width="200" height="40" fill="#DE9B35" rx="6" />
                 </svg>
             </Link>
             <div className="h-8 w-[2px] bg-white/20 -skew-x-12 shrink-0" />
-            {/* LOGO CS2 AUMENTADA E CORRIGIDA */}
             <img 
                 src="https://upload.wikimedia.org/wikipedia/commons/archive/b/b8/20230323152745%21Counter-Strike_2_logo.svg" 
                 alt="CS2 Logo" 
@@ -50,6 +48,20 @@ const CS2Header = () => {
         </div>
     </nav>
   );
+};
+
+// === HELPER: ÍCONES DE FUNÇÃO ===
+const getRoleIcon = (roleName: string, color: string) => {
+    const roleLower = roleName.toLowerCase();
+    const props = { size: 20, style: { color: color } };
+
+    if (roleLower.includes("igl")) return <Crown {...props} strokeWidth={2.5} />;
+    if (roleLower.includes("awp")) return <Crosshair {...props} strokeWidth={2.5} />;
+    if (roleLower.includes("entry") || roleLower.includes("fragger")) return <Swords {...props} strokeWidth={2.5} />;
+    if (roleLower.includes("anchor") || roleLower.includes("support")) return <Shield {...props} strokeWidth={2.5} />;
+    if (roleLower.includes("lurker")) return <Ghost {...props} strokeWidth={2.5} />;
+    
+    return <Target {...props} />; // Rifler Padrão
 };
 
 // === DADOS ===
@@ -71,32 +83,24 @@ const UTIL_TYPES = [
 
 const SITES = ["A Site", "B Site", "Mid", "Retake"];
 
-// Player Configs Reais/Simuladas
 const PLAYER_STATS: Record<string, any> = {
     default: { sens: "1.20", dpi: "800", res: "1280x960", crosshair: "CSGO-xxx" },
-    
-    // SPIRIT
+    // Stats reais simulados... (mantendo a lista anterior)
     donk: { sens: "1.25", dpi: "800", res: "1280x960", crosshair: "CSGO-GftnU-w9F74-Uo4y8-M4pbc-6rG6P" },
     sh1ro: { sens: "1.04", dpi: "800", res: "1024x768", crosshair: "CSGO-v6A6G-C8w7P-q3j6c-y5b8D-6rG6P" },
     chopper: { sens: "1.50", dpi: "400", res: "1280x960", crosshair: "CSGO-7rG6P-..." },
     zont1x: { sens: "1.60", dpi: "400", res: "1280x960", crosshair: "CSGO-9rG6P-..." },
     magixx: { sens: "2.00", dpi: "400", res: "1280x960", crosshair: "CSGO-1rG6P-..." },
-
-    // VITALITY
     zywoo: { sens: "2.00", dpi: "400", res: "1280x960", crosshair: "CSGO-Qzpx5-BRLw8-xFPCS-hTns4-GHDhP" },
     apex: { sens: "1.90", dpi: "400", res: "1280x960", crosshair: "CSGO-..." },
     spinx: { sens: "1.45", dpi: "800", res: "1280x960", crosshair: "CSGO-..." },
     flamez: { sens: "1.60", dpi: "800", res: "1280x960", crosshair: "CSGO-..." },
     mezii: { sens: "1.80", dpi: "400", res: "1280x960", crosshair: "CSGO-..." },
-
-    // FURIA
     fallen: { sens: "2.30", dpi: "400", res: "1280x960", crosshair: "CSGO-TpORA-p9jyT-6rG6P-..." },
     kscerato: { sens: "3.20", dpi: "400", res: "1280x960", crosshair: "CSGO-..." },
     yuurih: { sens: "1.30", dpi: "800", res: "1280x960", crosshair: "CSGO-..." },
     chelo: { sens: "1.90", dpi: "400", res: "1280x960", crosshair: "CSGO-..." },
     skullz: { sens: "1.70", dpi: "400", res: "1280x960", crosshair: "CSGO-..." },
-
-    // FALCONS
     s1mple: { sens: "3.09", dpi: "400", res: "1280x960", crosshair: "CSGO-w9F74-Uo4y8-..." },
     niko: { sens: "1.40", dpi: "400", res: "1280x960", crosshair: "CSGO-Kt7MO-..." },
     magisk: { sens: "1.50", dpi: "400", res: "1280x960", crosshair: "CSGO-..." },
@@ -104,53 +108,52 @@ const PLAYER_STATS: Record<string, any> = {
     snappi: { sens: "1.80", dpi: "400", res: "1280x960", crosshair: "CSGO-..." },
 };
 
-// CORES CORRIGIDAS
 const TEAMS_DATA = [
   {
-    id: 1, org: "SPIRIT", color: "#C6F53D", // Verde Spirit correto (Pale Neon Green)
+    id: 1, org: "SPIRIT", color: "#C6F53D", 
     players: [
-        { name: "donk", role: "Rifler (Entry)", image: "https://img-cdn.hltv.org/playerbodyshot/4Vf8o7y7K9A6.png?bg=3e4c54&h=800&ixlib=java-2.1.0&rect=132%2C12%2C455%2C455&w=800&s=0f00f0" },
-        { name: "sh1ro", role: "AWPer", image: "" },
-        { name: "chopper", role: "IGL", image: "" },
-        { name: "zont1x", role: "Rifler", image: "" },
-        { name: "magixx", role: "Lurker", image: "" }
+        { name: "donk", role: "Rifler (Entry)" },
+        { name: "sh1ro", role: "AWPer" },
+        { name: "chopper", role: "IGL" },
+        { name: "zont1x", role: "Rifler" },
+        { name: "magixx", role: "Lurker" }
     ]
   },
   {
-    id: 2, org: "VITALITY", color: "#D0F307", // Amarelo Vitality correto
+    id: 2, org: "VITALITY", color: "#D0F307", 
     players: [
-        { name: "ZywOo", role: "AWPer", image: "" },
-        { name: "apEX", role: "IGL", image: "" },
-        { name: "Spinx", role: "Lurker", image: "" },
-        { name: "flameZ", role: "Entry", image: "" },
-        { name: "mezii", role: "Anchor", image: "" }
+        { name: "ZywOo", role: "AWPer" },
+        { name: "apEX", role: "IGL" },
+        { name: "Spinx", role: "Lurker" },
+        { name: "flameZ", role: "Entry" },
+        { name: "mezii", role: "Anchor" }
     ]
   },
   {
-    id: 3, org: "FURIA", color: "#FFFFFF", // Furia é PB, Branco funciona melhor pro glow
+    id: 3, org: "FURIA", color: "#FFFFFF", 
     players: [
-        { name: "FalleN", role: "IGL / AWP", image: "" },
-        { name: "KSCERATO", role: "Rifler", image: "" },
-        { name: "yuurih", role: "Rifler", image: "" },
-        { name: "chelo", role: "Entry", image: "" },
-        { name: "skullz", role: "Anchor", image: "" }
+        { name: "FalleN", role: "IGL / AWP" },
+        { name: "KSCERATO", role: "Rifler" },
+        { name: "yuurih", role: "Rifler" },
+        { name: "chelo", role: "Entry" },
+        { name: "skullz", role: "Anchor" }
     ]
   },
   {
-    id: 4, org: "FALCONS", color: "#00B464", // Verde Falcons vibrante
+    id: 4, org: "FALCONS", color: "#00B464", 
     players: [
-        { name: "s1mple", role: "Rifler/AWP", image: "" },
-        { name: "NiKo", role: "Rifler", image: "" },
-        { name: "Magisk", role: "Anchor", image: "" },
-        { name: "dupreeh", role: "Entry", image: "" },
-        { name: "Snappi", role: "IGL", image: "" }
+        { name: "s1mple", role: "Rifler/AWP" },
+        { name: "NiKo", role: "Rifler" },
+        { name: "Magisk", role: "Anchor" },
+        { name: "dupreeh", role: "Entry" },
+        { name: "Snappi", role: "IGL" }
     ]
   },
 ];
 
 const STREAMERS = [
     { name: "Gaules", team: "Tribo", channel: "gaules", avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/f4b12683-133b-4853-b3eb-362240562c27-profile_image-70x70.png" },
-    { name: "chopper", team: "Spirit", channel: "chopperinho", avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/b204680e-3156-4c9f-861c-438db02222a7-profile_image-70x70.png" }, // Avatar Genérico/Real
+    { name: "chopper", team: "Spirit", channel: "chopperinho", avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/b204680e-3156-4c9f-861c-438db02222a7-profile_image-70x70.png" },
     { name: "ohnePixel", team: "Skin God", channel: "ohnepixel", avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/e82b090c-5184-47f9-8dca-6701c9535041-profile_image-70x70.png" },
     { name: "m0NESY", team: "G2", channel: "m0nesyof", avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/c648408d-871d-4876-b6d3-2df70058b752-profile_image-70x70.png" }
 ];
@@ -172,11 +175,6 @@ export default function CS2Hub() {
       }
   }, []);
 
-  // Reset player when team changes
-  useEffect(() => {
-    setSelectedPlayer(selectedTeam.players[0]);
-  }, [selectedTeam]);
-
   const playerStats = PLAYER_STATS[selectedPlayer.name.toLowerCase()] || PLAYER_STATS["default"];
 
   const handleCopyCrosshair = () => {
@@ -188,10 +186,9 @@ export default function CS2Hub() {
 
   return (
     <div className="fixed inset-0 w-full h-full bg-[#0A0A0A] font-sans selection:bg-[#DE9B35] selection:text-black overflow-y-auto overflow-x-hidden">
-      
       <CS2Header />
 
-      {/* === HERO: MAPAS (AGORA SEM O TEXTO GIGANTE E COM BOTÕES DO VALORANT) === */}
+      {/* === HERO: MAPAS === */}
       <section id="maps" className="relative h-[65vh] overflow-hidden">
         <AnimatePresence mode="popLayout">
           <motion.div
@@ -207,7 +204,6 @@ export default function CS2Hub() {
         </AnimatePresence>
 
         <div className="relative h-full flex flex-col justify-end px-4 lg:px-8 pb-8 z-10">
-            {/* SELETOR DE MAPAS ESTILO VALORANT (FLEX-1, H-32) */}
             <div className="flex w-full gap-4 h-32 items-end">
                 {MAPS.map((map) => {
                     const isSelected = selectedMap.id === map.id;
@@ -223,7 +219,6 @@ export default function CS2Hub() {
                         >
                             <img src={map.image} className="absolute inset-0 w-full h-full object-cover" />
                             <div className={`absolute inset-0 transition-colors ${isSelected ? 'bg-[#DE9B35]/10' : 'bg-black/60 group-hover:bg-transparent'}`} />
-                            
                             <div className="absolute inset-0 flex items-center justify-center">
                                 <span className={`text-2xl font-black uppercase italic tracking-tighter drop-shadow-lg transition-all ${isSelected ? 'text-white scale-110' : 'text-white/60'}`}>
                                     {map.name}
@@ -238,12 +233,6 @@ export default function CS2Hub() {
 
       {/* === SEÇÃO 2: PRO COMPS (TIMES & PLAYERS) === */}
       <section id="comps" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5 relative">
-        {/* FADE BACKGROUND - AGORA DINÂMICO E VISÍVEL */}
-        <div 
-             className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-[250px] opacity-10 pointer-events-none transition-colors duration-700"
-             style={{ backgroundColor: selectedTeam.color }}
-        />
-        
         <div className="mb-12 flex items-end gap-4 relative z-10">
              <h2 className="text-4xl font-black uppercase text-white italic">Pro <span className="text-[#DE9B35]">Comps</span></h2>
              <div className="h-[2px] bg-white/10 flex-1 mb-2"></div>
@@ -258,19 +247,32 @@ export default function CS2Hub() {
                     return (
                         <div
                             key={team.id}
-                            onClick={() => setSelectedTeam(team)}
+                            // Clique no CARD do time: seleciona time + primeiro player (comportamento padrão)
+                            onClick={() => {
+                                if (!isActive) {
+                                    setSelectedTeam(team);
+                                    setSelectedPlayer(team.players[0]);
+                                }
+                            }}
                             className={`flex-1 p-6 rounded-xl border cursor-pointer transition-all relative overflow-hidden group flex flex-col justify-center gap-4 ${
                                 isActive 
-                                ? "bg-gradient-to-r from-white/5 to-[#111] shadow-[0_0_30px_rgba(255,255,255,0.05)]" 
-                                : "bg-[#111] border-white/5 hover:bg-white/5 hover:border-white/20"
+                                ? "bg-gradient-to-r from-white/5 to-[#111]" 
+                                : "bg-[#111] border-white/5 hover:bg-white/5 hover:border-white/10"
                             }`}
                             style={{ 
                                 minHeight: '160px',
-                                borderColor: isActive ? team.color : 'rgba(255,255,255,0.05)'
+                                borderColor: isActive ? team.color : 'rgba(255,255,255,0.05)',
+                                boxShadow: isActive ? `0 0 30px ${team.color}10` : 'none'
                             }}
                         >
                             <div className="flex justify-between items-center relative z-10">
-                                <h3 className="text-4xl font-black uppercase italic tracking-tighter transition-colors duration-300" style={{color: isActive ? team.color : '#FFFFFF'}}>
+                                {/* Nome do Time sempre com a cor (suave quando inativo, forte quando ativo) */}
+                                <h3 className="text-4xl font-black uppercase italic tracking-tighter transition-all duration-300" 
+                                    style={{
+                                        color: team.color,
+                                        opacity: isActive ? 1 : 0.6,
+                                        filter: isActive ? `drop-shadow(0 0 10px ${team.color}40)` : 'grayscale(30%)'
+                                    }}>
                                     {team.org}
                                 </h3>
                             </div>
@@ -281,6 +283,7 @@ export default function CS2Hub() {
                                     return (
                                         <button 
                                             key={p.name} 
+                                            // Clique no PLAYER: seleciona time + player específico (stop propagation)
                                             onClick={(e) => { 
                                                 e.stopPropagation(); 
                                                 setSelectedTeam(team);
@@ -291,13 +294,13 @@ export default function CS2Hub() {
                                                 ? 'scale-110 z-20 shadow-lg' 
                                                 : 'border-white/10 opacity-70 hover:opacity-100 hover:scale-105'
                                             }`}
-                                            style={{ borderColor: isPlayerSelected ? team.color : 'rgba(255,255,255,0.1)' }}
+                                            style={{ 
+                                                borderColor: isPlayerSelected ? team.color : 'rgba(255,255,255,0.1)',
+                                                color: isPlayerSelected ? team.color : 'white'
+                                            }}
                                         >
-                                            {p.image ? (
-                                                 <img src={p.image} className="w-full h-full object-cover" />
-                                            ) : (
-                                                <span className="text-[10px] font-bold text-white">{p.name.substring(0, 2).toUpperCase()}</span>
-                                            )}
+                                            {/* ÍCONE DE FUNÇÃO AO INVÉS DE FOTO */}
+                                            {getRoleIcon(p.role, isPlayerSelected ? team.color : '#FFFFFF')}
                                             
                                             <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-black px-2 py-0.5 rounded text-[10px] font-bold text-white uppercase opacity-0 group-hover/player:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-30">
                                                 {p.name}
@@ -307,11 +310,16 @@ export default function CS2Hub() {
                                 })}
                             </div>
 
+                            {/* FADE MINIMALISTA E HIGH-END NO FUNDO */}
                             {isActive && (
                                 <motion.div 
                                     layoutId="activeGlowCS" 
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
                                     className="absolute inset-0 pointer-events-none"
-                                    style={{ background: `linear-gradient(to right, ${team.color}15, transparent)` }} 
+                                    style={{ 
+                                        background: `linear-gradient(120deg, ${team.color}08, transparent 60%)`,
+                                    }} 
                                 />
                             )}
                         </div>
@@ -321,9 +329,9 @@ export default function CS2Hub() {
 
             {/* COLUNA DIREITA: DETALHES DO PLAYER */}
             <div className="xl:col-span-8 bg-[#111] rounded-2xl border border-white/10 p-12 relative overflow-hidden flex flex-col justify-center min-h-[600px]">
-                {/* GLOW SECUNDÁRIO DENTRO DO CARD */}
+                {/* AMBIENT GLOW */}
                 <div 
-                    className="absolute top-0 right-0 w-96 h-96 opacity-10 blur-[150px] rounded-full pointer-events-none transition-colors duration-500"
+                    className="absolute top-0 right-0 w-[500px] h-[500px] opacity-10 blur-[120px] rounded-full pointer-events-none transition-colors duration-700"
                     style={{ backgroundColor: selectedTeam.color }}
                 />
 
@@ -337,7 +345,10 @@ export default function CS2Hub() {
                          </div>
                          <div className="text-right">
                             <span className="block text-xs font-bold uppercase tracking-widest mb-1 opacity-60 transition-colors" style={{color: selectedTeam.color}}>Role</span>
-                            <span className="text-2xl font-bold text-white">{selectedPlayer.role}</span>
+                            <div className="flex items-center justify-end gap-3 text-2xl font-bold text-white">
+                                {getRoleIcon(selectedPlayer.role, selectedTeam.color)}
+                                <span>{selectedPlayer.role}</span>
+                            </div>
                          </div>
                      </div>
                      
@@ -392,7 +403,6 @@ export default function CS2Hub() {
           </div>
 
           <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[600px] flex flex-col xl:flex-row">
-              {/* LADO ESQUERDO: CONTROLES */}
               <div className="w-full xl:w-1/3 bg-[#161616] p-10 flex flex-col border-r border-white/5 relative overflow-hidden">
                   <div className="relative z-20">
                       <div className="flex items-center gap-3 mb-8">
@@ -451,7 +461,6 @@ export default function CS2Hub() {
                   </div>
               </div>
 
-              {/* LADO DIREITO: GRID DE VIDEOS */}
               <div className="w-full xl:w-2/3 p-8 md:p-12 bg-[#0A0A0A]/50 relative">
                   <div className="absolute top-4 right-4 flex gap-2">
                        <span className="px-3 py-1 rounded bg-[#DE9B35]/20 text-[#DE9B35] text-xs font-bold uppercase border border-[#DE9B35]/30">
