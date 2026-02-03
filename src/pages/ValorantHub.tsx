@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sword, Shield, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, MousePointer2, Monitor, Eye, Crosshair, Copy, Check } from "lucide-react";
+import { Sword, Shield, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, MousePointer2, Monitor, Eye, Crosshair, Copy, Check, Zap, Layers } from "lucide-react";
 
 // === HEADER ===
 const HubHeader = () => {
@@ -87,7 +87,7 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
   clove: { name: "Clove", role: "Controller", id: "1dbf2edd-4729-0984-3115-daa5eed44993", color: "#E66AB4" }
 };
 
-// DADOS DE PLAYER (MOCK para demonstração - Idealmente viria de uma API)
+// DADOS DE PLAYER (MOCK)
 const PLAYER_STATS: Record<string, any> = {
     default: { sens: "0.35", dpi: "800", res: "1920x1080", crosshair: "SOON", color: "Yellow" },
     aspas: { sens: "0.4", dpi: "800", res: "1280x960", crosshair: "0;P;c;5;h;0;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Yellow (Deut)" },
@@ -97,30 +97,30 @@ const PLAYER_STATS: Record<string, any> = {
     boaster: { sens: "0.52", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
 };
 
-// COMPS ATUALIZADAS (CORES E ROSTERS DAS FOTOS)
+// COMPS
 const META_COMPS = [
   {
-    id: 1, org: "NRG", color: "#FF6B00", winRate: "NEW", // Laranja Energizado
+    id: 1, org: "NRG", color: "#FF6B00", winRate: "NEW",
     agents: [
       { key: "kayo", player: "Ethan" }, 
       { key: "raze", player: "mada" }, 
       { key: "sova", player: "brawk" }, 
       { key: "omen", player: "skuba" }, 
-      { key: "jett", player: "keiko" }, // Keiko geralmente Duelist
+      { key: "jett", player: "keiko" },
     ],
   },
   {
-    id: 2, org: "MIBR", color: "#002758", winRate: "NEW", // Azul Marinho
+    id: 2, org: "MIBR", color: "#002758", winRate: "NEW",
     agents: [
       { key: "jett", player: "aspas" }, 
       { key: "sova", player: "Verno" }, 
       { key: "omen", player: "Mazino" }, 
       { key: "chamber", player: "tex" }, 
-      { key: "raze", player: "zekken" }, // Zekken Flex/Duelist
+      { key: "raze", player: "zekken" }, 
     ],
   },
   {
-    id: 3, org: "FNATIC", color: "#FF5900", winRate: "71%", // Laranja Fnatic
+    id: 3, org: "FNATIC", color: "#FF5900", winRate: "71%",
     agents: [
       { key: "omen", player: "Boaster" }, 
       { key: "killjoy", player: "Alfajer" }, 
@@ -130,7 +130,7 @@ const META_COMPS = [
     ],
   },
   {
-    id: 4, org: "Paper Rex", color: "#BF216B", winRate: "NEW", // Magenta PRX
+    id: 4, org: "Paper Rex", color: "#BF216B", winRate: "NEW",
     agents: [
       { key: "skye", player: "d4v41" }, 
       { key: "yoru", player: "f0rsakeN" }, 
@@ -163,7 +163,7 @@ export default function ValorantHub() {
  
   const [masteryRole, setMasteryRole] = useState("Duelist");
   const [masteryAgent, setMasteryAgent] = useState(AGENTS["jett"]);
-  const [masteryPhase, setMasteryPhase] = useState<"attack" | "defense">("attack");
+  // REMOVIDO: Estado masteryPhase
 
   const selectedAgentPlayer = selectedComp.agents.find(a => a.key === selectedCompAgent)?.player || "Player";
   const playerStats = PLAYER_STATS[selectedAgentPlayer.toLowerCase()] || PLAYER_STATS["default"];
@@ -233,7 +233,7 @@ export default function ValorantHub() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 h-full">
-            {/* COLUNA ESQUERDA: LISTA DE TIMES (ATUALIZADA) */}
+            {/* COLUNA ESQUERDA: LISTA DE TIMES */}
             <div className="xl:col-span-5 flex flex-col gap-4 h-full">
                 {META_COMPS.map((comp) => {
                     const isActive = selectedComp.id === comp.id;
@@ -254,7 +254,6 @@ export default function ValorantHub() {
                                 borderColor: isActive ? comp.color : 'rgba(255,255,255,0.05)'
                             }}
                         >
-                            {/* NOME DA ORG */}
                             <div className="flex justify-between items-center relative z-10">
                                 <h3 className="text-4xl font-black uppercase italic tracking-tighter" style={{color: comp.color}}>
                                     {comp.org}
@@ -262,7 +261,6 @@ export default function ValorantHub() {
                                 <span className="text-3xl font-black text-white/10 group-hover:text-white/30 transition-colors">{comp.winRate}</span>
                             </div>
 
-                            {/* ROSTER ICONS */}
                             <div className="flex gap-2 relative z-10 mt-auto">
                                 {comp.agents.map((a) => {
                                     const isAgentSelected = selectedCompAgent === a.key && isActive;
@@ -302,59 +300,61 @@ export default function ValorantHub() {
                 })}
             </div>
 
-            {/* COLUNA DIREITA: DETALHES DO PLAYER */}
-            <div className="xl:col-span-7 bg-[#111] rounded-2xl border border-white/10 p-10 relative overflow-hidden flex flex-col justify-center min-h-[500px]">
-                {/* Glow Dinâmico com a cor do time */}
+            {/* COLUNA DIREITA: DETALHES DO PLAYER (HARMONIZADA) */}
+            <div className="xl:col-span-7 bg-[#111] rounded-2xl border border-white/10 p-10 relative overflow-hidden flex flex-col justify-center min-h-[600px]">
                 <div 
-                    className="absolute top-0 right-0 w-80 h-80 opacity-10 blur-[150px] rounded-full pointer-events-none transition-colors duration-500"
+                    className="absolute top-0 right-0 w-96 h-96 opacity-5 blur-[180px] rounded-full pointer-events-none transition-colors duration-500"
                     style={{ backgroundColor: selectedComp.color }}
                 />
 
-                <div className="relative z-10">
-                     <div className="flex items-end justify-between border-b border-white/5 pb-6 mb-8">
+                <div className="relative z-10 flex flex-col h-full justify-center">
+                     <div className="flex items-end justify-between border-b border-white/5 pb-8 mb-12">
                          <div>
-                             <h4 className="font-bold uppercase tracking-widest text-sm mb-1" style={{color: selectedComp.color}}>
+                             <h4 className="font-bold uppercase tracking-widest text-sm mb-2 opacity-60" style={{color: selectedComp.color}}>
                                 {selectedComp.org} // ROSTER
                              </h4>
-                             <h3 className="text-5xl font-black uppercase text-white italic tracking-tighter">{selectedAgentPlayer}</h3>
+                             <h3 className="text-7xl font-black uppercase text-white italic tracking-tighter leading-none">{selectedAgentPlayer}</h3>
                          </div>
                          <div className="text-right">
-                            <span className="block text-xs font-bold uppercase tracking-widest mb-1" style={{color: selectedComp.color}}>Role</span>
-                            <span className="text-xl font-bold text-white">{AGENTS[selectedCompAgent as keyof typeof AGENTS]?.role}</span>
+                            <span className="block text-xs font-bold uppercase tracking-widest mb-1 opacity-60" style={{color: selectedComp.color}}>Role</span>
+                            <span className="text-2xl font-bold text-white">{AGENTS[selectedCompAgent as keyof typeof AGENTS]?.role}</span>
                          </div>
                      </div>
                      
-                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                     {/* GRID DE STATS MAIS ESPAÇADA E ALTA */}
+                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                         {[
                             { label: "Sensitivity", val: playerStats.sens, icon: MousePointer2 },
                             { label: "DPI / eDPI", val: playerStats.dpi, icon: Target },
                             { label: "Resolution", val: playerStats.res, icon: Monitor },
                             { label: "Enemy Color", val: playerStats.color, icon: Eye }
                         ].map((stat, idx) => (
-                            <div key={idx} className="p-4 rounded-lg bg-black/40 border border-white/5 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors">
-                                <stat.icon className="mb-2 w-5 h-5" style={{color: selectedComp.color}} />
+                            <div key={idx} className="h-32 p-4 rounded-xl bg-black/40 border border-white/5 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors group">
+                                <stat.icon className="mb-3 w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" style={{color: selectedComp.color}} />
                                 <span className="text-[10px] text-white/40 uppercase tracking-widest mb-1">{stat.label}</span>
-                                <span className="text-lg font-mono font-bold text-white">{stat.val}</span>
+                                <span className="text-2xl font-mono font-bold text-white">{stat.val}</span>
                             </div>
                         ))}
                      </div>
 
                      <button 
                         onClick={handleCopyCrosshair}
-                        className="w-full p-5 rounded-lg bg-black/40 border border-white/5 flex items-center justify-between group hover:border-opacity-50 transition-all active:scale-[0.99]"
+                        className="w-full h-20 px-8 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between group hover:border-opacity-50 transition-all active:scale-[0.99]"
                         style={{ borderColor: copied ? '#22c55e' : 'rgba(255,255,255,0.1)' }}
                      >
-                        <div className="flex items-center gap-4">
-                            <Crosshair className={`w-6 h-6 transition-colors ${copied ? 'text-green-500' : ''}`} style={{ color: copied ? undefined : selectedComp.color }} />
-                            <span className="text-sm font-bold text-white uppercase tracking-widest">
+                        <div className="flex items-center gap-5">
+                            <div className="p-3 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors">
+                                <Crosshair className={`w-6 h-6 transition-colors ${copied ? 'text-green-500' : ''}`} style={{ color: copied ? undefined : selectedComp.color }} />
+                            </div>
+                            <span className="text-lg font-bold text-white uppercase tracking-widest">
                                 {copied ? "Copied to Clipboard!" : "Copy Crosshair Code"}
                             </span>
                         </div>
-                        <div className="flex items-center gap-3">
-                            <code className="font-mono text-xs text-white/60 bg-white/5 px-4 py-2 rounded-md group-hover:text-white group-hover:bg-white/10 transition-colors">
+                        <div className="flex items-center gap-4">
+                            <code className="hidden md:block font-mono text-sm text-white/40 bg-white/5 px-4 py-2 rounded-md group-hover:text-white group-hover:bg-white/10 transition-colors">
                                 {playerStats.crosshair}
                             </code>
-                            {copied ? <Check className="text-green-500 w-5 h-5" /> : <Copy className="text-white/40 w-5 h-5 group-hover:text-white" />}
+                            {copied ? <Check className="text-green-500 w-6 h-6" /> : <Copy className="text-white/40 w-6 h-6 group-hover:text-white" />}
                         </div>
                      </button>
                 </div>
@@ -362,11 +362,12 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 4: AGENT MASTERY === */}
+      {/* === SEÇÃO 4: AGENT MASTERY (SEM FADE E SEM BOTÕES) === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16 px-4">
+              {/* TÍTULO CORRIGIDO: SEM FADE, COR SÓLIDA */}
               <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 inline-block">
-                  Agent <span className="not-italic text-transparent bg-clip-text bg-gradient-to-r from-[#FF4654] via-[#ff7e89] to-white ml-2">MASTERY</span>
+                  Agent <span className="not-italic text-[#FF4654] ml-2">MASTERY</span>
               </h2>
           </div>
 
@@ -404,75 +405,66 @@ export default function ValorantHub() {
           </div>
 
           <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[500px] flex flex-col md:flex-row">
-              <div className="w-full md:w-1/3 bg-[#161616] p-10 flex flex-col justify-between border-r border-white/5 relative overflow-hidden">
-                  <div className="relative z-20">
-                    <h3 className="text-5xl font-black text-white uppercase italic tracking-tighter mb-2">{masteryAgent.name}</h3>
-                    <div className="inline-block px-3 py-1 bg-white/5 rounded text-xs font-bold tracking-[0.2em] text-[#FF4654] uppercase mb-8 border border-[#FF4654]/20">
+              {/* LADO ESQUERDO: INFOS DO AGENTE (LIMPO, SEM BOTÕES) */}
+              <div className="w-full md:w-1/3 bg-[#161616] p-10 flex flex-col justify-center border-r border-white/5 relative overflow-hidden">
+                  <div className="relative z-20 text-center md:text-left">
+                    <h3 className="text-6xl font-black text-white uppercase italic tracking-tighter mb-4">{masteryAgent.name}</h3>
+                    <div className="inline-block px-4 py-2 bg-white/5 rounded text-sm font-bold tracking-[0.2em] text-[#FF4654] uppercase mb-12 border border-[#FF4654]/20">
                         {masteryAgent.role}
                     </div>
 
-                    <div className="grid grid-cols-4 gap-3 mb-12">
+                    <div className="grid grid-cols-4 gap-4">
                         {abilitySlots.map((slot, i) => (
-                            <div key={i} className="aspect-square bg-black/40 rounded-lg border border-white/10 p-2 flex items-center justify-center hover:border-white/40 transition-colors cursor-help group" title={slot}>
+                            <div key={i} className="aspect-square bg-black/40 rounded-xl border border-white/10 p-3 flex items-center justify-center hover:border-white/40 transition-colors cursor-help group shadow-lg" title={slot}>
                                 <img 
                                     src={`https://media.valorant-api.com/agents/${masteryAgent.id}/abilities/${slot.toLowerCase()}/displayicon.png`} 
                                     alt={slot}
-                                    className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity"
+                                    className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
                                 />
                             </div>
                         ))}
                     </div>
                   </div>
-
-                  <div className="w-full space-y-3 relative z-20">
-                      <button onClick={() => setMasteryPhase('attack')} className={`w-full py-4 rounded font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all ${masteryPhase === 'attack' ? 'bg-[#FF4654] text-white shadow-lg shadow-[#FF4654]/20' : 'bg-white/5 text-white/40 hover:bg-white/10'}`}>
-                          <Sword size={18} /> Attack
-                      </button>
-                      <button onClick={() => setMasteryPhase('defense')} className={`w-full py-4 rounded font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all ${masteryPhase === 'defense' ? 'bg-white text-black shadow-lg shadow-white/10' : 'bg-white/5 text-white/40 hover:bg-white/10'}`}>
-                          <Shield size={18} /> Defense
-                      </button>
-                  </div>
               </div>
 
+              {/* LADO DIREITO: SETUPS (EXPANDIDO) */}
               <div className="w-full md:w-2/3 p-8 md:p-12 bg-[#0A0A0A]/50">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-                      <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-6 hover:border-white/30 transition-all group flex flex-col">
-                          <div className="flex items-center gap-3 mb-4">
-                              <div className={`p-2 rounded ${masteryPhase === 'attack' ? 'bg-[#FF4654]/20 text-[#FF4654]' : 'bg-white/20 text-white'}`}>
-                                  {masteryPhase === 'attack' ? <Target size={20} /> : <Anchor size={20} />}
+                      {/* CARD 1 */}
+                      <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-8 hover:border-white/30 transition-all group flex flex-col h-full shadow-2xl">
+                          <div className="flex items-center gap-3 mb-6">
+                              <div className="p-2 rounded bg-[#FF4654]/20 text-[#FF4654]">
+                                  <Zap size={24} />
                               </div>
-                              <h4 className="font-bold text-white uppercase tracking-widest text-sm">
-                                  {masteryPhase === 'attack' ? 'Entry / Execution' : 'Site Hold'}
+                              <h4 className="font-bold text-white uppercase tracking-widest text-lg">
+                                  Signature Setup
                               </h4>
                           </div>
-                          <div className="aspect-video bg-[#1A1A1A] rounded border border-white/5 mb-4 flex items-center justify-center relative overflow-hidden group-hover:border-white/20 transition-colors">
+                          <div className="aspect-video bg-[#1A1A1A] rounded-lg border border-white/5 mb-6 flex items-center justify-center relative overflow-hidden group-hover:border-white/20 transition-colors">
                               <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10" />
-                              <span className="text-white/20 text-xs font-mono">PLAY VIDEO</span>
+                              <span className="text-white/20 text-xs font-mono">VIDEO PLACEHOLDER</span>
                           </div>
-                          <p className="text-white/60 text-sm leading-relaxed mt-auto">
-                              {masteryPhase === 'attack'
-                                ? `Execute fast utilizing ${masteryAgent.name}'s kit to clear angles.`
-                                : `Anchor the site. Delay execution until rotation arrives.`}
+                          <p className="text-white/60 text-base leading-relaxed mt-auto">
+                              Essential early-round positioning and utility usage to gain map control with {masteryAgent.name}.
                           </p>
                       </div>
 
-                      <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-6 hover:border-white/30 transition-all group flex flex-col">
-                          <div className="flex items-center gap-3 mb-4">
-                              <div className={`p-2 rounded ${masteryPhase === 'attack' ? 'bg-[#FF4654]/20 text-[#FF4654]' : 'bg-white/20 text-white'}`}>
-                                  {masteryPhase === 'attack' ? <Timer size={20} /> : <RefreshCcw size={20} />}
+                      {/* CARD 2 */}
+                      <div className="bg-[#0A0A0A] rounded-xl border border-white/10 p-8 hover:border-white/30 transition-all group flex flex-col h-full shadow-2xl">
+                          <div className="flex items-center gap-3 mb-6">
+                              <div className="p-2 rounded bg-white/20 text-white">
+                                  <Layers size={24} />
                               </div>
-                              <h4 className="font-bold text-white uppercase tracking-widest text-sm">
-                                  {masteryPhase === 'attack' ? 'Post-Plant' : 'Retake Setup'}
+                              <h4 className="font-bold text-white uppercase tracking-widest text-lg">
+                                  Utility Combo
                               </h4>
                           </div>
-                          <div className="aspect-video bg-[#1A1A1A] rounded border border-white/5 mb-4 flex items-center justify-center relative overflow-hidden group-hover:border-white/20 transition-colors">
+                          <div className="aspect-video bg-[#1A1A1A] rounded-lg border border-white/5 mb-6 flex items-center justify-center relative overflow-hidden group-hover:border-white/20 transition-colors">
                               <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10" />
-                              <span className="text-white/20 text-xs font-mono">PLAY VIDEO</span>
+                              <span className="text-white/20 text-xs font-mono">VIDEO PLACEHOLDER</span>
                           </div>
-                          <p className="text-white/60 text-sm leading-relaxed mt-auto">
-                              {masteryPhase === 'attack'
-                                ? `Lineups and positioning to deny defuse.`
-                                : `Coordinate utility with team for efficient retake.`}
+                          <p className="text-white/60 text-base leading-relaxed mt-auto">
+                              High-impact utility combination to execute onto sites or retake defensive positions.
                           </p>
                       </div>
                   </div>
