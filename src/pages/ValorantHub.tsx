@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sword, Shield, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, MousePointer2, Monitor, Eye, Crosshair, Copy, Check, Zap, Layers } from "lucide-react";
+import { Sword, Shield, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, MousePointer2, Monitor, Crosshair, Copy, Check, Zap, Layers } from "lucide-react";
 
 // === HEADER ===
 const HubHeader = () => {
@@ -87,18 +87,37 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
   clove: { name: "Clove", role: "Controller", id: "1dbf2edd-4729-0984-3115-daa5eed44993", color: "#E66AB4" }
 };
 
-// DADOS DE PLAYER (MOCK)
+// === DADOS REAIS DE PLAYER (UPDATED) ===
 const PLAYER_STATS: Record<string, any> = {
-    default: { sens: "0.35", dpi: "800", res: "1920x1080", crosshair: "SOON", color: "Yellow" },
-    aspas: { sens: "0.4", dpi: "800", res: "1280x960", crosshair: "0;P;c;5;h;0;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Yellow (Deut)" },
-    less: { sens: "0.58", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;5;h;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
-    zekken: { sens: "0.175", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Yellow" },
-    jinggg: { sens: "0.25", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
-    boaster: { sens: "0.52", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
-    demon1: { sens: "0.1", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Red" },
-    ethan: { sens: "0.34", dpi: "800", res: "1920x1080", crosshair: "1;s;1;P;c;5;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
-    kaajak: { sens: "0.45", dpi: "800", res: "1920x1080", crosshair: "SOON", color: "Purple" },
-    something: { sens: "0.7", dpi: "800", res: "1920x1080", crosshair: "1;P;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
+    default: { sens: "0.35", dpi: "800", res: "1920x1080", crosshair: "SOON" },
+    
+    // NRG
+    brawk: { sens: "0.2", dpi: "800", res: "1440x1080/4:3", crosshair: "0;s;1;P;c;1;o;1;0l;5;0v;5;0a;1;0f;0;1b;0;S;s;1.002" },
+    keiko: { sens: "0.25", dpi: "800", res: "1280x882/4:3", crosshair: "0;s;1;P;u;000000FF;o;1;d;1;z;1;0b;0;1l;0;1a;0;1m;0;1f;0" },
+    mada: { sens: "0.37", dpi: "800", res: "1920x1080/16:9", crosshair: "0;s;1;P;u;000000FF;o;1;d;1;f;0;m;1;0l;2;0v;3;0o;0;0a;1;0f;0;1b;0;S;b;1;c;8;t;00FF66FF;o;1" },
+    skuba: { sens: "0.25", dpi: "800", res: "1920x1080/16:9", crosshair: "0;p;0;c;1;s;1;P;o;0.58;0t;1;0l;2;0o;2;0a;1;0f;0;1b;0;A;h;0;0b;0;1l;3;1o;0;1a;0.93;1m;0;1f;0" },
+    ethan: { sens: "0.3", dpi: "800", res: "1440x1080/4:3", crosshair: "0;P;o;0.503;0t;1;0g;1;0o;1;0a;1;0f;0;1b;0" },
+
+    // MIBR
+    aspas: { sens: "0.4", dpi: "800", res: "1920x1080/4:3", crosshair: "0;s;1;P;o;1;d;1;0b;0;1b;0;S;c;0" },
+    tex: { sens: "0.3", dpi: "800", res: "1920x1080/4:3", crosshair: "0;s;1;P;h;0;d;1;z;1;m;1;0t;1;0l;3;0v;2;0g;1;0o;2;0a;1;0e;0.319;1t;0;1l;0;1o;0;1a;0;1m;0;1e;3;S;s;0.677;o;1" },
+    mazino: { sens: "0.17", dpi: "1600", res: "1920x1080/16:9", crosshair: "0;P;c;1;h;0;0l;4;0o;2;0a;1;0f;0;1b;0" },
+    zekken: { sens: "0.175", dpi: "1600", res: "1920x1080/16:9", crosshair: "0;s;1;P;c;1;t;2;o;1;d;1;0b;0;1b;0;S;b;1;c;8;s;0.823" },
+    verno: { sens: "0.04", dpi: "3200", res: "1920x1080/16:9", crosshair: "0;P;o;1;d;1;0b;0;1b;0" },
+
+    // FNATIC
+    kaajak: { sens: "0.1", dpi: "1600", res: "1280x960/4:3", crosshair: "0;s;1;P;o;1;d;1;f;0;0b;0;1b;0;S;t;000000FF;s;0.603;o;1" },
+    veqaj: { sens: "0.4", dpi: "800", res: "1920x1080/16:9", crosshair: "0;P;o;1;0t;1;0l;2;0a;1;0f;0;1b;0" },
+    crashies: { sens: "0.24", dpi: "800", res: "1920x1080/16:9", crosshair: "0;P;h;0;0l;3;0v;3;0g;1;0o;2;0a;1;1b;0" },
+    alfajer: { sens: "0.45", dpi: "400", res: "1568x1080/16:10", crosshair: "0;p;0;s;1;P;h;0;f;0;0l;2;0o;2;0a;1;0f;0;1b;0;A;c;5;o;1;d;1;0b;0;1b;0;S;s;0.628;o;1" },
+    boaster: { sens: "0.24", dpi: "800", res: "1920x1080/16:9", crosshair: "0;s;1;P;c;1;o;1;d;1;0l;0;0o;2;0a;1;0f;0;1t;0;1l;0;1o;0;1a;0;S;c;1;o;1" },
+
+    // PAPER REX
+    something: { sens: "0.425", dpi: "800", res: "1920x1080/16:9", crosshair: "0;s;1;P;h;0;0t;1;0l;4;0v;4;0o;1;0a;1;0f;0;1b;0;S;d;0" },
+    f0rsaken: { sens: "0.645", dpi: "800", res: "1920x1080/16:9", crosshair: "0;p;0;c;1;s;1;P;u;000000FF;h;0;f;0;s;0;0l;3;0v;3;0g;1;0o;0;0a;1;0f;0;1b;0;A;u;000000FF;o;1;d;1;0b;0;1b;0;S;d;0" },
+    jinggg: { sens: "0.188", dpi: "1600", res: "1280x960/4:3", crosshair: "0;s;1;P;c;5;o;1;0t;1;0l;2;0o;2;0a;1;0f;0;1b;0" },
+    d4v41: { sens: "0.13", dpi: "1600", res: "1280x1024/5:4", crosshair: "0;s;1;P;u;FF55FFFF;o;1;d;1;f;0;0b;0;1b;0;S;s;0.415;o;1" },
+    invy: { sens: "0.175", dpi: "1600", res: "1920x1080/16:9", crosshair: "0;s;1;P;o;1;f;0;0t;1;0l;1;0o;2;0a;0;0f;0;1t;1;1l;1;1v;3;1o;3;1a;0;1m;0;1f;0;S;o;0.8" }
 };
 
 // COMPS DINÂMICAS (TODAS ATUALIZADAS)
@@ -451,12 +470,12 @@ export default function ValorantHub() {
                          </div>
                      </div>
                      
-                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                     {/* GRID DE 3 COLUNAS */}
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                         {[
                             { label: "Sensitivity", val: playerStats.sens, icon: MousePointer2 },
                             { label: "DPI / eDPI", val: playerStats.dpi, icon: Target },
-                            { label: "Resolution", val: playerStats.res, icon: Monitor },
-                            { label: "Enemy Color", val: playerStats.color, icon: Eye }
+                            { label: "Resolution", val: playerStats.res, icon: Monitor }
                         ].map((stat, idx) => (
                             <div key={idx} className="h-32 p-4 rounded-xl bg-black/40 border border-white/5 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors group">
                                 <stat.icon className="mb-3 w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" style={{color: selectedComp.color}} />
@@ -491,9 +510,10 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 4: AGENT MASTERY === */}
+      {/* === SEÇÃO 4: AGENT MASTERY (SEM FADE E SEM BOTÕES) === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16 px-4">
+              {/* TÍTULO CORRIGIDO: SEM FADE, COR SÓLIDA */}
               <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 inline-block">
                   Agent <span className="not-italic text-[#FF4654] ml-2">MASTERY</span>
               </h2>
@@ -533,6 +553,7 @@ export default function ValorantHub() {
           </div>
 
           <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[500px] flex flex-col md:flex-row">
+              {/* LADO ESQUERDO: INFOS DO AGENTE (LIMPO, SEM BOTÕES) */}
               <div className="w-full md:w-1/3 bg-[#161616] p-10 flex flex-col justify-center border-r border-white/5 relative overflow-hidden">
                   <div className="relative z-20 text-center md:text-left">
                     <h3 className="text-6xl font-black text-white uppercase italic tracking-tighter mb-4">{masteryAgent.name}</h3>
@@ -554,8 +575,10 @@ export default function ValorantHub() {
                   </div>
               </div>
 
+              {/* LADO DIREITO: APENAS VÍDEOS (SEM TÍTULOS/DESCRIÇÕES) */}
               <div className="w-full md:w-2/3 p-8 md:p-12 bg-[#0A0A0A]/50">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+                      {/* VIDEO 1 */}
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden hover:border-white/30 transition-all group shadow-2xl relative h-full">
                           <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10 pointer-events-none" />
                           <div className="w-full h-full flex items-center justify-center bg-[#1A1A1A]">
@@ -563,6 +586,7 @@ export default function ValorantHub() {
                           </div>
                       </div>
 
+                      {/* VIDEO 2 */}
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden hover:border-white/30 transition-all group shadow-2xl relative h-full">
                           <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10 pointer-events-none" />
                           <div className="w-full h-full flex items-center justify-center bg-[#1A1A1A]">
