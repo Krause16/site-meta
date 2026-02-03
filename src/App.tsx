@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
 import ValorantHub from './pages/ValorantHub'; // <--- IMPORTANTE: Importe o Hub
+import CS2Hub from './pages/CS2Hub';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
       
       {/* O CS2 a gente ainda vai criar, então por enquanto 
           vou deixar ele mandando de volta pra Landing pra não dar erro */}
-      <Route path="/cs2" element={<Landing />} />
+      <Route path="/cs2" element={<CS2Hub />} />
     </Routes>
   );
 }
