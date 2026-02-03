@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { 
   Target, MousePointer2, Monitor, Crosshair, Copy, Check, 
-  Wind, Zap, Flame, Eye, Shield, ChevronRight, Play 
+  Wind, Zap, Flame, Play 
 } from "lucide-react";
 
-// === HEADER PADRONIZADO (Estilo Valorant, Cores CS) ===
+// === HEADER PADRONIZADO (Estilo Valorant, Visual CS) ===
 const CS2Header = () => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -24,7 +24,6 @@ const CS2Header = () => {
                         <rect x="-100" y="226" width="800" height="60" fill="black" transform="rotate(-45 256 256)"/>
                       </mask>
                     </defs>
-                    {/* Círculo Branco */}
                     <g mask="url(#cut-header-cs)">
                         <circle cx="256" cy="256" r="200" stroke="white" strokeWidth="64" fill="none" />
                     </g>
@@ -33,8 +32,13 @@ const CS2Header = () => {
                     <rect x="156" y="236" width="200" height="40" fill="#DE9B35" rx="6" />
                 </svg>
             </Link>
-            <div className="h-6 w-[2px] bg-white/20 -skew-x-12 shrink-0" />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/archive/b/b8/20230323152745%21Counter-Strike_2_logo.svg" alt="CS2 Logo" className="h-6 w-auto object-contain drop-shadow-[0_0_15px_rgba(222,155,53,0.5)] opacity-90" />
+            <div className="h-8 w-[2px] bg-white/20 -skew-x-12 shrink-0" />
+            {/* LOGO CS2 AUMENTADA E CORRIGIDA */}
+            <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/archive/b/b8/20230323152745%21Counter-Strike_2_logo.svg" 
+                alt="CS2 Logo" 
+                className="h-10 w-auto object-contain drop-shadow-[0_0_20px_rgba(222,155,53,0.8)] filter brightness-110 contrast-125" 
+            />
         </div>
         <div className="hidden md:flex items-center gap-8 pointer-events-auto">
             {['MAPS', 'COMPS', 'UTILITY', 'STREAMS'].map((item) => (
@@ -59,16 +63,15 @@ const MAPS = [
   { id: "overpass", name: "Overpass", image: "/maps/overpass.webp" },
 ];
 
-// Utilitários disponíveis
 const UTIL_TYPES = [
-    { id: "smoke", name: "Smokes", icon: Wind, color: "#D1D5DB" }, // Cinza fumaça
-    { id: "flash", name: "Flashes", icon: Zap, color: "#FDE047" }, // Amarelo flash
-    { id: "molotov", name: "Molotovs", icon: Flame, color: "#EF4444" }, // Vermelho fogo
+    { id: "smoke", name: "Smokes", icon: Wind, color: "#D1D5DB" }, 
+    { id: "flash", name: "Flashes", icon: Zap, color: "#FDE047" }, 
+    { id: "molotov", name: "Molotovs", icon: Flame, color: "#EF4444" },
 ];
 
 const SITES = ["A Site", "B Site", "Mid", "Retake"];
 
-// Player Configs (Placeholder simulando dados reais)
+// Player Configs Reais/Simuladas
 const PLAYER_STATS: Record<string, any> = {
     default: { sens: "1.20", dpi: "800", res: "1280x960", crosshair: "CSGO-xxx" },
     
@@ -101,11 +104,12 @@ const PLAYER_STATS: Record<string, any> = {
     snappi: { sens: "1.80", dpi: "400", res: "1280x960", crosshair: "CSGO-..." },
 };
 
+// CORES CORRIGIDAS
 const TEAMS_DATA = [
   {
-    id: 1, org: "SPIRIT", color: "#00FF88",
+    id: 1, org: "SPIRIT", color: "#C6F53D", // Verde Spirit correto (Pale Neon Green)
     players: [
-        { name: "donk", role: "Rifler (Entry)", image: "https://img-cdn.hltv.org/playerbodyshot/4Vf8o7y7K9A6.png?bg=3e4c54&h=800&ixlib=java-2.1.0&rect=132%2C12%2C455%2C455&w=800&s=0f00f0" }, // Exemplo de URL, ideal usar local ou CDN confiável
+        { name: "donk", role: "Rifler (Entry)", image: "https://img-cdn.hltv.org/playerbodyshot/4Vf8o7y7K9A6.png?bg=3e4c54&h=800&ixlib=java-2.1.0&rect=132%2C12%2C455%2C455&w=800&s=0f00f0" },
         { name: "sh1ro", role: "AWPer", image: "" },
         { name: "chopper", role: "IGL", image: "" },
         { name: "zont1x", role: "Rifler", image: "" },
@@ -113,7 +117,7 @@ const TEAMS_DATA = [
     ]
   },
   {
-    id: 2, org: "VITALITY", color: "#FFDD00",
+    id: 2, org: "VITALITY", color: "#D0F307", // Amarelo Vitality correto
     players: [
         { name: "ZywOo", role: "AWPer", image: "" },
         { name: "apEX", role: "IGL", image: "" },
@@ -123,7 +127,7 @@ const TEAMS_DATA = [
     ]
   },
   {
-    id: 3, org: "FURIA", color: "#FFFFFF",
+    id: 3, org: "FURIA", color: "#FFFFFF", // Furia é PB, Branco funciona melhor pro glow
     players: [
         { name: "FalleN", role: "IGL / AWP", image: "" },
         { name: "KSCERATO", role: "Rifler", image: "" },
@@ -133,7 +137,7 @@ const TEAMS_DATA = [
     ]
   },
   {
-    id: 4, org: "FALCONS", color: "#008855",
+    id: 4, org: "FALCONS", color: "#00B464", // Verde Falcons vibrante
     players: [
         { name: "s1mple", role: "Rifler/AWP", image: "" },
         { name: "NiKo", role: "Rifler", image: "" },
@@ -146,7 +150,7 @@ const TEAMS_DATA = [
 
 const STREAMERS = [
     { name: "Gaules", team: "Tribo", channel: "gaules", avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/f4b12683-133b-4853-b3eb-362240562c27-profile_image-70x70.png" },
-    { name: "s1mple", team: "Falcons", channel: "s1mple", avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/4949b990-0c46-444a-9b19-f55a8286bf54-profile_image-70x70.png" },
+    { name: "chopper", team: "Spirit", channel: "chopperinho", avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/b204680e-3156-4c9f-861c-438db02222a7-profile_image-70x70.png" }, // Avatar Genérico/Real
     { name: "ohnePixel", team: "Skin God", channel: "ohnepixel", avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/e82b090c-5184-47f9-8dca-6701c9535041-profile_image-70x70.png" },
     { name: "m0NESY", team: "G2", channel: "m0nesyof", avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/c648408d-871d-4876-b6d3-2df70058b752-profile_image-70x70.png" }
 ];
@@ -160,7 +164,7 @@ export default function CS2Hub() {
 
   // States para Utility Hub
   const [utilSite, setUtilSite] = useState("A Site");
-  const [utilType, setUtilType] = useState("smoke"); // smoke, flash, molotov
+  const [utilType, setUtilType] = useState("smoke");
 
   useEffect(() => {
       if (typeof window !== "undefined") {
@@ -187,7 +191,7 @@ export default function CS2Hub() {
       
       <CS2Header />
 
-      {/* === HERO: MAPAS === */}
+      {/* === HERO: MAPAS (AGORA SEM O TEXTO GIGANTE E COM BOTÕES DO VALORANT) === */}
       <section id="maps" className="relative h-[65vh] overflow-hidden">
         <AnimatePresence mode="popLayout">
           <motion.div
@@ -203,26 +207,15 @@ export default function CS2Hub() {
         </AnimatePresence>
 
         <div className="relative h-full flex flex-col justify-end px-4 lg:px-8 pb-8 z-10">
-            {/* Título do Mapa Selecionado */}
-            <motion.div 
-                key={selectedMap.name}
-                initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-                className="mb-8 pl-2 border-l-4 border-[#DE9B35]"
-            >
-                <h1 className="text-6xl lg:text-8xl font-black uppercase italic tracking-tighter text-white drop-shadow-lg">
-                    {selectedMap.name}
-                </h1>
-                <p className="text-[#DE9B35] font-bold tracking-widest uppercase text-sm mt-2">Active Duty Group</p>
-            </motion.div>
-
-            <div className="flex w-full gap-4 h-24 lg:h-32 items-end overflow-x-auto scrollbar-hide pb-2">
+            {/* SELETOR DE MAPAS ESTILO VALORANT (FLEX-1, H-32) */}
+            <div className="flex w-full gap-4 h-32 items-end">
                 {MAPS.map((map) => {
                     const isSelected = selectedMap.id === map.id;
                     return (
                         <button
                             key={map.id}
                             onClick={() => setSelectedMap(map)}
-                            className={`flex-shrink-0 w-32 lg:w-48 h-full rounded-xl overflow-hidden transition-all duration-300 group relative ${
+                            className={`flex-1 h-full rounded-xl overflow-hidden transition-all duration-300 group relative ${
                                 isSelected 
                                 ? "ring-2 ring-[#DE9B35] shadow-[0_0_30px_rgba(222,155,53,0.4)] z-10 scale-105" 
                                 : "grayscale hover:grayscale-0 opacity-50 hover:opacity-100 hover:scale-105"
@@ -232,7 +225,7 @@ export default function CS2Hub() {
                             <div className={`absolute inset-0 transition-colors ${isSelected ? 'bg-[#DE9B35]/10' : 'bg-black/60 group-hover:bg-transparent'}`} />
                             
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <span className={`text-xl font-black uppercase italic tracking-tighter drop-shadow-lg transition-all ${isSelected ? 'text-white scale-110' : 'text-white/60'}`}>
+                                <span className={`text-2xl font-black uppercase italic tracking-tighter drop-shadow-lg transition-all ${isSelected ? 'text-white scale-110' : 'text-white/60'}`}>
                                     {map.name}
                                 </span>
                             </div>
@@ -245,7 +238,11 @@ export default function CS2Hub() {
 
       {/* === SEÇÃO 2: PRO COMPS (TIMES & PLAYERS) === */}
       <section id="comps" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5 relative">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#DE9B35] rounded-full blur-[200px] opacity-5 pointer-events-none" />
+        {/* FADE BACKGROUND - AGORA DINÂMICO E VISÍVEL */}
+        <div 
+             className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-[250px] opacity-10 pointer-events-none transition-colors duration-700"
+             style={{ backgroundColor: selectedTeam.color }}
+        />
         
         <div className="mb-12 flex items-end gap-4 relative z-10">
              <h2 className="text-4xl font-black uppercase text-white italic">Pro <span className="text-[#DE9B35]">Comps</span></h2>
@@ -273,7 +270,7 @@ export default function CS2Hub() {
                             }}
                         >
                             <div className="flex justify-between items-center relative z-10">
-                                <h3 className="text-4xl font-black uppercase italic tracking-tighter" style={{color: team.color}}>
+                                <h3 className="text-4xl font-black uppercase italic tracking-tighter transition-colors duration-300" style={{color: isActive ? team.color : '#FFFFFF'}}>
                                     {team.org}
                                 </h3>
                             </div>
@@ -296,7 +293,6 @@ export default function CS2Hub() {
                                             }`}
                                             style={{ borderColor: isPlayerSelected ? team.color : 'rgba(255,255,255,0.1)' }}
                                         >
-                                            {/* Fallback para imagem do player se não tiver URL */}
                                             {p.image ? (
                                                  <img src={p.image} className="w-full h-full object-cover" />
                                             ) : (
@@ -325,26 +321,26 @@ export default function CS2Hub() {
 
             {/* COLUNA DIREITA: DETALHES DO PLAYER */}
             <div className="xl:col-span-8 bg-[#111] rounded-2xl border border-white/10 p-12 relative overflow-hidden flex flex-col justify-center min-h-[600px]">
+                {/* GLOW SECUNDÁRIO DENTRO DO CARD */}
                 <div 
-                    className="absolute top-0 right-0 w-96 h-96 opacity-5 blur-[180px] rounded-full pointer-events-none transition-colors duration-500"
+                    className="absolute top-0 right-0 w-96 h-96 opacity-10 blur-[150px] rounded-full pointer-events-none transition-colors duration-500"
                     style={{ backgroundColor: selectedTeam.color }}
                 />
 
                 <div className="relative z-10 flex flex-col h-full justify-center">
                      <div className="flex items-end justify-between border-b border-white/5 pb-8 mb-12">
                          <div>
-                             <h4 className="font-bold uppercase tracking-widest text-sm mb-2 opacity-60" style={{color: selectedTeam.color}}>
+                             <h4 className="font-bold uppercase tracking-widest text-sm mb-2 opacity-60 transition-colors" style={{color: selectedTeam.color}}>
                                 {selectedTeam.org} // ROSTER
                              </h4>
                              <h3 className="text-7xl font-black uppercase text-white italic tracking-tighter leading-none">{selectedPlayer.name}</h3>
                          </div>
                          <div className="text-right">
-                            <span className="block text-xs font-bold uppercase tracking-widest mb-1 opacity-60" style={{color: selectedTeam.color}}>Role</span>
+                            <span className="block text-xs font-bold uppercase tracking-widest mb-1 opacity-60 transition-colors" style={{color: selectedTeam.color}}>Role</span>
                             <span className="text-2xl font-bold text-white">{selectedPlayer.role}</span>
                          </div>
                      </div>
                      
-                     {/* GRID DE SPECS */}
                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                         {[
                             { label: "Sensitivity", val: playerStats.sens, icon: MousePointer2 },
@@ -352,7 +348,7 @@ export default function CS2Hub() {
                             { label: "Resolution", val: playerStats.res, icon: Monitor }
                         ].map((stat, idx) => (
                             <div key={idx} className="h-32 p-4 rounded-xl bg-black/40 border border-white/5 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors group">
-                                <stat.icon className="mb-3 w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" style={{color: selectedTeam.color}} />
+                                <stat.icon className="mb-3 w-6 h-6 opacity-80 group-hover:opacity-100 transition-colors" style={{color: selectedTeam.color}} />
                                 <span className="text-[10px] text-white/40 uppercase tracking-widest mb-1">{stat.label}</span>
                                 <span className="text-2xl font-mono font-bold text-white">{stat.val}</span>
                             </div>
@@ -384,7 +380,7 @@ export default function CS2Hub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 4: UTILITY HUB (INTERACTIVE) === */}
+      {/* === SEÇÃO 4: UTILITY HUB === */}
       <section id="utility" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-12 px-4">
               <h2 className="text-5xl font-black uppercase text-white italic mb-4 leading-[1.3] inline-block">
@@ -407,7 +403,6 @@ export default function CS2Hub() {
                           </div>
                       </div>
 
-                      {/* SELETOR DE SITE */}
                       <div className="mb-8">
                           <label className="text-white/40 text-[10px] font-bold tracking-widest uppercase mb-3 block">Position / Situation</label>
                           <div className="grid grid-cols-2 gap-2">
@@ -427,7 +422,6 @@ export default function CS2Hub() {
                           </div>
                       </div>
 
-                      {/* SELETOR DE TIPO (SMOKE/FLASH/MOLLY) */}
                       <div>
                           <label className="text-white/40 text-[10px] font-bold tracking-widest uppercase mb-3 block">Utility Type</label>
                           <div className="flex flex-col gap-2">
@@ -469,7 +463,6 @@ export default function CS2Hub() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-                      {/* VIDEO 1 */}
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden hover:border-[#DE9B35]/50 transition-all group shadow-2xl relative h-64 md:h-auto cursor-pointer">
                           <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10 pointer-events-none" />
                           <div className="w-full h-full flex flex-col items-center justify-center bg-[#1A1A1A] group-hover:bg-[#222] transition-colors">
@@ -478,7 +471,6 @@ export default function CS2Hub() {
                           </div>
                       </div>
 
-                      {/* VIDEO 2 */}
                       <div className="bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden hover:border-[#DE9B35]/50 transition-all group shadow-2xl relative h-64 md:h-auto cursor-pointer">
                           <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10 pointer-events-none" />
                           <div className="w-full h-full flex flex-col items-center justify-center bg-[#1A1A1A] group-hover:bg-[#222] transition-colors">
