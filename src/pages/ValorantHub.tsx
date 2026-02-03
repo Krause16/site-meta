@@ -97,9 +97,10 @@ const PLAYER_STATS: Record<string, any> = {
     boaster: { sens: "0.52", dpi: "400", res: "1920x1080", crosshair: "1;s;1;P;c;1;o;1;f;0;0l;4;0o;2;0a;1;0f;0;1b;0", color: "Green" },
     demon1: { sens: "0.1", dpi: "1600", res: "1920x1080", crosshair: "1;s;1;P;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Red" },
     ethan: { sens: "0.34", dpi: "800", res: "1920x1080", crosshair: "1;s;1;P;c;5;o;1;f;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0", color: "Cyan" },
+    kaajak: { sens: "0.45", dpi: "800", res: "1920x1080", crosshair: "SOON", color: "Purple" },
 };
 
-// COMPS DINÂMICAS (ATUALIZADA MIBR)
+// COMPS DINÂMICAS (NRG, MIBR, FNATIC ATUALIZADAS)
 const META_COMPS = [
   {
     id: 1, org: "NRG", color: "#FF6B00",
@@ -177,6 +178,36 @@ const META_COMPS = [
   },
   {
     id: 3, org: "FNATIC", color: "#FF5900",
+    rosters: {
+        breeze: [
+            { key: "neon", player: "kaajak" }, { key: "viper", player: "Veqaj" },
+            { key: "sova", player: "crashies" }, { key: "sage", player: "Alfajer" }, { key: "astra", player: "Boaster" }
+        ],
+        haven: [
+            { key: "yoru", player: "kaajak" }, { key: "viper", player: "Veqaj" },
+            { key: "sova", player: "crashies" }, { key: "killjoy", player: "Alfajer" }, { key: "omen", player: "Boaster" }
+        ],
+        split: [
+            { key: "raze", player: "Alfajer" }, { key: "fade", player: "crashies" },
+            { key: "astra", player: "Boaster" }, { key: "yoru", player: "kaajak" }, { key: "omen", player: "Veqaj" }
+        ],
+        bind: [
+            { key: "gekko", player: "Alfajer" }, { key: "skye", player: "crashies" },
+            { key: "brimstone", player: "Boaster" }, { key: "raze", player: "kaajak" }, { key: "viper", player: "Veqaj" }
+        ],
+        corrode: [
+            { key: "fade", player: "Alfajer" }, { key: "sova", player: "crashies" },
+            { key: "omen", player: "Boaster" }, { key: "yoru", player: "kaajak" }, { key: "viper", player: "Veqaj" }
+        ],
+        abyss: [
+            { key: "chamber", player: "Alfajer" }, { key: "sova", player: "crashies" },
+            { key: "astra", player: "Boaster" }, { key: "jett", player: "kaajak" }, { key: "breach", player: "Veqaj" }
+        ],
+        pearl: [
+            { key: "sova", player: "crashies" }, { key: "yoru", player: "kaajak" },
+            { key: "astra", player: "Boaster" }, { key: "chamber", player: "Veqaj" }, { key: "neon", player: "Alfajer" }
+        ]
+    },
     agents: [
       { key: "omen", player: "Boaster" }, { key: "killjoy", player: "Alfajer" }, 
       { key: "jett", player: "kaajak" }, { key: "sova", player: "crashies" }, { key: "breach", player: "Veqaj" }, 
@@ -301,6 +332,7 @@ export default function ValorantHub() {
             <div className="xl:col-span-4 flex flex-col gap-4 h-full">
                 {META_COMPS.map((comp) => {
                     const isActive = selectedComp.id === comp.id;
+                    
                     const rosterToDisplay = (comp.rosters && comp.rosters[selectedMap.id]) 
                                             ? comp.rosters[selectedMap.id] 
                                             : comp.agents;
