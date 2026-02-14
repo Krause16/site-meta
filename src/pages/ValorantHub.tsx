@@ -91,11 +91,10 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
 };
 
 // === LINEUPS / SKILL SPOTS (MOCK DATA) ===
-// Mapeando quais slots correspondem a quais tipos (para o teste funcionar)
-// Grenade = molly, Ability1 = smoke, Ability2 = flash, Ultimate = recon (exemplo)
 interface Lineup {
   id: string;
   agentId: string;
+  mapId: string; // Agora é obrigatório e está presente nos dados
   type: 'smoke' | 'flash' | 'molly' | 'recon';
   slot: string; // Qual botão ativa (Grenade, Ability1, etc)
   x: number;
@@ -106,16 +105,17 @@ interface Lineup {
 
 // Dados MOCKADOS que funcionam em QUALQUER mapa para teste
 const MOCK_LINEUPS: Lineup[] = [
-  { id: "1", agentId: "sova", type: "recon", slot: "Ability1", x: 45, y: 30, title: "Recon Teste 1", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
-  { id: "2", agentId: "sova", type: "recon", slot: "Ability1", x: 60, y: 70, title: "Recon Teste 2", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
-  { id: "3", agentId: "jett", type: "smoke", slot: "Ability1", x: 25, y: 40, title: "Smoke Teste", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
-  { id: "4", agentId: "jett", type: "flash", slot: "Ability2", x: 50, y: 50, title: "Flash Teste", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+  // Específicos (ex: Abyss)
+  { id: "1", agentId: "sova", mapId: "abyss", type: "recon", slot: "Ability1", x: 45, y: 30, title: "Recon Teste 1", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+  { id: "2", agentId: "sova", mapId: "abyss", type: "recon", slot: "Ability1", x: 60, y: 70, title: "Recon Teste 2", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+  { id: "3", agentId: "jett", mapId: "abyss", type: "smoke", slot: "Ability1", x: 25, y: 40, title: "Smoke Teste", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
   
-  // Genéricos para garantir que sempre apareça algo ao clicar
-  { id: "g1", agentId: "generic", type: "molly", slot: "Grenade", x: 30, y: 30, title: "Molly Spot A", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
-  { id: "g2", agentId: "generic", type: "smoke", slot: "Ability1", x: 70, y: 40, title: "Smoke Spot B", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
-  { id: "g3", agentId: "generic", type: "flash", slot: "Ability2", x: 50, y: 60, title: "Flash Mid", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
-  { id: "g4", agentId: "generic", type: "recon", slot: "Ultimate", x: 50, y: 50, title: "Ult Spot", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+  // Genéricos (pra aparecer em todos os mapas durante o teste)
+  // Usei mapId: "all" mas a lógica de filtro abaixo vai pegar pelo agentId="generic"
+  { id: "g1", agentId: "generic", mapId: "all", type: "molly", slot: "Grenade", x: 30, y: 30, title: "Molly Spot A", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+  { id: "g2", agentId: "generic", mapId: "all", type: "smoke", slot: "Ability1", x: 70, y: 40, title: "Smoke Spot B", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+  { id: "g3", agentId: "generic", mapId: "all", type: "flash", slot: "Ability2", x: 50, y: 60, title: "Flash Mid", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+  { id: "g4", agentId: "generic", mapId: "all", type: "recon", slot: "Ultimate", x: 50, y: 50, title: "Ult Spot", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
 ];
 
 const SKILL_ICONS = {
