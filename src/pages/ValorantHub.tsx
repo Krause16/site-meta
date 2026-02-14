@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { 
-  Sword, Shield, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, 
-  MousePointer2, Monitor, Crosshair, Copy, Check, Zap, Layers, 
-  Play, X, CircleDot, Eye 
+  Sword, Shield, Target, MousePointer2, Monitor, Crosshair, Copy, Check, Zap, Layers, 
+  X, CircleDot, Eye, Play 
 } from "lucide-react";
 
 // === HEADER ===
@@ -31,7 +30,7 @@ const HubHeader = () => {
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Valorant_pink_version_logo.svg/2560px-Valorant_pink_version_logo.svg.png" alt="V Logo" className="h-8 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,70,84,0.5)]" />
         </div>
         <div className="hidden md:flex items-center gap-8 pointer-events-auto">
-            {['MAPS', 'COMPS', 'MASTERY', 'STREAMS'].map((item) => (
+            {['MAPS', 'MASTERY', 'COMPS', 'STREAMS'].map((item) => (
                 <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-sm font-bold tracking-widest text-white/60 hover:text-[#FF4654] transition-colors uppercase relative group">
                     {item}
                     <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#FF4654] transition-all group-hover:w-full" />
@@ -43,13 +42,12 @@ const HubHeader = () => {
 };
 
 // === DADOS ===
-// Adicionei os UUIDs corretos para puxar da API
 const MAPS = [
   { id: "abyss", name: "Abyss", uuid: "224b0a95-48b9-f703-1bd8-67aca101a61f", image: "/maps/abyss.webp" },
   { id: "bind", name: "Bind", uuid: "2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba", image: "/maps/bind.webp" },
   { id: "split", name: "Split", uuid: "d960549e-485c-e861-8d71-aa9d1aed12a2", image: "/maps/split.webp" },
   { id: "breeze", name: "Breeze", uuid: "2fb9a4fd-47b8-4e7d-a969-74b4046ebd53", image: "/maps/breeze.webp" },
-  { id: "corrode", name: "Corrode", uuid: "1c18ab1f-420d-0d8b-71d0-77ad3c439115", image: "/maps/corrode.webp" }, // Drift/TDM map placeholder
+  { id: "corrode", name: "Corrode", uuid: "1c18ab1f-420d-0d8b-71d0-77ad3c439115", image: "/maps/corrode.webp" },
   { id: "pearl", name: "Pearl", uuid: "fd267378-4d1d-484f-ff52-77821ed10dc2", image: "/maps/pearl.webp" },
   { id: "haven", name: "Haven", uuid: "2bee0dc9-4ffe-519b-1cbd-7fbe763a6047", image: "/maps/haven.webp" },
 ];
@@ -404,7 +402,179 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 2: META COMPS === */}
+      {/* === SEÇÃO 2 (INVERTIDA): AGENT MASTERY (COM MINIMAPA API & INTERAÇÃO) === */}
+      <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
+          <div className="text-center mb-16 px-4">
+              <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 inline-block">
+                  Agent <span className="not-italic text-[#FF4654] ml-2">MASTERY</span>
+              </h2>
+          </div>
+
+          <div className="flex justify-center gap-4 mb-12 flex-wrap">
+              {ROLES.map(role => (
+                  <button
+                    key={role.name}
+                    onClick={() => setMasteryRole(role.name)}
+                    className={`w-14 h-14 rounded-xl border flex items-center justify-center transition-all ${
+                        masteryRole === role.name
+                        ? "bg-white border-white shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-110"
+                        : "bg-white/5 border-white/10 hover:border-white/50"
+                    }`}
+                  >
+                      <img
+                        src={`https://media.valorant-api.com/agents/roles/${role.id}/displayicon.png`}
+                        className={`w-8 h-8 ${masteryRole === role.name ? 'brightness-0' : 'invert opacity-60'}`}
+                      />
+                  </button>
+              ))}
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-4 mb-16">
+              {Object.values(AGENTS).filter(a => a.role === masteryRole).map(agent => (
+                  <button
+                    key={agent.id}
+                    onClick={() => { setMasteryAgent(agent); setSelectedLineup(null); }}
+                    className={`w-16 h-16 rounded-xl border-2 transition-all overflow-hidden relative group ${
+                        masteryAgent.id === agent.id ? "border-[#FF4654] scale-110 shadow-[0_0_20px_rgba(255,70,84,0.4)]" : "border-white/10 hover:border-white/50 grayscale hover:grayscale-0"
+                    }`}
+                  >
+                      <img src={`https://media.valorant-api.com/agents/${agent.id}/displayicon.png`} className="w-full h-full object-cover" />
+                  </button>
+              ))}
+          </div>
+
+          {/* ÁREA INTERATIVA: INFO NA ESQUERDA, MAPA DA API NA DIREITA */}
+          <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[600px] flex flex-col md:flex-row">
+              
+              {/* LADO ESQUERDO: INFOS DO AGENTE (FIXO) */}
+              <div className="w-full md:w-1/3 bg-[#161616] p-10 flex flex-col justify-center border-r border-white/5 relative shrink-0 z-20">
+                  <div className="relative z-20 text-center md:text-left">
+                    <h3 className="text-6xl font-black text-white uppercase italic tracking-tighter mb-4 leading-none">{masteryAgent.name}</h3>
+                    <div className="inline-block px-4 py-2 bg-white/5 rounded text-sm font-bold tracking-[0.2em] text-[#FF4654] uppercase mb-12 border border-[#FF4654]/20">
+                        {masteryAgent.role}
+                    </div>
+
+                    <div className="grid grid-cols-4 gap-4">
+                        {abilitySlots.map((slot, i) => (
+                            <div key={i} className="aspect-square bg-black/40 rounded-xl border border-white/10 p-3 flex items-center justify-center hover:border-white/40 transition-colors cursor-help group shadow-lg" title={slot}>
+                                <img 
+                                    src={`https://media.valorant-api.com/agents/${masteryAgent.id}/abilities/${slot.toLowerCase()}/displayicon.png`} 
+                                    alt={slot}
+                                    className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                  </div>
+              </div>
+
+              {/* LADO DIREITO: MAPA INTERATIVO (DIMINUÍDO E CLICÁVEL) */}
+              <div className="flex-1 flex relative overflow-hidden bg-[#0A0A0A]">
+                  
+                  {/* PAINEL DO MAPA */}
+                  <motion.div 
+                      layout
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      className="relative h-full border-r border-white/10 overflow-hidden flex items-center justify-center bg-[#050505] z-10"
+                      style={{ 
+                          width: selectedLineup ? '30%' : '100%', // Reduzi de 35% pra 30% pra ficar mais compacto
+                          minWidth: selectedLineup ? '200px' : '300px'
+                      }}
+                  >
+                      {/* === MAPA CENTRALIZADO COM TAMANHO CONTROLADO === */}
+                      <div className={`relative transition-all duration-500 flex items-center justify-center ${selectedLineup ? 'w-full px-4' : 'max-w-2xl px-12'}`}>
+                          <img 
+                            src={`https://media.valorant-api.com/maps/${selectedMap.uuid}/displayicon.png`} 
+                            className="w-full h-auto object-contain opacity-90 drop-shadow-[0_0_30px_rgba(255,255,255,0.05)] pointer-events-none"
+                            alt="Tactical Minimap"
+                          />
+                          
+                          {/* Ícones Interativos (Overlay) */}
+                          <div className="absolute inset-0 z-20">
+                              {activeLineups.map((lineup) => {
+                                  const Icon = SKILL_ICONS[lineup.type] || CircleDot;
+                                  const isSelected = selectedLineup?.id === lineup.id;
+                                  
+                                  return (
+                                      <button
+                                          key={lineup.id}
+                                          onClick={() => setSelectedLineup(isSelected ? null : lineup)}
+                                          // Z-INDEX ALTO (50) E CURSOR POINTER
+                                          className={`absolute transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 z-50 cursor-pointer ${
+                                              isSelected ? 'bg-[#FF4654] scale-125 shadow-[0_0_20px_#FF4654]' : 'bg-white text-black hover:scale-110 shadow-lg'
+                                          }`}
+                                          style={{ left: `${lineup.x}%`, top: `${lineup.y}%` }}
+                                      >
+                                          <Icon size={16} strokeWidth={2.5} />
+                                          {!isSelected && (
+                                              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-black px-3 py-1.5 rounded-md text-xs font-bold text-white whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none border border-white/20">
+                                                  {lineup.title}
+                                              </div>
+                                      )}
+                                      </button>
+                                  );
+                              })}
+                          </div>
+                      </div>
+
+                      {/* Legenda Fixa */}
+                      {!selectedLineup && (
+                          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-none text-center">
+                             <span className="text-white/30 text-xs font-mono tracking-widest bg-black/40 px-3 py-1 rounded border border-white/5">
+                                 SELECT A SKILL TO VIEW VIDEO
+                             </span>
+                          </div>
+                      )}
+                  </motion.div>
+
+                  {/* PAINEL DE VÍDEO */}
+                  <AnimatePresence>
+                      {selectedLineup && (
+                          <motion.div
+                              initial={{ width: 0, opacity: 0 }}
+                              animate={{ width: '70%', opacity: 1 }}
+                              exit={{ width: 0, opacity: 0 }}
+                              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                              className="relative h-full bg-black flex flex-col z-0"
+                          >
+                              <div className="flex items-center justify-between p-6 border-b border-white/10 bg-[#111]">
+                                  <h4 className="text-xl font-bold text-white italic truncate pr-4">{selectedLineup.title}</h4>
+                                  <button 
+                                      onClick={() => setSelectedLineup(null)}
+                                      className="p-2 hover:bg-white/10 rounded-full transition-colors text-white/60 hover:text-white shrink-0"
+                                  >
+                                      <X size={20} />
+                                  </button>
+                              </div>
+
+                              <div className="flex-1 bg-black relative flex items-center justify-center overflow-hidden">
+                                  {/* Embed do Vídeo */}
+                                  <iframe 
+                                      src={selectedLineup.videoUrl}
+                                      className="w-full h-full object-contain"
+                                      allow="autoplay; encrypted-media"
+                                      allowFullScreen
+                                  />
+                              </div>
+
+                              <div className="p-4 bg-[#111] border-t border-white/10">
+                                  <div className="flex gap-4">
+                                      <div className="bg-[#FF4654]/10 text-[#FF4654] px-3 py-1 rounded text-xs font-bold uppercase border border-[#FF4654]/20">
+                                          {selectedLineup.type}
+                                      </div>
+                                      <div className="text-white/40 text-xs font-mono uppercase py-1">
+                                          {masteryAgent.name} • {selectedMap.name}
+                                      </div>
+                                  </div>
+                              </div>
+                          </motion.div>
+                      )}
+                  </AnimatePresence>
+              </div>
+          </div>
+      </section>
+
+      {/* === SEÇÃO 3 (DESCEU): META COMPS & PLAYER SETTINGS === */}
       <section id="comps" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
         <div className="mb-12 flex items-end gap-4">
              <h2 className="text-4xl font-black uppercase text-white italic">Meta <span className="text-[#FF4654]">Comps</span></h2>
@@ -540,174 +710,6 @@ export default function ValorantHub() {
                 </div>
             </div>
         </div>
-      </section>
-
-      {/* === SEÇÃO 4: AGENT MASTERY (COM MINIMAPA API & INTERAÇÃO) === */}
-      <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
-          <div className="text-center mb-16 px-4">
-              <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 inline-block">
-                  Agent <span className="not-italic text-[#FF4654] ml-2">MASTERY</span>
-              </h2>
-          </div>
-
-          <div className="flex justify-center gap-4 mb-12 flex-wrap">
-              {ROLES.map(role => (
-                  <button
-                    key={role.name}
-                    onClick={() => setMasteryRole(role.name)}
-                    className={`w-14 h-14 rounded-xl border flex items-center justify-center transition-all ${
-                        masteryRole === role.name
-                        ? "bg-white border-white shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-110"
-                        : "bg-white/5 border-white/10 hover:border-white/50"
-                    }`}
-                  >
-                      <img
-                        src={`https://media.valorant-api.com/agents/roles/${role.id}/displayicon.png`}
-                        className={`w-8 h-8 ${masteryRole === role.name ? 'brightness-0' : 'invert opacity-60'}`}
-                      />
-                  </button>
-              ))}
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-4 mb-16">
-              {Object.values(AGENTS).filter(a => a.role === masteryRole).map(agent => (
-                  <button
-                    key={agent.id}
-                    onClick={() => { setMasteryAgent(agent); setSelectedLineup(null); }}
-                    className={`w-16 h-16 rounded-xl border-2 transition-all overflow-hidden relative group ${
-                        masteryAgent.id === agent.id ? "border-[#FF4654] scale-110 shadow-[0_0_20px_rgba(255,70,84,0.4)]" : "border-white/10 hover:border-white/50 grayscale hover:grayscale-0"
-                    }`}
-                  >
-                      <img src={`https://media.valorant-api.com/agents/${agent.id}/displayicon.png`} className="w-full h-full object-cover" />
-                  </button>
-              ))}
-          </div>
-
-          {/* ÁREA INTERATIVA: INFO NA ESQUERDA, MAPA DA API NA DIREITA */}
-          <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[600px] flex flex-col md:flex-row">
-              
-              {/* LADO ESQUERDO: INFOS DO AGENTE (FIXO) */}
-              <div className="w-full md:w-1/3 bg-[#161616] p-10 flex flex-col justify-center border-r border-white/5 relative shrink-0 z-20">
-                  <div className="relative z-20 text-center md:text-left">
-                    <h3 className="text-6xl font-black text-white uppercase italic tracking-tighter mb-4 leading-none">{masteryAgent.name}</h3>
-                    <div className="inline-block px-4 py-2 bg-white/5 rounded text-sm font-bold tracking-[0.2em] text-[#FF4654] uppercase mb-12 border border-[#FF4654]/20">
-                        {masteryAgent.role}
-                    </div>
-
-                    <div className="grid grid-cols-4 gap-4">
-                        {abilitySlots.map((slot, i) => (
-                            <div key={i} className="aspect-square bg-black/40 rounded-xl border border-white/10 p-3 flex items-center justify-center hover:border-white/40 transition-colors cursor-help group shadow-lg" title={slot}>
-                                <img 
-                                    src={`https://media.valorant-api.com/agents/${masteryAgent.id}/abilities/${slot.toLowerCase()}/displayicon.png`} 
-                                    alt={slot}
-                                    className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                  </div>
-              </div>
-
-              {/* LADO DIREITO: MAPA INTERATIVO (AGORA COM MAPA DA API) */}
-              <div className="flex-1 flex relative overflow-hidden bg-[#0A0A0A]">
-                  
-                  {/* PAINEL DO MAPA */}
-                  <motion.div 
-                      layout
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      className="relative h-full border-r border-white/10 overflow-hidden flex items-center justify-center bg-[#050505]"
-                      style={{ 
-                          width: selectedLineup ? '35%' : '100%',
-                          minWidth: '300px'
-                      }}
-                  >
-                      {/* === AQUI TÁ A MUDANÇA: puxando displayicon.png da API === */}
-                      <div className="relative w-full h-full p-8 flex items-center justify-center">
-                          <img 
-                            src={`https://media.valorant-api.com/maps/${selectedMap.uuid}/displayicon.png`} 
-                            className="w-full h-full object-contain opacity-80 hover:opacity-100 transition-all duration-500 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]"
-                            alt="Tactical Minimap"
-                          />
-                          
-                          {/* Ícones Interativos (Overlay) */}
-                          <div className="absolute inset-0">
-                              {activeLineups.map((lineup) => {
-                                  const Icon = SKILL_ICONS[lineup.type] || CircleDot;
-                                  const isSelected = selectedLineup?.id === lineup.id;
-                                  
-                                  return (
-                                      <button
-                                          key={lineup.id}
-                                          onClick={() => setSelectedLineup(isSelected ? null : lineup)}
-                                          className={`absolute transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 z-10 ${
-                                              isSelected ? 'bg-[#FF4654] scale-125 shadow-[0_0_20px_#FF4654]' : 'bg-white text-black hover:scale-110'
-                                          }`}
-                                          style={{ left: `${lineup.x}%`, top: `${lineup.y}%` }}
-                                      >
-                                          <Icon size={16} />
-                                          {!isSelected && (
-                                              <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black px-2 py-1 rounded text-xs font-bold text-white whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none">
-                                                  {lineup.title}
-                                              </div>
-                                      )}
-                                      </button>
-                                  );
-                              })}
-                          </div>
-                      </div>
-
-                      <div className="absolute bottom-4 left-4 pointer-events-none">
-                         <span className="text-white/40 text-xs font-mono tracking-widest bg-black/60 px-2 py-1 rounded">
-                             TACTICAL VIEW // {selectedMap.name.toUpperCase()}
-                         </span>
-                      </div>
-                  </motion.div>
-
-                  {/* PAINEL DE VÍDEO (Abre quando seleciona lineup) */}
-                  <AnimatePresence>
-                      {selectedLineup && (
-                          <motion.div
-                              initial={{ width: 0, opacity: 0 }}
-                              animate={{ width: '65%', opacity: 1 }}
-                              exit={{ width: 0, opacity: 0 }}
-                              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                              className="relative h-full bg-black flex flex-col"
-                          >
-                              <div className="flex items-center justify-between p-6 border-b border-white/10 bg-[#111]">
-                                  <h4 className="text-xl font-bold text-white italic">{selectedLineup.title}</h4>
-                                  <button 
-                                      onClick={() => setSelectedLineup(null)}
-                                      className="p-2 hover:bg-white/10 rounded-full transition-colors text-white/60 hover:text-white"
-                                  >
-                                      <X size={20} />
-                                  </button>
-                              </div>
-
-                              <div className="flex-1 bg-black relative flex items-center justify-center overflow-hidden">
-                                  {/* Embed do Vídeo */}
-                                  <iframe 
-                                      src={selectedLineup.videoUrl}
-                                      className="w-full h-full object-contain"
-                                      allow="autoplay; encrypted-media"
-                                      allowFullScreen
-                                  />
-                              </div>
-
-                              <div className="p-4 bg-[#111] border-t border-white/10">
-                                  <div className="flex gap-4">
-                                      <div className="bg-[#FF4654]/10 text-[#FF4654] px-3 py-1 rounded text-xs font-bold uppercase border border-[#FF4654]/20">
-                                          {selectedLineup.type}
-                                      </div>
-                                      <div className="text-white/40 text-xs font-mono uppercase py-1">
-                                          {masteryAgent.name} • {selectedMap.name}
-                                      </div>
-                                  </div>
-                              </div>
-                          </motion.div>
-                      )}
-                  </AnimatePresence>
-              </div>
-          </div>
       </section>
 
       {/* === STREAMS === */}
