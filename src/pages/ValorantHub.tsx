@@ -43,12 +43,13 @@ const HubHeader = () => {
 };
 
 // === DADOS ===
+// Adicionei os UUIDs corretos para puxar da API
 const MAPS = [
   { id: "abyss", name: "Abyss", uuid: "224b0a95-48b9-f703-1bd8-67aca101a61f", image: "/maps/abyss.webp" },
   { id: "bind", name: "Bind", uuid: "2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba", image: "/maps/bind.webp" },
   { id: "split", name: "Split", uuid: "d960549e-485c-e861-8d71-aa9d1aed12a2", image: "/maps/split.webp" },
   { id: "breeze", name: "Breeze", uuid: "2fb9a4fd-47b8-4e7d-a969-74b4046ebd53", image: "/maps/breeze.webp" },
-  { id: "corrode", name: "Corrode", uuid: "1c18ab1f-420d-0d8b-71d0-77ad3c439115", image: "/maps/corrode.webp" },
+  { id: "corrode", name: "Corrode", uuid: "1c18ab1f-420d-0d8b-71d0-77ad3c439115", image: "/maps/corrode.webp" }, // Drift/TDM map placeholder
   { id: "pearl", name: "Pearl", uuid: "fd267378-4d1d-484f-ff52-77821ed10dc2", image: "/maps/pearl.webp" },
   { id: "haven", name: "Haven", uuid: "2bee0dc9-4ffe-519b-1cbd-7fbe763a6047", image: "/maps/haven.webp" },
 ];
@@ -92,8 +93,6 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
 };
 
 // === LINEUPS / SKILL SPOTS (MOCK DATA) ===
-// Aqui futuramente você puxa do banco de dados
-// Coordenadas em % (top, left)
 interface Lineup {
   id: string;
   agentId: string;
@@ -106,7 +105,7 @@ interface Lineup {
 }
 
 const MOCK_LINEUPS: Lineup[] = [
-  // Exemplo para Sova na Abyss (Só pra testar a mecânica)
+  // Exemplo para Sova na Abyss
   { id: "1", agentId: "sova", mapId: "abyss", type: "recon", x: 45, y: 30, title: "Recon A Site God", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
   { id: "2", agentId: "sova", mapId: "abyss", type: "recon", x: 60, y: 70, title: "Recon Mid Info", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
   { id: "3", agentId: "jett", mapId: "abyss", type: "smoke", x: 25, y: 40, title: "One Way A Main", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
@@ -149,7 +148,6 @@ const PLAYER_STATS: Record<string, any> = {
     invy: { sens: "0.175", dpi: "1600", res: "1920x1080/16:9", crosshair: "0;s;1;P;o;1;f;0;0t;1;0l;1;0o;2;0a;0;0f;0;1t;1;1l;1;1v;3;1o;3;1a;0;1m;0;1f;0;S;o;0.8" }
 };
 
-// COMPS DINÂMICAS (TODAS ATUALIZADAS)
 const META_COMPS = [
   {
     id: 1, org: "NRG", color: "#FF6B00",
@@ -315,7 +313,7 @@ export default function ValorantHub() {
   const [hostname, setHostname] = useState("");
   const [copied, setCopied] = useState(false);
 
-  // ESTADO PARA O MAPA INTERATIVO (NOVO)
+  // ESTADO PARA O MAPA INTERATIVO
   const [masteryRole, setMasteryRole] = useState("Duelist");
   const [masteryAgent, setMasteryAgent] = useState(AGENTS["jett"]);
   const [selectedLineup, setSelectedLineup] = useState<Lineup | null>(null);
@@ -384,7 +382,7 @@ export default function ValorantHub() {
                     return (
                         <button
                             key={map.id}
-                            onClick={() => { setSelectedMap(map); setSelectedLineup(null); }} // Reseta o lineup ao mudar mapa
+                            onClick={() => { setSelectedMap(map); setSelectedLineup(null); }}
                             className={`flex-1 h-full rounded-xl overflow-hidden transition-all duration-300 group relative ${
                                 isSelected 
                                 ? "ring-2 ring-[#FF4654] shadow-[0_0_30px_rgba(255,70,84,0.4)] z-10 scale-105" 
@@ -544,7 +542,7 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 4: AGENT MASTERY (COM MAPA INTERATIVO) === */}
+      {/* === SEÇÃO 4: AGENT MASTERY (COM MINIMAPA API & INTERAÇÃO) === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16 px-4">
               <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 inline-block">
@@ -585,7 +583,7 @@ export default function ValorantHub() {
               ))}
           </div>
 
-          {/* ÁREA INTERATIVA: INFO NA ESQUERDA, MAPA DINÂMICO NA DIREITA */}
+          {/* ÁREA INTERATIVA: INFO NA ESQUERDA, MAPA DA API NA DIREITA */}
           <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[600px] flex flex-col md:flex-row">
               
               {/* LADO ESQUERDO: INFOS DO AGENTE (FIXO) */}
@@ -610,60 +608,57 @@ export default function ValorantHub() {
                   </div>
               </div>
 
-              {/* LADO DIREITO: MAPA INTERATIVO & VÍDEO (DINÂMICO) */}
+              {/* LADO DIREITO: MAPA INTERATIVO (AGORA COM MAPA DA API) */}
               <div className="flex-1 flex relative overflow-hidden bg-[#0A0A0A]">
                   
                   {/* PAINEL DO MAPA */}
                   <motion.div 
                       layout
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      className="relative h-full border-r border-white/10 overflow-hidden"
+                      className="relative h-full border-r border-white/10 overflow-hidden flex items-center justify-center bg-[#050505]"
                       style={{ 
                           width: selectedLineup ? '35%' : '100%',
-                          minWidth: '300px' // Garante que o mapa não suma em telas menores
+                          minWidth: '300px'
                       }}
                   >
-                      {/* Imagem do Mapa (Fundo) */}
-                      <div className="absolute inset-0">
+                      {/* === AQUI TÁ A MUDANÇA: puxando displayicon.png da API === */}
+                      <div className="relative w-full h-full p-8 flex items-center justify-center">
                           <img 
-                            src={selectedMap.image} 
-                            className="w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-500"
-                            alt="Minimap"
+                            src={`https://media.valorant-api.com/maps/${selectedMap.uuid}/displayicon.png`} 
+                            className="w-full h-full object-contain opacity-80 hover:opacity-100 transition-all duration-500 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+                            alt="Tactical Minimap"
                           />
-                          <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-                      </div>
-
-                      {/* Ícones Interativos (Overlay) */}
-                      <div className="absolute inset-0">
-                          {activeLineups.map((lineup) => {
-                              const Icon = SKILL_ICONS[lineup.type] || CircleDot;
-                              const isSelected = selectedLineup?.id === lineup.id;
-                              
-                              return (
-                                  <button
-                                      key={lineup.id}
-                                      onClick={() => setSelectedLineup(isSelected ? null : lineup)}
-                                      className={`absolute transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 z-10 ${
-                                          isSelected ? 'bg-[#FF4654] scale-125 shadow-[0_0_20px_#FF4654]' : 'bg-white text-black hover:scale-110'
-                                      }`}
-                                      style={{ left: `${lineup.x}%`, top: `${lineup.y}%` }}
-                                  >
-                                      <Icon size={16} />
-                                      
-                                      {/* Tooltip Hover */}
-                                      {!isSelected && (
-                                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black px-2 py-1 rounded text-xs font-bold text-white whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none">
-                                              {lineup.title}
-                                          </div>
+                          
+                          {/* Ícones Interativos (Overlay) */}
+                          <div className="absolute inset-0">
+                              {activeLineups.map((lineup) => {
+                                  const Icon = SKILL_ICONS[lineup.type] || CircleDot;
+                                  const isSelected = selectedLineup?.id === lineup.id;
+                                  
+                                  return (
+                                      <button
+                                          key={lineup.id}
+                                          onClick={() => setSelectedLineup(isSelected ? null : lineup)}
+                                          className={`absolute transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 z-10 ${
+                                              isSelected ? 'bg-[#FF4654] scale-125 shadow-[0_0_20px_#FF4654]' : 'bg-white text-black hover:scale-110'
+                                          }`}
+                                          style={{ left: `${lineup.x}%`, top: `${lineup.y}%` }}
+                                      >
+                                          <Icon size={16} />
+                                          {!isSelected && (
+                                              <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black px-2 py-1 rounded text-xs font-bold text-white whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none">
+                                                  {lineup.title}
+                                              </div>
                                       )}
-                                  </button>
-                              );
-                          })}
+                                      </button>
+                                  );
+                              })}
+                          </div>
                       </div>
 
                       <div className="absolute bottom-4 left-4 pointer-events-none">
                          <span className="text-white/40 text-xs font-mono tracking-widest bg-black/60 px-2 py-1 rounded">
-                             INTERACTIVE MAP
+                             TACTICAL VIEW // {selectedMap.name.toUpperCase()}
                          </span>
                       </div>
                   </motion.div>
