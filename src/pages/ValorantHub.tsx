@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Sword, Shield, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, MousePointer2, Monitor, Crosshair, Copy, Check, Zap, Layers } from "lucide-react";
+import { 
+  Sword, Shield, Map as MapIcon, Target, Timer, Anchor, RefreshCcw, 
+  MousePointer2, Monitor, Crosshair, Copy, Check, Zap, Layers, 
+  Play, X, CircleDot, Eye 
+} from "lucide-react";
 
 // === HEADER ===
 const HubHeader = () => {
@@ -87,31 +91,56 @@ const AGENTS: Record<string, { name: string; role: string; id: string; color: st
   clove: { name: "Clove", role: "Controller", id: "1dbf2edd-4729-0984-3115-daa5eed44993", color: "#E66AB4" }
 };
 
-// === DADOS REAIS DE PLAYER (UPDATED) ===
+// === LINEUPS / SKILL SPOTS (MOCK DATA) ===
+// Aqui futuramente você puxa do banco de dados
+// Coordenadas em % (top, left)
+interface Lineup {
+  id: string;
+  agentId: string;
+  mapId: string;
+  type: 'smoke' | 'flash' | 'molly' | 'recon';
+  x: number;
+  y: number;
+  title: string;
+  videoUrl: string;
+}
+
+const MOCK_LINEUPS: Lineup[] = [
+  // Exemplo para Sova na Abyss (Só pra testar a mecânica)
+  { id: "1", agentId: "sova", mapId: "abyss", type: "recon", x: 45, y: 30, title: "Recon A Site God", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+  { id: "2", agentId: "sova", mapId: "abyss", type: "recon", x: 60, y: 70, title: "Recon Mid Info", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+  { id: "3", agentId: "jett", mapId: "abyss", type: "smoke", x: 25, y: 40, title: "One Way A Main", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+  // Exemplo para Bind
+  { id: "4", agentId: "viper", mapId: "bind", type: "smoke", x: 30, y: 50, title: "A Short One Way", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1" },
+];
+
+const SKILL_ICONS = {
+  smoke: CircleDot,
+  flash: Zap,
+  molly: Layers,
+  recon: Eye
+};
+
 const PLAYER_STATS: Record<string, any> = {
     default: { sens: "0.35", dpi: "800", res: "1920x1080", crosshair: "SOON" },
-    
     // NRG
     brawk: { sens: "0.2", dpi: "800", res: "1440x1080/4:3", crosshair: "0;s;1;P;c;1;o;1;0l;5;0v;5;0a;1;0f;0;1b;0;S;s;1.002" },
     keiko: { sens: "0.25", dpi: "800", res: "1280x882/4:3", crosshair: "0;s;1;P;u;000000FF;o;1;d;1;z;1;0b;0;1l;0;1a;0;1m;0;1f;0" },
     mada: { sens: "0.37", dpi: "800", res: "1920x1080/16:9", crosshair: "0;s;1;P;u;000000FF;o;1;d;1;f;0;m;1;0l;2;0v;3;0o;0;0a;1;0f;0;1b;0;S;b;1;c;8;t;00FF66FF;o;1" },
     skuba: { sens: "0.25", dpi: "800", res: "1920x1080/16:9", crosshair: "0;p;0;c;1;s;1;P;o;0.58;0t;1;0l;2;0o;2;0a;1;0f;0;1b;0;A;h;0;0b;0;1l;3;1o;0;1a;0.93;1m;0;1f;0" },
     ethan: { sens: "0.3", dpi: "800", res: "1440x1080/4:3", crosshair: "0;P;o;0.503;0t;1;0g;1;0o;1;0a;1;0f;0;1b;0" },
-
     // MIBR
     aspas: { sens: "0.4", dpi: "800", res: "1920x1080/4:3", crosshair: "0;s;1;P;o;1;d;1;0b;0;1b;0;S;c;0" },
     tex: { sens: "0.3", dpi: "800", res: "1920x1080/4:3", crosshair: "0;s;1;P;h;0;d;1;z;1;m;1;0t;1;0l;3;0v;2;0g;1;0o;2;0a;1;0e;0.319;1t;0;1l;0;1o;0;1a;0;1m;0;1e;3;S;s;0.677;o;1" },
     mazino: { sens: "0.17", dpi: "1600", res: "1920x1080/16:9", crosshair: "0;P;c;1;h;0;0l;4;0o;2;0a;1;0f;0;1b;0" },
     zekken: { sens: "0.175", dpi: "1600", res: "1920x1080/16:9", crosshair: "0;s;1;P;c;1;t;2;o;1;d;1;0b;0;1b;0;S;b;1;c;8;s;0.823" },
     verno: { sens: "0.04", dpi: "3200", res: "1920x1080/16:9", crosshair: "0;P;o;1;d;1;0b;0;1b;0" },
-
     // FNATIC
     kaajak: { sens: "0.1", dpi: "1600", res: "1280x960/4:3", crosshair: "0;s;1;P;o;1;d;1;f;0;0b;0;1b;0;S;t;000000FF;s;0.603;o;1" },
     veqaj: { sens: "0.4", dpi: "800", res: "1920x1080/16:9", crosshair: "0;P;o;1;0t;1;0l;2;0a;1;0f;0;1b;0" },
     crashies: { sens: "0.24", dpi: "800", res: "1920x1080/16:9", crosshair: "0;P;h;0;0l;3;0v;3;0g;1;0o;2;0a;1;1b;0" },
     alfajer: { sens: "0.45", dpi: "400", res: "1568x1080/16:10", crosshair: "0;p;0;s;1;P;h;0;f;0;0l;2;0o;2;0a;1;0f;0;1b;0;A;c;5;o;1;d;1;0b;0;1b;0;S;s;0.628;o;1" },
     boaster: { sens: "0.24", dpi: "800", res: "1920x1080/16:9", crosshair: "0;s;1;P;c;1;o;1;d;1;0l;0;0o;2;0a;1;0f;0;1t;0;1l;0;1o;0;1a;0;S;c;1;o;1" },
-
     // PAPER REX
     something: { sens: "0.425", dpi: "800", res: "1920x1080/16:9", crosshair: "0;s;1;P;h;0;0t;1;0l;4;0v;4;0o;1;0a;1;0f;0;1b;0;S;d;0" },
     f0rsaken: { sens: "0.645", dpi: "800", res: "1920x1080/16:9", crosshair: "0;p;0;c;1;s;1;P;u;000000FF;h;0;f;0;s;0;0l;3;0v;3;0g;1;0o;0;0a;1;0f;0;1b;0;A;u;000000FF;o;1;d;1;0b;0;1b;0;S;d;0" },
@@ -286,6 +315,11 @@ export default function ValorantHub() {
   const [hostname, setHostname] = useState("");
   const [copied, setCopied] = useState(false);
 
+  // ESTADO PARA O MAPA INTERATIVO (NOVO)
+  const [masteryRole, setMasteryRole] = useState("Duelist");
+  const [masteryAgent, setMasteryAgent] = useState(AGENTS["jett"]);
+  const [selectedLineup, setSelectedLineup] = useState<Lineup | null>(null);
+
   useEffect(() => {
       if (typeof window !== "undefined") {
           setHostname(window.location.hostname);
@@ -302,12 +336,14 @@ export default function ValorantHub() {
       }
   }, [selectedMap, selectedComp, selectedCompAgent]);
  
-  const [masteryRole, setMasteryRole] = useState("Duelist");
-  const [masteryAgent, setMasteryAgent] = useState(AGENTS["jett"]);
+  // Filtrar Lineups para o Agente e Mapa atuais
+  const activeLineups = MOCK_LINEUPS.filter(
+    l => l.mapId === selectedMap.id && l.agentId === masteryAgent.id
+  );
 
   const activeAgents = (selectedComp.rosters && selectedComp.rosters[selectedMap.id]) 
-                       ? selectedComp.rosters[selectedMap.id] 
-                       : selectedComp.agents;
+                        ? selectedComp.rosters[selectedMap.id] 
+                        : selectedComp.agents;
 
   const selectedAgentObj = activeAgents.find(a => a.key === selectedCompAgent);
   const selectedAgentPlayer = selectedAgentObj?.player || "Player";
@@ -348,7 +384,7 @@ export default function ValorantHub() {
                     return (
                         <button
                             key={map.id}
-                            onClick={() => setSelectedMap(map)}
+                            onClick={() => { setSelectedMap(map); setSelectedLineup(null); }} // Reseta o lineup ao mudar mapa
                             className={`flex-1 h-full rounded-xl overflow-hidden transition-all duration-300 group relative ${
                                 isSelected 
                                 ? "ring-2 ring-[#FF4654] shadow-[0_0_30px_rgba(255,70,84,0.4)] z-10 scale-105" 
@@ -370,7 +406,7 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 2: META COMPS & PLAYER INTEL === */}
+      {/* === SEÇÃO 2: META COMPS === */}
       <section id="comps" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
         <div className="mb-12 flex items-end gap-4">
              <h2 className="text-4xl font-black uppercase text-white italic">Meta <span className="text-[#FF4654]">Comps</span></h2>
@@ -378,11 +414,10 @@ export default function ValorantHub() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 h-full">
-            {/* COLUNA ESQUERDA: LISTA DE TIMES */}
+            {/* LISTA DE TIMES */}
             <div className="xl:col-span-4 flex flex-col gap-4 h-full">
                 {META_COMPS.map((comp) => {
                     const isActive = selectedComp.id === comp.id;
-                    
                     const rosterToDisplay = (comp.rosters && comp.rosters[selectedMap.id]) 
                                             ? comp.rosters[selectedMap.id] 
                                             : comp.agents;
@@ -449,7 +484,7 @@ export default function ValorantHub() {
                 })}
             </div>
 
-            {/* COLUNA DIREITA: DETALHES DO PLAYER */}
+            {/* DETALHES DO PLAYER */}
             <div className="xl:col-span-8 bg-[#111] rounded-2xl border border-white/10 p-12 relative overflow-hidden flex flex-col justify-center min-h-[600px]">
                 <div 
                     className="absolute top-0 right-0 w-96 h-96 opacity-5 blur-[180px] rounded-full pointer-events-none transition-colors duration-500"
@@ -470,7 +505,6 @@ export default function ValorantHub() {
                          </div>
                      </div>
                      
-                     {/* GRID DE 3 COLUNAS */}
                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                         {[
                             { label: "Sensitivity", val: playerStats.sens, icon: MousePointer2 },
@@ -510,10 +544,9 @@ export default function ValorantHub() {
         </div>
       </section>
 
-      {/* === SEÇÃO 4: AGENT MASTERY (SEM FADE E SEM BOTÕES) === */}
+      {/* === SEÇÃO 4: AGENT MASTERY (COM MAPA INTERATIVO) === */}
       <section id="mastery" className="px-8 lg:px-16 py-24 bg-[#0A0A0A] border-t border-white/5">
           <div className="text-center mb-16 px-4">
-              {/* TÍTULO CORRIGIDO: SEM FADE, COR SÓLIDA */}
               <h2 className="text-5xl font-black uppercase text-white italic mb-0 leading-[1.3] py-4 inline-block">
                   Agent <span className="not-italic text-[#FF4654] ml-2">MASTERY</span>
               </h2>
@@ -542,7 +575,7 @@ export default function ValorantHub() {
               {Object.values(AGENTS).filter(a => a.role === masteryRole).map(agent => (
                   <button
                     key={agent.id}
-                    onClick={() => setMasteryAgent(agent)}
+                    onClick={() => { setMasteryAgent(agent); setSelectedLineup(null); }}
                     className={`w-16 h-16 rounded-xl border-2 transition-all overflow-hidden relative group ${
                         masteryAgent.id === agent.id ? "border-[#FF4654] scale-110 shadow-[0_0_20px_rgba(255,70,84,0.4)]" : "border-white/10 hover:border-white/50 grayscale hover:grayscale-0"
                     }`}
@@ -552,11 +585,13 @@ export default function ValorantHub() {
               ))}
           </div>
 
-          <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[500px] flex flex-col md:flex-row">
-              {/* LADO ESQUERDO: INFOS DO AGENTE (LIMPO, SEM BOTÕES) */}
-              <div className="w-full md:w-1/3 bg-[#161616] p-10 flex flex-col justify-center border-r border-white/5 relative overflow-hidden">
+          {/* ÁREA INTERATIVA: INFO NA ESQUERDA, MAPA DINÂMICO NA DIREITA */}
+          <div className="bg-[#111] rounded-2xl border border-white/10 overflow-hidden min-h-[600px] flex flex-col md:flex-row">
+              
+              {/* LADO ESQUERDO: INFOS DO AGENTE (FIXO) */}
+              <div className="w-full md:w-1/3 bg-[#161616] p-10 flex flex-col justify-center border-r border-white/5 relative shrink-0 z-20">
                   <div className="relative z-20 text-center md:text-left">
-                    <h3 className="text-6xl font-black text-white uppercase italic tracking-tighter mb-4">{masteryAgent.name}</h3>
+                    <h3 className="text-6xl font-black text-white uppercase italic tracking-tighter mb-4 leading-none">{masteryAgent.name}</h3>
                     <div className="inline-block px-4 py-2 bg-white/5 rounded text-sm font-bold tracking-[0.2em] text-[#FF4654] uppercase mb-12 border border-[#FF4654]/20">
                         {masteryAgent.role}
                     </div>
@@ -575,25 +610,107 @@ export default function ValorantHub() {
                   </div>
               </div>
 
-              {/* LADO DIREITO: APENAS VÍDEOS (SEM TÍTULOS/DESCRIÇÕES) */}
-              <div className="w-full md:w-2/3 p-8 md:p-12 bg-[#0A0A0A]/50">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-                      {/* VIDEO 1 */}
-                      <div className="bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden hover:border-white/30 transition-all group shadow-2xl relative h-full">
-                          <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10 pointer-events-none" />
-                          <div className="w-full h-full flex items-center justify-center bg-[#1A1A1A]">
-                              <span className="text-white/20 text-xs font-mono tracking-widest">VIDEO PLACEHOLDER 1</span>
-                          </div>
+              {/* LADO DIREITO: MAPA INTERATIVO & VÍDEO (DINÂMICO) */}
+              <div className="flex-1 flex relative overflow-hidden bg-[#0A0A0A]">
+                  
+                  {/* PAINEL DO MAPA */}
+                  <motion.div 
+                      layout
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      className="relative h-full border-r border-white/10 overflow-hidden"
+                      style={{ 
+                          width: selectedLineup ? '35%' : '100%',
+                          minWidth: '300px' // Garante que o mapa não suma em telas menores
+                      }}
+                  >
+                      {/* Imagem do Mapa (Fundo) */}
+                      <div className="absolute inset-0">
+                          <img 
+                            src={selectedMap.image} 
+                            className="w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-500"
+                            alt="Minimap"
+                          />
+                          <div className="absolute inset-0 bg-black/40 pointer-events-none" />
                       </div>
 
-                      {/* VIDEO 2 */}
-                      <div className="bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden hover:border-white/30 transition-all group shadow-2xl relative h-full">
-                          <div className="absolute inset-0 bg-[url('/maps/tactical_grid.png')] opacity-10 pointer-events-none" />
-                          <div className="w-full h-full flex items-center justify-center bg-[#1A1A1A]">
-                              <span className="text-white/20 text-xs font-mono tracking-widest">VIDEO PLACEHOLDER 2</span>
-                          </div>
+                      {/* Ícones Interativos (Overlay) */}
+                      <div className="absolute inset-0">
+                          {activeLineups.map((lineup) => {
+                              const Icon = SKILL_ICONS[lineup.type] || CircleDot;
+                              const isSelected = selectedLineup?.id === lineup.id;
+                              
+                              return (
+                                  <button
+                                      key={lineup.id}
+                                      onClick={() => setSelectedLineup(isSelected ? null : lineup)}
+                                      className={`absolute transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 z-10 ${
+                                          isSelected ? 'bg-[#FF4654] scale-125 shadow-[0_0_20px_#FF4654]' : 'bg-white text-black hover:scale-110'
+                                      }`}
+                                      style={{ left: `${lineup.x}%`, top: `${lineup.y}%` }}
+                                  >
+                                      <Icon size={16} />
+                                      
+                                      {/* Tooltip Hover */}
+                                      {!isSelected && (
+                                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black px-2 py-1 rounded text-xs font-bold text-white whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none">
+                                              {lineup.title}
+                                          </div>
+                                      )}
+                                  </button>
+                              );
+                          })}
                       </div>
-                  </div>
+
+                      <div className="absolute bottom-4 left-4 pointer-events-none">
+                         <span className="text-white/40 text-xs font-mono tracking-widest bg-black/60 px-2 py-1 rounded">
+                             INTERACTIVE MAP
+                         </span>
+                      </div>
+                  </motion.div>
+
+                  {/* PAINEL DE VÍDEO (Abre quando seleciona lineup) */}
+                  <AnimatePresence>
+                      {selectedLineup && (
+                          <motion.div
+                              initial={{ width: 0, opacity: 0 }}
+                              animate={{ width: '65%', opacity: 1 }}
+                              exit={{ width: 0, opacity: 0 }}
+                              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                              className="relative h-full bg-black flex flex-col"
+                          >
+                              <div className="flex items-center justify-between p-6 border-b border-white/10 bg-[#111]">
+                                  <h4 className="text-xl font-bold text-white italic">{selectedLineup.title}</h4>
+                                  <button 
+                                      onClick={() => setSelectedLineup(null)}
+                                      className="p-2 hover:bg-white/10 rounded-full transition-colors text-white/60 hover:text-white"
+                                  >
+                                      <X size={20} />
+                                  </button>
+                              </div>
+
+                              <div className="flex-1 bg-black relative flex items-center justify-center overflow-hidden">
+                                  {/* Embed do Vídeo */}
+                                  <iframe 
+                                      src={selectedLineup.videoUrl}
+                                      className="w-full h-full object-contain"
+                                      allow="autoplay; encrypted-media"
+                                      allowFullScreen
+                                  />
+                              </div>
+
+                              <div className="p-4 bg-[#111] border-t border-white/10">
+                                  <div className="flex gap-4">
+                                      <div className="bg-[#FF4654]/10 text-[#FF4654] px-3 py-1 rounded text-xs font-bold uppercase border border-[#FF4654]/20">
+                                          {selectedLineup.type}
+                                      </div>
+                                      <div className="text-white/40 text-xs font-mono uppercase py-1">
+                                          {masteryAgent.name} • {selectedMap.name}
+                                      </div>
+                                  </div>
+                              </div>
+                          </motion.div>
+                      )}
+                  </AnimatePresence>
               </div>
           </div>
       </section>
@@ -616,7 +733,7 @@ export default function ValorantHub() {
                             width="100%"
                             allowFullScreen
                             className="w-full h-full object-cover"
-                         />
+                          />
                      </div>
                      <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent flex items-center gap-3 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
                          <img src={streamer.avatar} className="w-10 h-10 rounded-full border-2 border-[#9146FF]" />
