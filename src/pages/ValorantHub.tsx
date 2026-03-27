@@ -27,7 +27,7 @@ const HubHeader = () => {
                 </svg>
             </Link>
             <div className="h-6 w-[2px] bg-white/20 -skew-x-12 shrink-0" />
-            <img src="https://pt.wikipedia.org/wiki/Ficheiro:Valorant_logo_-_pink_color_version.svg#/media/Ficheiro:Valorant_pink_version_logo.svg" alt="V Logo" className="h-8 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,70,84,0.5)]" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Valorant_pink_version_logo.svg/1920px-Valorant_pink_version_logo.svg.png" alt="V Logo" className="h-8 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,70,84,0.5)]" />
         </div>
         <div className="hidden md:flex items-center gap-8 pointer-events-auto">
             {['MAPS', 'MASTERY', 'COMPS', 'STREAMS'].map((item) => (
